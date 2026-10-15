@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{# Shown for errors on normal pages. API errors are answered with JSON instead (see app.py). #}
+{% block title %}{{ code }}{% endblock %}
+{% block content %}
+<div class="card app-card auth-card text-center">
+  <div class="card-body p-4">
+    <div class="hero-number text-secondary">{{ code }}</div>
+    <p class="mt-3">{{ message }}</p>
+    <a class="btn btn-primary" href="{{ url_for('pages.index') }}">Back to home</a>
+  </div>
+</div>
+{% endblock %}

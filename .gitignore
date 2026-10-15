@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# Created while the app runs (not source code): database, uploaded photos, model weights
+instance/*
+!instance/.gitkeep
+models/*
+!models/.gitkeep

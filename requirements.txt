@@ -1,0 +1,11 @@
+# Install everything with:  pip install -r requirements.txt
+#
+# Linux only: install the CPU build of PyTorch first to avoid a ~2 GB GPU download:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+# (On Windows and macOS the normal torch package is already CPU-only.)
+
+Flask>=3.1,<4           # web framework; also installs Jinja2 (templates) and Werkzeug (security helpers)
+Pillow>=11,<13          # open, check, rotate, resize and re-save uploaded images
+torch>=2.6,<3           # runs the AI model on the CPU
+transformers>=5.0,<6    # downloads and runs the pretrained CLIP model
+pytest>=8,<10           # automated tests

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{#
+  foods.html - the nutrition database, plus the form to add a food that is missing.
+  A new food also becomes a new AI label at once (no retraining). See static/js/foods.js.
+#}
+{% block title %}Foods{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-3">
+  <div>
+    <h1 class="h3 mb-0">Food database</h1>
+    <p class="text-secondary mb-0">Values per 100 g. Every food is also a label the AI can recognise.</p>
+  </div>
+  <a href="#add-food" class="btn btn-outline-primary">Add a food</a>
+</div>
+
+<div class="mb-2">
+  <label for="food-filter" class="visually-hidden">Filter foods</label>
+  <input id="food-filter" type="search" class="form-control form-control-lg" placeholder="Search by name or category"
+         autocomplete="off" autocapitalize="none" spellcheck="false" enterkeyhint="search">
+</div>
+<div id="category-chips" class="chip-row mb-2" role="group" aria-label="Filter by category"></div>
+<p id="food-count" class="small text-secondary" aria-live="polite"></p>
+
+<div id="foods-alert" aria-live="assertive"></div>
+
+<!-- Phones: one card per food -->
+<div id="food-cards" class="card app-card d-md-none"><div class="card-body py-2" id="food-card-list"></div></div>
+
+<!-- Tablets and laptops: table -->
+<div class="card app-card d-none d-md-block" id="food-table-card">
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th scope="col">Food</th>
+          <th scope="col">Category</th>
+          <th scope="col">Default serving</th>
+          <th scope="col" class="num">kcal</th>
+          <th scope="col" class="num">Protein</th>
+          <th scope="col" class="num">Carbs</th>
+          <th scope="col" class="num">Fat</th>
+          <th scope="col" class="num">Fiber</th>
+          <th scope="col">Source</th>
+        </tr>
+      </thead>
+      <tbody id="food-rows"></tbody>
+    </table>
+  </div>
+</div>
+
+<section id="add-food" class="card app-card mt-4" aria-labelledby="add-title">
+  <div class="card-body p-4">
+    <h2 id="add-title" class="h5">Add a food that is missing</h2>
+    <p class="text-secondary small">
+      Copy the values per 100 g from the packet label or a trusted source such as the Indian Nutrient Databank.
+      The AI will be able to suggest this food straight away.
+    </p>
+    <form id="add-food-form" class="row g-3">
+      <div class="col-md-6">
+        <label for="f-name" class="form-label">Name</label>
+        <input id="f-name" name="name" class="form-control" autocomplete="off" minlength="2" maxlength="80" required>
+      </div>
+      <div class="col-md-6">
+        <label for="f-category" class="form-label">Category</label>
+        <input id="f-category" name="category" class="form-control" maxlength="40" list="category-list" placeholder="e.g. Snack">
+        <datalist id="category-list"></datalist>
+      </div>
+      <div class="col-6 col-md-3">
+        <label for="f-unit" class="form-label">Serving unit</label>
+        <select id="f-unit" name="serving_unit" class="form-select" required>
+          {% for unit in serving_units %}<option value="{{ unit }}">{{ unit }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="col-6 col-md-3">
+        <label for="f-grams" class="form-label">Grams per serving</label>
+        <input id="f-grams" name="serving_grams" type="number" inputmode="decimal" class="form-control" min="1" max="3000" step="any" required>
+      </div>
+      <div class="col-6 col-md-3">
+        <label for="f-kcal" class="form-label">kcal per 100 g</label>
+        <input id="f-kcal" name="calories" type="number" inputmode="decimal" class="form-control" min="0" max="900" step="any" required>
+      </div>
+      <div class="col-6 col-md-3">
+        <label for="f-protein" class="form-label">Protein (g)</label>
+        <input id="f-protein" name="protein" type="number" inputmode="decimal" class="form-control" min="0" max="100" step="any" required>
+      </div>
+      <div class="col-6 col-md-3">
+        <label for="f-carbs" class="form-label">Carbohydrates (g)</label>
+        <input id="f-carbs" name="carbs" type="number" inputmode="decimal" class="form-control" min="0" max="100" step="any" required>
+      </div>
+      <div class="col-6 col-md-3">
+        <label for="f-fat" class="form-label">Fat (g)</label>
+        <input id="f-fat" name="fat" type="number" inputmode="decimal" class="form-control" min="0" max="100" step="any" required>
+      </div>
+      <div class="col-6 col-md-3">
+        <label for="f-fiber" class="form-label">Fiber (g)</label>
+        <input id="f-fiber" name="fiber" type="number" inputmode="decimal" class="form-control" min="0" max="100" step="any" required>
+      </div>
+      <div class="col-12">
+        <div id="add-alert" aria-live="assertive"></div>
+        <button class="btn btn-primary">Add food</button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/foods.js') }}"></script>{% endblock %}

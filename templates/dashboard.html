@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{#
+  dashboard.html - one day at a glance. static/js/dashboard.js fills every
+  number from GET /api/dashboard?date=YYYY-MM-DD and draws the 7-day chart.
+#}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+  <div>
+    <h1 class="h3 mb-0">Dashboard</h1>
+    <div id="dash-date-label" class="text-secondary"></div>
+  </div>
+  <div class="d-flex gap-2 align-items-end">
+    <button type="button" id="btn-prev-day" class="btn btn-outline-secondary" aria-label="Previous day">‹</button>
+    <div>
+      <label for="dash-date" class="form-label small mb-1">Day</label>
+      <input type="date" id="dash-date" class="form-control">
+    </div>
+    <button type="button" id="btn-next-day" class="btn btn-outline-secondary" aria-label="Next day">›</button>
+    <button type="button" id="btn-today" class="btn btn-outline-secondary">Today</button>
+  </div>
+</div>
+
+<div id="dash-alert" aria-live="assertive"></div>
+
+<div id="dashboard" class="dash">
+  <div class="row g-3">
+    <!-- The one number this page leads with -->
+    <div class="col-lg-5">
+      <div class="card app-card h-100">
+        <div class="card-body">
+          <div class="tile-label">Calories eaten</div>
+          <div><span id="kpi-consumed" class="hero-number">0</span> <span class="hero-unit">kcal</span></div>
+          <div id="kpi-goal-text" class="text-secondary"></div>
+          <div class="meter mt-3" id="kpi-meter" role="progressbar" aria-label="Calories eaten compared with the daily goal"
+               aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+            <div class="meter-fill" id="kpi-meter-fill"></div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mt-2 small">
+            <span id="kpi-remaining"></span>
+            <button type="button" class="btn btn-link btn-sm" data-bs-toggle="collapse" data-bs-target="#goal-form"
+                    aria-expanded="false" aria-controls="goal-form">Change goal</button>
+          </div>
+          <form id="goal-form" class="collapse mt-2">
+            <label for="goal-input" class="form-label small mb-1">Daily goal (kcal, 800 to 5000)</label>
+            <div class="input-group">
+              <input id="goal-input" type="number" inputmode="numeric" class="form-control" min="800" max="5000" step="50" required>
+              <button class="btn btn-primary">Save</button>
+            </div>
+            <div class="form-text">2000 kcal is a general reference value, not a personal recommendation.</div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Supporting numbers -->
+    <div class="col-lg-7">
+      <div class="row g-3 h-100">
+        <div class="col-6 col-sm-4"><div class="card app-card h-100"><div class="card-body">
+          <div class="tile-label">Meals logged</div><div class="tile-value" id="kpi-meals">0</div>
+        </div></div></div>
+        <div class="col-6 col-sm-4"><div class="card app-card h-100"><div class="card-body">
+          <div class="tile-label">Protein</div><div class="tile-value"><span id="kpi-protein">0</span><span class="tile-unit"> g</span></div>
+        </div></div></div>
+        <div class="col-6 col-sm-4"><div class="card app-card h-100"><div class="card-body">
+          <div class="tile-label">Carbohydrates</div><div class="tile-value"><span id="kpi-carbs">0</span><span class="tile-unit"> g</span></div>
+        </div></div></div>
+        <div class="col-6 col-sm-4"><div class="card app-card h-100"><div class="card-body">
+          <div class="tile-label">Fat</div><div class="tile-value"><span id="kpi-fat">0</span><span class="tile-unit"> g</span></div>
+        </div></div></div>
+        <div class="col-6 col-sm-4"><div class="card app-card h-100"><div class="card-body">
+          <div class="tile-label">Fiber</div><div class="tile-value"><span id="kpi-fiber">0</span><span class="tile-unit"> g</span></div>
+        </div></div></div>
+        <div class="col-6 col-sm-4"><div class="card app-card h-100"><div class="card-body">
+          <div class="tile-label">Remaining</div><div class="tile-value"><span id="kpi-left">0</span><span class="tile-unit"> kcal</span></div>
+        </div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mt-0">
+    <!-- Part-to-whole: one stacked bar, every value also written in the legend -->
+    <div class="col-lg-5">
+      <div class="card app-card h-100">
+        <div class="card-body">
+          <h2 class="h6">Where the calories come from</h2>
+          <div id="split-bar" class="split-bar" role="img" aria-label="Share of calories from protein, carbohydrates and fat"></div>
+          <ul id="split-legend" class="split-legend"></ul>
+          <p class="small text-secondary mb-0 mt-2">Energy from each nutrient: 4 kcal per gram of protein or carbohydrate, 9 per gram of fat.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trend: last 7 days with the goal line, plus a table twin -->
+    <div class="col-lg-7">
+      <div class="card app-card h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 class="h6 mb-0">Calories over the last 7 days</h2>
+            <button type="button" id="btn-week-table" class="btn btn-link btn-sm" aria-expanded="false"
+                    aria-controls="week-table">Show as table</button>
+          </div>
+          <div id="week-empty" hidden></div>
+          <div id="week-chart-box" class="chart-box mt-2"><canvas id="week-chart" role="img" aria-label="Calories eaten on each of the last 7 days"></canvas></div>
+          <table id="week-table" class="table table-sm mt-2 mb-0" hidden>
+            <thead><tr><th scope="col">Day</th><th scope="col" class="num">kcal</th><th scope="col" class="num">Goal</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card app-card mt-3">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 class="h6 mb-0">Meals on this day</h2>
+        <a class="btn btn-primary" href="{{ url_for('pages.index') }}">Scan food</a>
+      </div>
+      <div id="meals"></div>
+    </div>
+  </div>
+</div>
+{% include "_edit_meal_modal.html" %}
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='vendor/chart.umd.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/meal-ui.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

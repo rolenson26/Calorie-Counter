@@ -1,0 +1,78 @@
+<!doctype html>
+{#
+  base.html - the frame every page shares: navbar, main area, disclaimer footer.
+  Other templates fill the "content" and "scripts" blocks.
+  Bootstrap and Chart.js are served from static/vendor, so the app works offline.
+#}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  {# Set the saved (or the phone's) light/dark choice before the page is drawn, so it does not flash. #}
+  <script>
+    try {
+      var theme = localStorage.getItem("theme") ||
+        (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-bs-theme", theme);
+    } catch (e) {}
+  </script>
+  <title>{% block title %}{% endblock %} · AI Food Calorie Counter</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="d-flex flex-column min-vh-100">
+  <nav class="navbar navbar-expand-md app-nav">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('pages.index') }}">
+        <svg class="brand-icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 11h18a9 9 0 0 1-18 0Z" fill="currentColor"/>
+          <path d="M9 8c0-1.6 1.6-1.6 1.6-3.2M13.4 8c0-1.6 1.6-1.6 1.6-3.2" stroke="currentColor"
+                stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        </svg>
+        Food Calorie Counter
+      </a>
+      <button type="button" id="theme-toggle" class="btn btn-sm theme-toggle ms-auto ms-md-2 me-2 me-md-0 order-md-last"
+              aria-label="Switch to dark mode" title="Light / dark mode">
+        <span aria-hidden="true" class="theme-icon">☾</span>
+      </button>
+      {% if current_user %}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav"
+                aria-controls="main-nav" aria-expanded="false" aria-label="Open menu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="main-nav">
+          <ul class="navbar-nav me-auto">
+            {% for endpoint, label in [("pages.index", "Scan food"), ("pages.dashboard", "Dashboard"),
+                                       ("pages.history", "History"), ("pages.foods", "Foods")] %}
+              <li class="nav-item">
+                <a class="nav-link{% if request.endpoint == endpoint %} active{% endif %}"
+                   {% if request.endpoint == endpoint %}aria-current="page"{% endif %}
+                   href="{{ url_for(endpoint) }}">{{ label }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+          <form method="post" action="{{ url_for('pages.logout') }}" class="d-flex align-items-center gap-2 py-2 py-md-0">
+            <span class="small text-secondary d-none d-lg-inline">{{ current_user.name }}</span>
+            <button class="btn btn-sm btn-outline-secondary logout-btn">Log out</button>
+          </form>
+        </div>
+      {% endif %}
+    </div>
+  </nav>
+
+  <main class="container py-3 py-md-4 flex-grow-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="container py-3 disclaimer">
+    Academic demonstration. Calorie and nutrient values are approximate estimates based on typical
+    recipes and portions. They are not medical or dietary advice.
+  </footer>
+
+  <script src="{{ url_for('static', filename='vendor/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

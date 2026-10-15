@@ -1,0 +1,50 @@
+{#
+  _edit_meal_modal.html - the "Edit meal" pop-up shared by the Dashboard and History pages.
+  static/js/meal-ui.js opens it with openMealEditor(meal, callback) and saves with PUT /api/food-log/<id>.
+  The food itself cannot be changed here (delete the meal and add it again for that).
+#}
+<div class="modal fade" id="edit-meal-modal" tabindex="-1" aria-labelledby="edit-meal-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <form class="modal-content" id="edit-meal-form">
+      <div class="modal-header">
+        <h2 class="modal-title h5" id="edit-meal-title">Edit meal</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="edit-food" class="h5 mb-0"></div>
+        <div id="edit-serving-hint" class="small text-secondary mb-3"></div>
+
+        <label class="form-label fw-semibold" for="edit-meal-type">Meal</label>
+        <select id="edit-meal-type" class="form-select mb-3">
+          {% for meal in meal_types %}<option value="{{ meal }}">{{ meal|capitalize }}</option>{% endfor %}
+        </select>
+
+        <label class="form-label fw-semibold" for="edit-quantity">How much?</label>
+        <div class="portion-grid mb-2" role="group" aria-label="Quick portions">
+          <button type="button" class="btn btn-outline-secondary" data-edit-quantity="0.5">½</button>
+          <button type="button" class="btn btn-outline-secondary" data-edit-quantity="1">1</button>
+          <button type="button" class="btn btn-outline-secondary" data-edit-quantity="1.5">1½</button>
+          <button type="button" class="btn btn-outline-secondary" data-edit-quantity="2">2</button>
+          <button type="button" class="btn btn-outline-secondary" data-edit-quantity="3">3</button>
+        </div>
+        <div class="input-group qty-group mb-3">
+          <button type="button" class="btn btn-outline-secondary" data-edit-step="-0.25" aria-label="Fewer servings">−</button>
+          <input id="edit-quantity" type="number" inputmode="decimal" class="form-control" min="0.25" max="20" step="0.25"
+                 aria-label="Number of servings">
+          <button type="button" class="btn btn-outline-secondary" data-edit-step="0.25" aria-label="More servings">+</button>
+        </div>
+
+        <label class="form-label small text-secondary mb-1" for="edit-grams">Or the exact weight in grams</label>
+        <input id="edit-grams" type="number" inputmode="decimal" class="form-control" min="1" max="3000" step="1"
+               placeholder="optional">
+
+        <div id="edit-preview" class="mt-3 fw-semibold" aria-live="polite"></div>
+        <div id="edit-alert" class="mt-2" aria-live="assertive"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="edit-save">Save changes</button>
+      </div>
+    </form>
+  </div>
+</div>
