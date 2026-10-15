@@ -10,6 +10,7 @@ Endpoints (all need login except /status)
     POST   /api/predict             photo -> top 3 foods
     POST   /api/calculate           food + portion -> nutrition (nothing saved)
     POST   /api/food-log            save a meal
+    POST   /api/food-log/batch      save several foods from one plate at once
     PUT    /api/food-log/<id>       change the meal type or portion of a saved meal
     DELETE /api/food-log/<id>       delete one of your meals
     GET    /api/history             meals in a date range
@@ -37,6 +38,8 @@ from services.image_processor import ImageValidationError, process_upload
 api_bp = Blueprint("api", __name__)
 
 MAX_HISTORY_DAYS = 31
+MAX_MEAL_ITEMS = 10                    # foods saved together in one /food-log/batch call
+NUTRIENT_KEYS = ("calories", "protein", "carbs", "fat", "fiber")
 LEVEL_MESSAGES = {
     "high": "Looks like {name}. Check the portion, then calculate.",
     "medium": "Not completely sure. Please pick the right food from the suggestions.",
@@ -106,6 +109,22 @@ def get_food_or_404(food_id):
     if food is None:
         raise ApiError("Food not found", 404)
     return food
+
+
+def check_meal_type(meal_type):
+    if meal_type not in db.MEAL_TYPES:
+        raise ApiError("meal_type must be one of: " + ", ".join(db.MEAL_TYPES))
+    return meal_type
+
+
+def prediction_for(prediction_id, user):
+    """The user's own prediction row for this id, or None when no id was sent."""
+    if prediction_id is None:
+        return None
+    prediction = db.get_prediction(to_int(prediction_id, "prediction_id"), user["id"])
+    if prediction is None:
+        raise ApiError("Prediction not found", 404)
+    return prediction
 
 
 def food_json(food):
@@ -185,7 +204,7 @@ def predict():
     )
 
     suggestions = []
-    for guess in result.top3:
+    for guess in result.suggestions or result.top3:      # top 3 plus other likely foods on the plate
         food = db.get_food(guess.food_id)
         if food:
             suggestions.append({"food_id": food["id"], "name": food["name"], "confidence": guess.confidence,
@@ -222,29 +241,64 @@ def add_food_log():
     data = json_body()
     user = current_user()
     food = get_food_or_404(data.get("food_id"))
-
-    meal_type = data.get("meal_type")
-    if meal_type not in db.MEAL_TYPES:
-        raise ApiError("meal_type must be one of: " + ", ".join(db.MEAL_TYPES))
-
+    meal_type = check_meal_type(data.get("meal_type"))
     result = calculate(food, quantity=data.get("quantity"), grams=data.get("grams"))
 
-    prediction_id, was_corrected = None, False
-    if data.get("prediction_id") is not None:
-        prediction = db.get_prediction(to_int(data["prediction_id"], "prediction_id"), user["id"])
-        if prediction is None:
-            raise ApiError("Prediction not found", 404)
-        prediction_id = prediction["id"]
-        was_corrected = prediction["predicted_food_id"] != food["id"]
+    prediction = prediction_for(data.get("prediction_id"), user)
+    was_corrected = prediction is not None and prediction["predicted_food_id"] != food["id"]
 
-    nutrients = {key: result[key] for key in ("calories", "protein", "carbs", "fat", "fiber")}
+    nutrients = {key: result[key] for key in NUTRIENT_KEYS}
     log_id = db.add_food_log(user["id"], food["id"], meal_type, result["grams"], nutrients,
-                             quantity=result["quantity"], prediction_id=prediction_id,
+                             quantity=result["quantity"], prediction_id=prediction and prediction["id"],
                              was_corrected=was_corrected)
 
+    return ok(201, log_id=log_id, nutrition=result, today=today_summary(user))
+
+
+@api_bp.post("/food-log/batch")
+@login_required
+def add_food_logs():
+    """Save several foods eaten together, for example rice, dal and roti from one thali photo.
+
+    Send meal_type, an optional prediction_id, and
+    items: [{"food_id": 1, "quantity": 1}, {"food_id": 7, "grams": 120}, ...].
+    Every item is checked first; if any one is wrong, nothing is saved.
+    """
+    data = json_body()
+    user = current_user()
+    meal_type = check_meal_type(data.get("meal_type"))
+    items = data.get("items")
+    if not isinstance(items, list) or not items:
+        raise ApiError("items must be a list with at least one food")
+    if len(items) > MAX_MEAL_ITEMS:
+        raise ApiError(f"Save at most {MAX_MEAL_ITEMS} foods at once")
+    prediction = prediction_for(data.get("prediction_id"), user)
+
+    entries, saved = [], []
+    for number, item in enumerate(items, start=1):
+        if not isinstance(item, dict):
+            raise ApiError(f"Item {number} must be an object with food_id and quantity or grams")
+        food = get_food_or_404(item.get("food_id"))
+        try:
+            result = calculate(food, quantity=item.get("quantity"), grams=item.get("grams"))
+        except PortionError as error:
+            raise ApiError(f"{food['name']}: {error}") from None
+        entries.append({
+            "food_id": food["id"], "grams": result["grams"], "quantity": result["quantity"],
+            "nutrients": {key: result[key] for key in NUTRIENT_KEYS},
+            "was_corrected": prediction is not None and prediction["predicted_food_id"] != food["id"],
+        })
+        saved.append({"food": {"id": food["id"], "name": food["name"]}, **result})
+
+    log_ids = db.add_food_logs(user["id"], meal_type, entries, prediction_id=prediction and prediction["id"])
+    totals = {key: round(sum(item[key] for item in saved), 1) for key in NUTRIENT_KEYS}
+    return ok(201, log_ids=log_ids, items=saved, totals=totals, today=today_summary(user))
+
+
+def today_summary(user):
+    """consumed / goal / remaining for today, shown after a meal is saved."""
     summary = daily_summary(db.get_daily_totals(user["id"], date.today()), user["daily_calorie_goal"])
-    return ok(201, log_id=log_id, nutrition=result,
-              today={key: summary[key] for key in ("consumed", "goal", "remaining")})
+    return {key: summary[key] for key in ("consumed", "goal", "remaining")}
 
 
 @api_bp.put("/food-log/<int:log_id>")
@@ -262,16 +316,14 @@ def update_food_log(log_id):
     if log is None:
         raise ApiError("Meal not found", 404)
 
-    meal_type = data.get("meal_type", log["meal_type"])
-    if meal_type not in db.MEAL_TYPES:
-        raise ApiError("meal_type must be one of: " + ", ".join(db.MEAL_TYPES))
+    meal_type = check_meal_type(data.get("meal_type", log["meal_type"]))
 
     if data.get("quantity") is None and data.get("grams") is None:
         raise ApiError("Send either quantity (servings) or grams")
     food = get_food_or_404(log["food_id"])
     result = calculate(food, quantity=data.get("quantity"), grams=data.get("grams"))
 
-    nutrients = {key: result[key] for key in ("calories", "protein", "carbs", "fat", "fiber")}
+    nutrients = {key: result[key] for key in NUTRIENT_KEYS}
     db.update_food_log(log_id, user["id"], meal_type, result["grams"], nutrients, quantity=result["quantity"])
 
     summary = daily_summary(db.get_daily_totals(user["id"], log["log_date"]), user["daily_calorie_goal"])

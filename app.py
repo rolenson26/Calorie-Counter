@@ -64,6 +64,7 @@ def start_loading_classifier(app):
                 app.config["MODEL_NAME"], app.config["MODEL_CACHE_DIR"],
                 app.config["HIGH_CONFIDENCE"], app.config["LOW_CONFIDENCE"],
                 app.config["FOOD_GATE_THRESHOLD"],
+                app.config["SUGGESTION_MIN_CONFIDENCE"], app.config["MAX_SUGGESTIONS"],
             )
             with app.app_context():
                 model.set_foods(db.get_all_foods())

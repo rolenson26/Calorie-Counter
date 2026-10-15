@@ -1,4 +1,5 @@
 """Tests for every /api endpoint, using the fake classifier from conftest.py."""
+import json
 from datetime import date, timedelta
 
 import pytest
@@ -16,7 +17,7 @@ def upload(client, image, filename="lunch.jpg"):
 
 @pytest.mark.parametrize("method, path", [
     ("get", "/api/dashboard"), ("get", "/api/history"), ("get", "/api/foods"),
-    ("post", "/api/predict"), ("post", "/api/calculate"), ("post", "/api/food-log"),
+    ("post", "/api/predict"), ("post", "/api/calculate"), ("post", "/api/food-log"), ("post", "/api/food-log/batch"),
     ("delete", "/api/food-log/1"), ("put", "/api/food-log/1"), ("get", "/api/foods/recent"), ("post", "/api/foods"), ("put", "/api/user/goal"),
 ])
 def test_every_api_needs_login(client, method, path):
@@ -61,6 +62,18 @@ def test_predict_high_confidence(auth_client, fake_classifier, photo, app, user_
         prediction = db.get_prediction(data["prediction_id"], user_id)
     assert prediction["confidence_level"] == "high"
     assert (app.config["UPLOAD_FOLDER"] / data["image_url"].rsplit("/", 1)[1]).is_file()
+
+
+def test_predict_offers_more_than_3_foods_for_a_plate(auth_client, fake_classifier, photo, app, user_id):
+    guesses = [("Aloo Matar", 0.12), ("Veg Khichdi", 0.12), ("Chana Dal", 0.07),
+               ("Baingan Bharta", 0.07), ("Dal", 0.07), ("Uttapam", 0.06)]
+    fake_classifier.answer(guesses)
+    data = upload(auth_client, photo()).get_json()
+    assert [p["name"] for p in data["top_predictions"]] == [name for name, _ in guesses]
+    assert data["confidence_level"] == "low"                 # the level still comes from the top food
+    with app.app_context():
+        stored = json.loads(db.get_prediction(data["prediction_id"], user_id)["top3_json"])
+    assert [g["name"] for g in stored] == ["Aloo Matar", "Veg Khichdi", "Chana Dal"]   # the record keeps the top 3
 
 
 def test_photo_is_shown_only_to_its_owner(auth_client, fake_classifier, photo, app):
@@ -213,6 +226,68 @@ def test_thali_one_photo_many_items(auth_client, fake_classifier, photo, food_id
     dashboard = auth_client.get("/api/dashboard").get_json()
     assert dashboard["meals_count"] == 3
     assert dashboard["consumed"] == 176 + 93 + 162          # rice 175.8, dal 92.9, 2 rotis 161.8
+
+
+def test_save_a_whole_plate_in_one_step(auth_client, fake_classifier, photo, food_id, app, user_id):
+    fake_classifier.answer([("Steamed Rice", 0.4), ("Dal", 0.3), ("Roti / Chapati", 0.2)])
+    prediction_id = upload(auth_client, photo()).get_json()["prediction_id"]
+    response = auth_client.post("/api/food-log/batch", json={
+        "meal_type": "dinner", "prediction_id": prediction_id,
+        "items": [{"food_id": food_id("Steamed Rice"), "quantity": 1},
+                  {"food_id": food_id("Dal"), "quantity": 1},
+                  {"food_id": food_id("Roti / Chapati"), "quantity": 2}],
+    })
+    data = response.get_json()
+    assert response.status_code == 201
+    assert len(data["log_ids"]) == 3
+    assert [item["food"]["name"] for item in data["items"]] == ["Steamed Rice", "Dal", "Roti / Chapati"]
+    assert [item["calories"] for item in data["items"]] == [176, 93, 162]
+    assert data["totals"]["calories"] == 431
+    assert data["today"] == {"consumed": 431, "goal": 2000, "remaining": 1569}
+
+    with app.app_context():
+        logs = db.get_logs(user_id, date.today(), date.today())
+    assert {log["meal_type"] for log in logs} == {"dinner"}
+    assert {log["prediction_id"] for log in logs} == {prediction_id}
+    # was_corrected keeps its meaning: "not the AI's top guess" (the AI's top guess was rice).
+    assert {log["food_name"]: log["was_corrected"] for log in logs} == \
+        {"Steamed Rice": 0, "Dal": 1, "Roti / Chapati": 1}
+
+
+def test_plate_without_photo_mixes_grams_and_servings(auth_client, food_id):
+    response = auth_client.post("/api/food-log/batch", json={"meal_type": "snack", "items": [
+        {"food_id": food_id("Idli"), "grams": 100}, {"food_id": food_id("Banana"), "quantity": 1}]})
+    data = response.get_json()
+    assert response.status_code == 201
+    assert [item["calories"] for item in data["items"]] == [138, 105]
+    assert data["items"][0]["quantity"] is None
+
+
+def test_one_bad_food_on_the_plate_saves_nothing(auth_client, food_id, app, user_id):
+    response = auth_client.post("/api/food-log/batch", json={"meal_type": "lunch", "items": [
+        {"food_id": food_id("Steamed Rice"), "quantity": 1}, {"food_id": food_id("Dal"), "quantity": 0}]})
+    assert response.status_code == 400
+    assert response.get_json()["error"].startswith("Dal: quantity must be between")
+    with app.app_context():
+        assert db.get_logs(user_id, date.today(), date.today()) == []
+
+
+@pytest.mark.parametrize("change, status, phrase", [
+    ({"items": None}, 400, "at least one food"),
+    ({"items": []}, 400, "at least one food"),
+    ({"items": "rice"}, 400, "at least one food"),
+    ({"items": [1]}, 400, "Item 1 must be an object"),
+    ({"items": [{"food_id": 1, "quantity": 1}] * 11}, 400, "at most 10"),
+    ({"items": [{"food_id": 99999, "quantity": 1}]}, 404, "Food not found"),
+    ({"items": [{"food_id": 1}]}, 400, "either quantity"),
+    ({"meal_type": "brunch"}, 400, "meal_type"),
+    ({"prediction_id": 99999}, 404, "Prediction not found"),
+])
+def test_plate_errors(auth_client, change, status, phrase):
+    body = {"meal_type": "lunch", "items": [{"food_id": 1, "quantity": 1}], **change}
+    response = auth_client.post("/api/food-log/batch", json=body)
+    assert response.status_code == status
+    assert phrase in response.get_json()["error"]
 
 
 def test_manual_meal_without_photo(auth_client, food_id):

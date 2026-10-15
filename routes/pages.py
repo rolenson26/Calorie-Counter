@@ -24,7 +24,7 @@ def inject_user():
 @pages_bp.get("/")
 @login_required
 def index():
-    return render_template("index.html", meal_types=db.MEAL_TYPES)
+    return render_template("index.html", meal_types=db.MEAL_TYPES, serving_units=SERVING_UNITS)
 
 
 @pages_bp.get("/dashboard")

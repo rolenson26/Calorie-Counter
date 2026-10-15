@@ -240,8 +240,37 @@ def add_food_log(user_id, food_id, meal_type, grams, nutrients, quantity=None,
     nutrients is a dict with calories, protein, carbs, fat and fiber, already
     calculated for `grams`. eaten_at defaults to now (laptop's local time).
     """
+    db = get_db()
+    log_id = _insert_log(db, user_id, food_id, meal_type, grams, nutrients, quantity,
+                         prediction_id, was_corrected, eaten_at or datetime.now())
+    db.commit()
+    return log_id
+
+
+def add_food_logs(user_id, meal_type, entries, prediction_id=None, eaten_at=None):
+    """Save several foods eaten together (for example the items of one thali) and return their ids.
+
+    entries is a list of dicts with food_id, grams, quantity, nutrients and was_corrected.
+    Everything is saved in one transaction: either every row is stored or none is.
+    """
     eaten_at = eaten_at or datetime.now()
     db = get_db()
+    try:
+        ids = [
+            _insert_log(db, user_id, entry["food_id"], meal_type, entry["grams"], entry["nutrients"],
+                        entry["quantity"], prediction_id, entry["was_corrected"], eaten_at)
+            for entry in entries
+        ]
+    except Exception:
+        db.rollback()
+        raise
+    db.commit()
+    return ids
+
+
+def _insert_log(db, user_id, food_id, meal_type, grams, nutrients, quantity,
+                prediction_id, was_corrected, eaten_at):
+    """INSERT one food_logs row without committing (the caller commits)."""
     cursor = db.execute(
         """INSERT INTO food_logs (user_id, food_id, prediction_id, meal_type, quantity, grams,
                                   calories, protein, carbs, fat, fiber, was_corrected,
@@ -254,7 +283,6 @@ def add_food_log(user_id, food_id, meal_type, grams, nutrients, quantity=None,
             eaten_at.date().isoformat(), eaten_at.strftime("%Y-%m-%d %H:%M:%S"),
         ),
     )
-    db.commit()
     return cursor.lastrowid
 
 

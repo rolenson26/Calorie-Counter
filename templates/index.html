@@ -3,8 +3,8 @@
   index.html - the home / Scan page. One screen shows one step at a time:
     1. Landing + capture : a short hero with the Take Photo / Upload Photo buttons (or log a food without one)
        -> a preview where the photo can be retaken or changed before it is sent to the AI
-    2. Confirm : check the AI's suggestion, choose the food and the portion
-    3. Result  : calories and nutrients, then save to today's log
+    2. Confirm : check the AI's suggestions and put one or more foods on "Your plate", each with its own portion
+    3. Result  : calories and nutrients (a total plus one row per food), then save them all to today's log
   static/js/main.js shows one step at a time and talks to the API.
 #}
 {% block title %}Scan food{% endblock %}
@@ -112,7 +112,7 @@
                 </div>
               </div>
 
-              <p class="demo-foot">Add the dal, curries and other dishes the same way, one by one.</p>
+              <p class="demo-foot">Tap the dal, curries and other dishes too: they all go on the same plate and are saved together.</p>
             </div>
           </figure>
         </div>
@@ -120,9 +120,9 @@
 
       <ol class="how-grid" aria-label="How it works">
         <li><span class="how-num" aria-hidden="true">1</span>
-          <div><strong>Snap or upload</strong><span>One dish per photo works best.</span></div></li>
+          <div><strong>Snap or upload</strong><span>One dish, or a whole plate.</span></div></li>
         <li><span class="how-num" aria-hidden="true">2</span>
-          <div><strong>Confirm the food</strong><span>Pick the AI's guess, or search all foods.</span></div></li>
+          <div><strong>Confirm the foods</strong><span>Tap the AI's guesses, or search all foods. Add as many as are on the plate.</span></div></li>
         <li><span class="how-num" aria-hidden="true">3</span>
           <div><strong>Choose the portion</strong><span>You set the amount; nothing is guessed from the photo.</span></div></li>
       </ol>
@@ -160,7 +160,7 @@
         <div class="d-flex justify-content-between align-items-start gap-2">
           <div>
             <p class="step-label">Step 2 of 3</p>
-            <h2 id="confirm-title" class="h4">Check the food and the portion</h2>
+            <h2 id="confirm-title" class="h4">Check the foods and portions</h2>
           </div>
           <button type="button" id="btn-change-photo" class="btn btn-outline-secondary btn-sm text-nowrap"
                   data-action="start-over">Change photo</button>
@@ -183,53 +183,32 @@
               <span id="confidence-badge" class="level-badge"></span>
               <div id="conf-meter" class="conf-meter" aria-hidden="true"><div id="conf-fill" class="conf-fill"></div></div>
               <p id="prediction-message" class="mb-2"></p>
+              <p id="multi-hint" class="small text-secondary mb-2">Tap every food on your plate. Missing one? Tap <b>+ Add a food</b>.</p>
               <div id="suggestions" class="suggestions" role="group" aria-label="Suggested foods"></div>
             </div>
 
-            <label for="food-search" class="form-label fw-semibold">Not right? Search all foods</label>
+            <label for="food-search" class="form-label fw-semibold">Not right, or something missing? Search all foods</label>
             <input id="food-search" class="form-control form-control-lg" type="search" placeholder="e.g. dal, paneer, dosa"
                    autocomplete="off" autocapitalize="none" spellcheck="false" enterkeyhint="search" aria-controls="search-results">
             <div id="search-results" class="list-group mt-1 search-results" aria-live="polite"></div>
-            <p class="small mt-2 mb-0">Food not in the list?
-              <a href="{{ url_for('pages.foods') }}#add-food" class="d-inline-block py-1">Add it with its nutrition values</a></p>
+            <p class="small mt-2 mb-0">Food not in the database?
+              <button type="button" id="btn-new-food" class="btn btn-link btn-sm p-0 align-baseline">Create it here</button></p>
           </div>
         </div>
 
         <hr class="my-4">
 
-        <div class="selected-food mb-3">
-          <span class="small text-secondary">Selected food</span>
-          <div id="selected-food" class="h5 mb-0 text-secondary">Choose a food above</div>
-        </div>
-
         <div class="row g-3">
-          <div class="col-md-7">
-            <label class="form-label fw-semibold" for="quantity">
-              How much? <span id="serving-hint" class="fw-normal text-secondary"></span>
-            </label>
-            <div class="portion-grid mb-2" role="group" aria-label="Quick portions">
-              <button type="button" class="btn btn-outline-secondary" data-quantity="0.5">½</button>
-              <button type="button" class="btn btn-outline-secondary" data-quantity="1">1</button>
-              <button type="button" class="btn btn-outline-secondary" data-quantity="1.5">1½</button>
-              <button type="button" class="btn btn-outline-secondary" data-quantity="2">2</button>
-              <button type="button" class="btn btn-outline-secondary" data-quantity="3">3</button>
+          <div class="col-md-8">
+            <div class="plate-head">
+              <h3 class="h5 mb-0">Your plate</h3>
+              <span id="plate-count" class="small text-secondary"></span>
             </div>
-            <div class="d-flex flex-wrap gap-2 align-items-center">
-              <div class="input-group qty-group">
-                <button type="button" class="btn btn-outline-secondary" data-step="-0.25" aria-label="Fewer servings">−</button>
-                <input id="quantity" type="number" inputmode="decimal" class="form-control quantity-input" min="0.25" max="20"
-                       step="0.25" value="1" aria-label="Number of servings">
-                <button type="button" class="btn btn-outline-secondary" data-step="0.25" aria-label="More servings">+</button>
-              </div>
-              <span id="portion-total" class="text-secondary"></span>
-            </div>
-            <label class="form-label small text-secondary mt-3 mb-1" for="grams">
-              Or the exact weight in grams, if you weighed it
-            </label>
-            <input id="grams" type="number" inputmode="decimal" class="form-control grams-input" min="1" max="3000" step="1"
-                   placeholder="optional">
+            <p id="plate-empty" class="text-secondary mb-0">Choose a food above. You can add several.</p>
+            <!-- One card per food, each with its own portion. Filled by main.js. -->
+            <ul id="plate-items" class="plate-list" aria-label="Foods on your plate"></ul>
           </div>
-          <div class="col-md-5">
+          <div class="col-md-4">
             <label class="form-label fw-semibold" for="meal-type">Meal</label>
             <select id="meal-type" class="form-select form-select-lg">
               {% for meal in meal_types %}<option value="{{ meal }}">{{ meal|capitalize }}</option>{% endfor %}
@@ -257,6 +236,10 @@
             <div id="result-serving" class="text-secondary"></div>
             <div id="result-confidence" class="small text-secondary mt-1"></div>
           </div>
+          <!-- One row per food when the plate has more than one; the big number above is the total. -->
+          <div class="col-12 order-sm-last">
+            <ul id="result-items" class="result-items" aria-label="Calories per food" hidden></ul>
+          </div>
           <div class="col-sm-7">
             <dl class="nutrient-grid">
               <div><dt>Protein</dt><dd><span id="result-protein">0</span> g</dd></div>
@@ -282,12 +265,12 @@
 
         <div id="before-save" class="action-bar d-grid gap-2 d-sm-flex mt-3">
           <button type="button" id="btn-save" class="btn btn-primary btn-lg">Save to today's log</button>
-          <button type="button" class="btn btn-outline-secondary btn-lg" data-action="back-to-confirm">Change food or portion</button>
+          <button type="button" class="btn btn-outline-secondary btn-lg" data-action="back-to-confirm">Change foods or portions</button>
         </div>
         <div id="after-save" class="d-grid gap-2 d-sm-flex mt-3" hidden>
           <button type="button" class="btn btn-primary btn-lg" data-action="start-over">Scan another meal</button>
           <button type="button" id="btn-another" class="btn btn-outline-primary btn-lg" data-action="another-item">
-            Add another item from this photo
+            Add more from this photo
           </button>
           <a class="btn btn-outline-secondary btn-lg" href="{{ url_for('pages.dashboard') }}">Go to dashboard</a>
         </div>
@@ -307,5 +290,6 @@
     <button type="button" id="camera-flip" class="btn btn-light camera-side" hidden>Flip</button>
   </div>
 </div>
+{% include "_new_food_modal.html" %}
 {% endblock %}
 {% block scripts %}<script src="{{ url_for('static', filename='js/main.js') }}"></script>{% endblock %}

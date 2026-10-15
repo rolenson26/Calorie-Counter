@@ -42,6 +42,11 @@ class Config:
     FOOD_GATE_THRESHOLD = 0.50                # below this, the photo "doesn't look like food"
     HIGH_CONFIDENCE = 0.60                    # top food at or above this is pre-selected
     LOW_CONFIDENCE = 0.30                     # top food below this: ask the user to search
+    # Suggestions shown after a scan: always the top 3, plus any other food scoring at least
+    # SUGGESTION_MIN_CONFIDENCE, up to MAX_SUGGESTIONS. On a plate with several dishes the
+    # scores spread out (e.g. 12 %, 12 %, 7 %, 7 %, 7 %...), so more of the dishes get offered.
+    SUGGESTION_MIN_CONFIDENCE = 0.04
+    MAX_SUGGESTIONS = 8
 
     # ---------------------------------------------------------------- nutrition
     DEFAULT_CALORIE_GOAL = 2000               # kcal per day; each user can change their own goal

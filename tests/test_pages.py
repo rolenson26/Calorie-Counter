@@ -25,6 +25,8 @@ def test_scan_page_has_camera_and_upload_inputs(auth_client):
     assert 'accept="image/jpeg,image/png,image/webp"' in html
     for meal in ("breakfast", "lunch", "dinner", "snack"):
         assert f'value="{meal}"' in html
+    assert 'id="plate-items"' in html and 'id="result-items"' in html    # several foods per photo
+    assert 'id="new-food-modal"' in html and '<option value="katori">katori</option>' in html   # create a food in place
 
 
 def test_foods_page_lists_serving_units(auth_client):

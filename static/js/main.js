@@ -4,8 +4,9 @@
   Flow (matches the HLD workflow):
     photo (live camera, phone camera app or file) -> preview: use / retake / change
     -> shrink in the browser -> POST /api/predict -> show top 3 + confidence
-    -> user confirms or searches the food, picks the portion -> POST /api/calculate
-    -> result card -> POST /api/food-log -> today's total and progress.
+    -> user puts one or more foods on "Your plate" (AI suggestions, search, recent foods),
+       each with its own portion -> POST /api/calculate for each food
+    -> result card (total + one row per food) -> POST /api/food-log/batch -> today's total and progress.
 
   Camera: where the browser allows it (HTTPS or localhost) the page opens its own live
   camera preview with getUserMedia. Otherwise "Take Photo" falls back to
@@ -22,13 +23,16 @@
   };
   const MAX_SIDE = 1280;                        // photos are shrunk to this before uploading
   const MAX_PICKED_BYTES = 30 * 1024 * 1024;    // refuse absurdly large files before even decoding them
+  const MAX_PLATE_ITEMS = 10;                   // the same limit as /api/food-log/batch
+  const QUICK_PORTIONS = [0.5, 1, 1.5, 2, 3];
 
   const state = {
     prediction: null,                   // answer from /api/predict (null = no photo)
-    food: null,                         // the food the user chose
-    portion: null,                      // {quantity} or {grams} used for the last calculation
+    plate: [],                          // [{key, food, quantity, grams}] - the foods the user chose
+    calculated: [],                     // [{food_id, portion, result}] from the last calculation (what Save stores)
     recent: [],                         // foods this user logged before (quick add)
   };
+  let plateKey = 0;                     // gives every plate card its own element ids
   const pending = { file: null, source: null, url: null };   // the photo waiting in the preview step
 
   /* ------------------------------------------------------------ helpers */
@@ -279,13 +283,13 @@
   }
 
   function renderRecent() {
-    const chips = () => state.recent.map((food) =>
-      el("button", { type: "button", class: "chip", onclick: () => quickAdd(food) }, food.name));
+    const chips = (onPick) => state.recent.map((food) =>
+      el("button", { type: "button", class: "chip", onclick: () => onPick(food) }, food.name));
     $("recent-box").hidden = !state.recent.length;
-    $("recent-foods").replaceChildren(...chips());
+    $("recent-foods").replaceChildren(...chips(quickAdd));                // landing page: start a new plate
     const showHere = state.recent.length > 0 && !state.prediction && !steps.confirm.hidden;
     $("recent-confirm").hidden = !showHere;
-    $("recent-confirm-foods").replaceChildren(...(showHere ? chips() : []));
+    $("recent-confirm-foods").replaceChildren(...(showHere ? chips(addFood) : []));   // confirm step: add to this plate
   }
 
   function quickAdd(food) {
@@ -296,13 +300,11 @@
 
   function showConfirm(prediction, { keepMeal = false, food = null } = {}) {
     state.prediction = prediction;
-    state.food = null;
+    state.plate = [];
     clearAlert($("confirm-alert"));
     $("food-search").value = "";
     $("search-results").replaceChildren();
-    $("quantity").value = 1;
-    $("grams").value = "";
-    if (!keepMeal) $("meal-type").value = defaultMealType();   // a thali's items share one meal
+    if (!keepMeal) $("meal-type").value = defaultMealType();   // more items from the same photo share one meal
     $("btn-change-photo").textContent = prediction ? "Change photo" : "Start over";
 
     const photo = $("photo-preview");
@@ -322,23 +324,25 @@
       $("conf-meter").hidden = !prediction.is_food;
       $("conf-fill").style.width = prediction.is_food ? `${Math.round(top.confidence * 100)}%` : "0%";
       $("prediction-message").textContent = prediction.message;
+      $("multi-hint").hidden = !prediction.is_food;
       renderSuggestions(prediction.is_food ? prediction.top_predictions : []);
-      if (level === "high") selectFood(top);
+      if (level === "high") addFood(top);
     } else {
       photo.hidden = true;
       photo.removeAttribute("src");
       $("no-photo").hidden = false;
       $("prediction-box").hidden = true;
     }
-    if (food) selectFood(food);
+    if (food) addFood(food);
 
-    updateSelectedFood();
+    renderPlate();
     showStep("confirm");
     renderRecent();
     const level = prediction && prediction.confidence_level;
     if (!food && (!prediction || level === "low" || level === "not_food")) $("food-search").focus({ preventScroll: true });
   }
 
+  /* The AI's suggestions (3 to 8 foods) as toggle buttons, then a "+ Add a food" tile for anything it missed. */
   function renderSuggestions(suggestions) {
     $("suggestions").replaceChildren(
       ...suggestions.map((s) =>
@@ -347,61 +351,142 @@
           class: "suggestion",
           "aria-pressed": "false",
           "data-food-id": s.food_id,
-          onclick: () => selectFood(s),
+          onclick: () => (onPlate(s.food_id) ? removeFood(s.food_id) : addFood(s)),   // tap again to take it off
         }, el("span", { class: "name" }, s.name), el("span", { class: "pct" }, formatPercent(s.confidence)))
-      )
+      ),
+      el("button", { type: "button", class: "suggestion suggestion-add", onclick: focusSearch },
+        el("span", { class: "name" }, "+ Add a food"))
     );
   }
 
-  function selectFood(food) {
-    state.food = {
-      id: food.food_id ?? food.id,
-      name: food.name,
-      serving_unit: food.serving_unit,
-      serving_grams: food.serving_grams,
-    };
+  /* The search box sits right under the suggestions: bring it into view and type straight away. */
+  function focusSearch() {
+    const search = $("food-search");
+    search.scrollIntoView({ behavior: "smooth", block: "center" });
+    search.focus({ preventScroll: true });
+  }
+
+  /* ------------------------------------------------------------ step 2: the plate (one or more foods) */
+
+  function onPlate(foodId) {
+    return state.plate.some((item) => item.food.id === foodId);
+  }
+
+  /* Suggestions use food_id, food lists use id: keep only what the plate needs. */
+  function plateFood(food) {
+    return { id: food.food_id ?? food.id, name: food.name, serving_unit: food.serving_unit, serving_grams: food.serving_grams };
+  }
+
+  function addFood(food) {
+    const entry = plateFood(food);
     $("food-search").value = "";
     $("search-results").replaceChildren();
     clearAlert($("confirm-alert"));
-    updateSelectedFood();
-  }
-
-  function updateSelectedFood() {
-    const food = state.food;
-    const box = $("selected-food");
-    box.textContent = food ? food.name : "Choose a food above";
-    box.classList.toggle("text-secondary", !food);
-    $("serving-hint").textContent = food ? `(1 ${food.serving_unit} = ${formatGrams(food.serving_grams)} g)` : "";
-    $("btn-calculate").disabled = !food;
-    for (const button of $("suggestions").children) {
-      button.setAttribute("aria-pressed", String(Boolean(food) && Number(button.dataset.foodId) === food.id));
+    if (onPlate(entry.id)) {                             // already there: just show it
+      renderPlate();
+      return;
     }
-    updatePortionTotal();
-  }
-
-  function readPortion() {
-    const grams = $("grams").value.trim();
-    return grams !== "" ? { grams: Number(grams) } : { quantity: Number($("quantity").value) };
-  }
-
-  function updatePortionTotal() {
-    const portion = readPortion();
-    for (const button of document.querySelectorAll("[data-quantity]")) {
-      const active = portion.quantity === Number(button.dataset.quantity);
-      button.classList.toggle("active", active);
-      button.setAttribute("aria-pressed", String(active));
+    if (state.plate.length >= MAX_PLATE_ITEMS) {
+      showAlert($("confirm-alert"), `You can add up to ${MAX_PLATE_ITEMS} foods at once. Save these, then add the rest.`, "warning");
+      return;
     }
-    const text = state.food && portion.quantity > 0
-      ? `= ${formatGrams(Math.round(portion.quantity * state.food.serving_grams * 10) / 10)} g`
-      : "";
-    $("portion-total").textContent = text;
+    state.plate.push({ key: ++plateKey, food: entry, quantity: 1, grams: "" });
+    renderPlate();
   }
 
-  function stepQuantity(delta) {
-    const current = Number($("quantity").value) || 1;
-    $("quantity").value = Math.min(20, Math.max(0.25, current + delta));
-    $("grams").value = "";
-    updatePortionTotal();
+  function removeFood(foodId) {
+    state.plate = state.plate.filter((item) => item.food.id !== foodId);
+    clearAlert($("confirm-alert"));
+    renderPlate();
+  }
+
+  function renderPlate() {
+    const count = state.plate.length;
+    $("plate-items").replaceChildren(...state.plate.map(buildPlateItem));
+    $("plate-empty").hidden = count > 0;
+    $("plate-count").textContent = count > 1 ? `${count} foods` : "";
+    $("btn-calculate").disabled = count === 0;
+    $("btn-calculate").textContent = count > 1 ? `Calculate Calories (${count} foods)` : "Calculate Calories";
+    for (const button of $("suggestions").querySelectorAll("[data-food-id]")) {
+      button.setAttribute("aria-pressed", String(onPlate(Number(button.dataset.foodId))));
+    }
+  }
+
+  /* {grams} when the user typed a weight, otherwise {quantity} in servings. */
+  function portionOf(item) {
+    return item.grams !== "" ? { grams: Number(item.grams) } : { quantity: Number(item.quantity) };
+  }
+
+  /* One card on the plate: name, quick portions, a − / + stepper and an optional weight in grams. */
+  function buildPlateItem(item) {
+    const { food } = item;
+    const id = `plate-${item.key}`;
+    const total = el("span", { class: "text-secondary" });
+    const quantity = el("input", {
+      id: `${id}-qty`, type: "number", inputmode: "decimal", class: "form-control", min: "0.25", max: "20",
+      step: "0.25", value: String(item.quantity), "aria-label": `Servings of ${food.name}`,
+    });
+    const grams = el("input", {
+      id: `${id}-grams`, type: "number", inputmode: "decimal", class: "form-control grams-input", min: "1",
+      max: "3000", step: "1", placeholder: "optional", value: item.grams,
+    });
+    const quick = QUICK_PORTIONS.map((amount) =>
+      el("button", { type: "button", class: "btn btn-outline-secondary", "data-quantity": amount,
+        onclick: () => setQuantity(amount) }, formatQuantity(amount)));
+
+    function refresh() {
+      const portion = portionOf(item);
+      for (const button of quick) {
+        const active = portion.quantity === Number(button.dataset.quantity);
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
+      }
+      total.textContent = portion.quantity > 0
+        ? `= ${formatGrams(Math.round(portion.quantity * food.serving_grams * 10) / 10)} g`
+        : "";
+    }
+
+    function setQuantity(amount) {
+      item.quantity = amount;
+      item.grams = "";
+      quantity.value = amount;
+      grams.value = "";
+      refresh();
+    }
+
+    quantity.addEventListener("input", () => {
+      item.quantity = Number(quantity.value);
+      item.grams = "";
+      grams.value = "";
+      refresh();
+    });
+    grams.addEventListener("input", () => {
+      item.grams = grams.value.trim();
+      refresh();
+    });
+    const step = (delta) => setQuantity(Math.min(20, Math.max(0.25, (Number(item.quantity) || 1) + delta)));
+
+    const card = el("li", { class: "plate-item" },
+      el("div", { class: "plate-item-head" },
+        el("div", { class: "plate-item-name" },
+          el("div", { class: "fw-semibold" }, food.name),
+          el("div", { class: "small text-secondary" }, `1 ${food.serving_unit} = ${formatGrams(food.serving_grams)} g`)),
+        el("button", { type: "button", class: "btn btn-outline-secondary btn-sm", "aria-label": `Remove ${food.name}`,
+          onclick: () => removeFood(food.id) }, "Remove")),
+      el("div", { class: "portion-grid", role: "group", "aria-label": `Quick portions for ${food.name}` }, ...quick),
+      el("div", { class: "d-flex flex-wrap gap-2 align-items-center mt-2" },
+        el("div", { class: "input-group qty-group" },
+          el("button", { type: "button", class: "btn btn-outline-secondary", "aria-label": `Fewer servings of ${food.name}`,
+            onclick: () => step(-0.25) }, "−"),
+          quantity,
+          el("button", { type: "button", class: "btn btn-outline-secondary", "aria-label": `More servings of ${food.name}`,
+            onclick: () => step(0.25) }, "+")),
+        total),
+      el("div", { class: "grams-row" },
+        el("label", { class: "small text-secondary", for: `${id}-grams` }, "Or the exact weight in grams"),
+        grams));
+    refresh();
+    return card;
   }
 
   /* Search the whole food list. A counter drops answers that arrive out of order. */
@@ -427,52 +512,115 @@
   }
 
   function renderSearchResults(foods, query) {
-    const box = $("search-results");
-    if (!foods.length) {
-      box.replaceChildren(el("div", { class: "list-group-item text-secondary" },
-        `No food called "${query}". `, el("a", { href: "/foods#add-food" }, "Add it"), "."));
-      return;
-    }
-    box.replaceChildren(...foods.map((food) =>
-      el("button", { type: "button", class: "list-group-item list-group-item-action", onclick: () => selectFood(food) },
+    const create = el("button", { type: "button", class: "list-group-item list-group-item-action create-food",
+      onclick: () => openNewFood(query) },
+      el("span", { class: "fw-semibold" }, `+ Create "${query}" as a new food`),
+      el("span", { class: "small text-secondary" }, "Enter its nutrition values here; it goes straight on your plate"));
+    const header = foods.length ? null : el("div", { class: "list-group-item text-secondary" }, `No food called "${query}".`);
+    $("search-results").replaceChildren(...(header ? [header] : []), ...foods.map((food) =>
+      el("button", { type: "button", class: "list-group-item list-group-item-action", onclick: () => addFood(food) },
         el("span", { class: "fw-semibold" }, food.name),
         el("span", { class: "small text-secondary" },
           `1 ${food.serving_unit} = ${formatGrams(food.serving_grams)} g · ${formatNumber(food.calories_per_100g)} kcal per 100 g`))
-    ));
+    ), create);
   }
 
+  /* ------------------------------------------------------------ step 2: create a missing food without leaving the page */
+
+  let newFoodModal = null;
+
+  function openNewFood(name = "") {
+    const form = $("new-food-form");
+    form.reset();
+    $("nf-name").value = name;
+    clearAlert($("new-food-alert"));
+    newFoodModal = newFoodModal || bootstrap.Modal.getOrCreateInstance($("new-food-modal"));
+    $("new-food-modal").addEventListener("shown.bs.modal", () => $(name ? "nf-grams" : "nf-name").focus(), { once: true });
+    newFoodModal.show();
+  }
+
+  /* POST /api/foods checks every value and answers with all the problems at once, shown as a list. */
+  async function saveNewFood(event) {
+    event.preventDefault();
+    const body = Object.fromEntries(new FormData(event.target).entries());
+    $("new-food-save").disabled = true;
+    clearAlert($("new-food-alert"));
+    try {
+      const { food } = await api("POST", "/api/foods", body);
+      newFoodModal.hide();
+      addFood(food);
+      showAlert($("confirm-alert"), `${food.name} was added to the food database and to your plate.`, "success");
+    } catch (error) {
+      const problems = (error.data && error.data.errors) || [error.message];
+      $("new-food-alert").replaceChildren(el("div", { class: "alert alert-danger mb-0", role: "alert" },
+        el("ul", { class: "mb-0 ps-3" }, ...problems.map((p) => el("li", {}, p)))));
+    } finally {
+      $("new-food-save").disabled = false;
+    }
+  }
+
+  /* Ask the server for every food on the plate (in parallel). The server's numbers are the ones shown and saved. */
   async function calculate() {
     clearAlert($("confirm-alert"));
-    if (!state.food) return;
-    const portion = readPortion();
+    if (!state.plate.length) return;
+    const button = $("btn-calculate");
+    button.disabled = true;
     try {
-      const result = await api("POST", "/api/calculate", { food_id: state.food.id, ...portion });
-      state.portion = portion;
-      showResult(result);
+      state.calculated = await Promise.all(state.plate.map(async (item) => {
+        const portion = portionOf(item);
+        try {
+          const result = await api("POST", "/api/calculate", { food_id: item.food.id, ...portion });
+          return { food_id: item.food.id, portion, result };
+        } catch (error) {
+          error.message = `${item.food.name}: ${error.message}`;    // say which food has the problem
+          throw error;
+        }
+      }));
+      showResult(state.calculated.map((entry) => entry.result));
     } catch (error) {
       showAlert($("confirm-alert"), error.message);
+    } finally {
+      button.disabled = state.plate.length === 0;
     }
   }
 
   /* ------------------------------------------------------------ step 3: result and save */
 
-  function confidenceNote() {
+  function confidenceNote(foodId) {
     const prediction = state.prediction;
     if (!prediction) return "Chosen by you (no photo)";
     const top = prediction.top_predictions[0];
-    if (prediction.is_food && top && top.food_id === state.food.id) {
+    if (prediction.is_food && top && top.food_id === foodId) {
       return `AI suggestion, ${LEVEL_TEXT[prediction.confidence_level].toLowerCase()} (${formatPercent(top.confidence)})`;
     }
     return top && prediction.is_food ? `Chosen by you (the AI suggested ${top.name})` : "Chosen by you";
   }
 
-  function showResult(result) {
-    $("result-calories").textContent = formatNumber(result.calories);
-    $("result-food").textContent = result.food.name;
-    $("result-serving").textContent = portionText(result.quantity, result.food.serving_unit, result.grams);
-    $("result-confidence").textContent = confidenceNote();
+  function showResult(results) {
+    const sum = (key) => results.reduce((total, result) => total + result[key], 0);
+    $("result-calories").textContent = formatNumber(sum("calories"));
     for (const key of ["protein", "carbs", "fat", "fiber"]) {
-      $(`result-${key}`).textContent = formatNumber(result[key], 1);
+      $(`result-${key}`).textContent = formatNumber(Math.round(sum(key) * 10) / 10, 1);
+    }
+
+    if (results.length === 1) {
+      const [result] = results;
+      $("result-food").textContent = result.food.name;
+      $("result-serving").textContent = portionText(result.quantity, result.food.serving_unit, result.grams);
+      $("result-confidence").textContent = confidenceNote(result.food.id);
+      $("result-items").hidden = true;
+      $("result-items").replaceChildren();
+    } else {
+      $("result-food").textContent = `${results.length} foods`;
+      $("result-serving").textContent = `${formatGrams(Math.round(sum("grams") * 10) / 10)} g in total`;
+      $("result-confidence").textContent = state.prediction ? "From your photo" : "Chosen by you (no photo)";
+      $("result-items").replaceChildren(...results.map((result) =>
+        el("li", { class: "result-item" },
+          el("div", { class: "meal-info" },
+            el("div", { class: "meal-name" }, result.food.name),
+            el("div", { class: "small text-secondary" }, portionText(result.quantity, result.food.serving_unit, result.grams))),
+          el("div", { class: "meal-kcal" }, `${formatNumber(result.calories)} kcal`))));
+      $("result-items").hidden = false;
     }
     clearAlert($("result-alert"));
     $("today-progress").hidden = true;
@@ -498,17 +646,22 @@
     $("today-progress").hidden = false;
   }
 
+  /* Every food is saved in one request: either all of them are stored or none is. */
   async function save() {
     $("btn-save").disabled = true;
-    const body = { food_id: state.food.id, meal_type: $("meal-type").value, ...state.portion };
+    const body = {
+      meal_type: $("meal-type").value,
+      items: state.calculated.map((entry) => ({ food_id: entry.food_id, ...entry.portion })),
+    };
     if (state.prediction) body.prediction_id = state.prediction.prediction_id;
     try {
-      const data = await api("POST", "/api/food-log", body);
-      showAlert($("result-alert"), "Saved to today's log.", "success");
+      const data = await api("POST", "/api/food-log/batch", body);
+      const count = data.log_ids.length;
+      showAlert($("result-alert"), count > 1 ? `Saved ${count} foods to today's log.` : "Saved to today's log.", "success");
       showTodayProgress(data.today);
       $("before-save").hidden = true;
       $("after-save").hidden = false;
-      $("btn-another").textContent = state.prediction ? "Add another item from this photo" : "Log another food";
+      $("btn-another").textContent = state.prediction ? "Add more from this photo" : "Log another food";
     } catch (error) {
       showAlert($("result-alert"), friendlyError(error));
       $("btn-save").disabled = false;
@@ -517,7 +670,8 @@
 
   function startOver() {
     state.prediction = null;
-    state.food = null;
+    state.plate = [];
+    state.calculated = [];
     releasePending();
     clearAlert($("capture-alert"));
     showStep("capture");
@@ -564,21 +718,8 @@
   });
 
   $("food-search").addEventListener("input", onSearchInput);
-  for (const button of document.querySelectorAll("[data-quantity]")) {
-    button.addEventListener("click", () => {
-      $("quantity").value = button.dataset.quantity;
-      $("grams").value = "";
-      updatePortionTotal();
-    });
-  }
-  for (const button of document.querySelectorAll("[data-step]")) {
-    button.addEventListener("click", () => stepQuantity(Number(button.dataset.step)));
-  }
-  $("quantity").addEventListener("input", () => {
-    $("grams").value = "";
-    updatePortionTotal();
-  });
-  $("grams").addEventListener("input", updatePortionTotal);
+  $("btn-new-food").addEventListener("click", () => openNewFood($("food-search").value.trim()));
+  $("new-food-form").addEventListener("submit", saveNewFood);
   $("btn-calculate").addEventListener("click", calculate);
   $("btn-save").addEventListener("click", save);
 

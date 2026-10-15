@@ -7,7 +7,7 @@ import pytest
 from PIL import Image
 
 from config import Config
-from services.food_classifier import FoodClassifier, confidence_level, prompts_for
+from services.food_classifier import FoodClassifier, Guess, confidence_level, pick_suggestions, prompts_for
 
 
 @pytest.mark.parametrize("is_food, top, expected", [
@@ -20,6 +20,23 @@ from services.food_classifier import FoodClassifier, confidence_level, prompts_f
 ])
 def test_confidence_level(is_food, top, expected):
     assert confidence_level(is_food, top) == expected
+
+
+def ranked(*scores):
+    return [Guess(i, f"Food {i}", score) for i, score in enumerate(scores, start=1)]
+
+
+def test_one_clear_dish_gives_just_the_top_3():
+    picked = pick_suggestions(ranked(0.90, 0.03, 0.02, 0.01, 0.01))
+    assert [g.food_id for g in picked] == [1, 2, 3]          # always 3, even below the minimum
+
+
+def test_a_plate_of_several_dishes_offers_more():
+    # Real scores for a plate of aloo matar, khichdi and chana dal: close together.
+    picked = pick_suggestions(ranked(0.123, 0.119, 0.072, 0.070, 0.068, 0.065, 0.060, 0.051, 0.051, 0.043, 0.039))
+    assert len(picked) == 8                                  # capped at the maximum
+    assert pick_suggestions(ranked(0.157, 0.155, 0.143, 0.071, 0.071, 0.046, 0.038)) == \
+        ranked(0.157, 0.155, 0.143, 0.071, 0.071, 0.046)     # the 0.038 food is below 4 %
 
 
 def test_three_sentences_per_food():
@@ -56,6 +73,7 @@ def test_result_has_the_shape_the_api_expects(classifier):
     assert {g.food_id for g in result.top3} == {1, 2, 3}
     assert 0.99 <= sum(g.confidence for g in result.top3) <= 1.01     # only 3 labels, so they add up to 1
     assert result.top3[0].confidence >= result.top3[1].confidence
+    assert result.suggestions == result.top3                          # with only 3 labels, nothing more to offer
 
 
 @needs_model

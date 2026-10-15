@@ -5,7 +5,7 @@
 >
 > **Note on `PROJECT_STATUS.md`:** it was rewritten on 2026-10-15 as a short status page that agrees with this file. The older audit it replaced (2026-10-10) is gone.
 >
-> **Updates after the audit (2026-10-15):** project put under git and pushed to https://github.com/rolenson26/Calorie-Counter; README corrupted lines and test count fixed; developer's manual photo tests recorded (§4 #6–#7). The developer has **deferred** HLD/report/viva documents, CSRF protection and multi-food detection.
+> **Updates after the audit (2026-10-15):** project put under git and pushed to https://github.com/rolenson26/Calorie-Counter; README corrupted lines and test count fixed; developer's manual photo tests recorded (§4 #6–#7). **Multi-food selection in one step implemented** (§4 #7, §8, T12), then **3–8 AI suggestions per photo** (`pick_suggestions`, `SUGGESTION_MIN_CONFIDENCE=0.04`, `MAX_SUGGESTIONS=8`), a **"+ Add a food"** tile, and **creating a missing food in a pop-up on the scan page** (`templates/_new_food_modal.html`, `POST /api/foods`). The "AI's top guess / AI suggestion" labels were removed from result rows at the developer's request. Tests now **183 passed**. The developer has **deferred** HLD/report/viva documents and CSRF protection.
 
 ---
 
@@ -18,7 +18,7 @@
 | **Overall status** | Core workflow **photo → AI guess → confirm/correct → portion → calories → save → dashboard/history** is implemented end to end. **165 automated tests pass** (verified this audit). The UI JavaScript has **no automated tests** and I did not open it in a browser |
 | **Completion estimate** | **≈ 70 %** weighted (see §4 for the calculation); **63 %** strict (Complete only). This counts software *and* documentation. The software alone is clearly further along than the documentation |
 | **Main working features** | Register/login, photo upload, image validation, CLIP zero-shot recognition of 73 foods with confidence levels, not-food gate, manual food search/correction, portion selection, calorie and macro calculation, SQLite storage, meal edit/delete, history, dashboard data, quick-add recent foods, unused-photo cleanup, dark mode, offline model loading |
-| **Main incomplete features** | One food label per photo (no multi-food detection; confirmed by the developer's own tests); portion is user-chosen, never estimated from the photo; dashboard charts and mobile layout not systematically checked; no CSRF protection (deferred); no HLD diagrams or report files in the repo (deferred) |
+| **Main incomplete features** | The AI offers at most 3 suggestions per photo and does not locate separate items (the user taps the foods that are present, now several at once); portion is user-chosen, never estimated from the photo; dashboard charts and mobile layout not systematically checked; no CSRF protection (deferred); no HLD diagrams or report files in the repo (deferred) |
 | **Critical blockers** | **None.** No P0 issue found |
 | **Recommended next task** | Finish the browser dry run (dashboard, history, edit/delete, phone) and fix what it reveals (§13, T1–T2). Multi-food detection is the main feature gap, scheduled as future work |
 | **Last audit date** | 2026-10-15 |
@@ -154,7 +154,7 @@ Legend: **T** = covered by the pytest run I executed (165 passed). **R** = code 
 | 4 | Image validation | **Complete** | `image_processor.py`: extension allow-list, Pillow must decode as JPEG/MPO/PNG/WEBP, 40 MP cap, 8 MB request cap | T (`test_image_processor.py`, API tests) | HEIC unsupported (documented) |
 | 5 | Image preprocessing | **Complete** | EXIF rotate, RGB, ≤1024 px, re-encode JPEG (drops EXIF/GPS); CLIP processor resizes to 224 px | T | – |
 | 6 | AI food classification | **Partial** | `FoodClassifier.classify`: CLIP zero-shot over the 73 foods | T: 2 tests with real CLIP on a plain colour image (shape only, not accuracy). **Manual (developer, 2026-10-15):** single foods from the 73-food list are recognised well from different angles (informal, no counted figure) | Only the 73 DB foods are predictable. One label per photo. README accuracy (77 % top-1 / 93 % top-3 on 658 photos) **cannot be reproduced from the repo** |
-| 7 | Multiple-food detection | **Not Implemented** | `classify` returns one top-3 list per photo | **Manual (developer):** with 3–4 foods on one plate, several of them appear among the suggestions, but the user must pick one; calories are calculated for that one only | Workaround exists: after saving, "Add another item from this photo" (`main.js: save`, `another-item` action) logs the next item from the same photo. **Future work:** a real multi-food flow (e.g. multi-select from suggestions, or region/crop-based detection) |
+| 7 | Multiple foods per photo | **Complete** (user-selected; added 2026-10-15) | "Your plate" in `templates/index.html` + `static/js/main.js` (`addFood`, `removeFood`, `renderPlate`, `buildPlateItem`, `calculate`, `save`); `POST /api/food-log/batch` (`routes/api.py: add_food_logs`); `db.add_food_logs` (one transaction) | T: 13 API cases + 2 DB tests. **Browser-verified** (headless Edge, phone width, real CLIP, thali photo): select/deselect, search add, per-food portions, per-food error, total + rows, back keeps plate, save 3 meals, dashboard total | The AI ranks the whole photo and does not *detect* separate items; it offers 3–8 likely foods (`pick_suggestions`) and the user taps the ones that are there, adds others with "+ Add a food", or creates a missing food in a pop-up. Up to 10 foods per save. `predictions.top3_json` still stores only the top 3. Before this change only one food could be chosen per calculation (developer's manual test) |
 | 8 | Confidence score | **Complete** | `_probabilities` (softmax over labels), `confidence_level`; thresholds in `config.py` | T (`confidence_level`) | Relative, not calibrated (see §6) |
 | 9 | Unknown / not-food handling | **Complete** | Food gate (5 food vs 7 non-food prompts) → `not_food`; low level asks the user to search; `LEVEL_MESSAGES` | T (API tests with fake classifier) | Gate and thresholds tuned by hand |
 | 10 | Manual food correction | **Complete** | `GET /api/foods?q=`, `add_food_log` sets `was_corrected`; search UI in `main.js` | T (API); UI not tested | – |
@@ -176,9 +176,9 @@ Legend: **T** = covered by the pytest run I executed (165 passed). **R** = code 
 | 26 | Technical documentation | **Partial** | `README.md` (good), docstrings in every module | – | README has 2 corrupted lines and a stale test count (§10) |
 | 27 | HLD and college documents | **Not Implemented** (in repo) | No `docs/`; README links to two external claude.ai artifact pages ("Architecture & HLD", "Project report") that I **could not inspect** | – | Module docstrings cite "HLD Module 2/3/4/6" and "section 4/9/10", so an HLD probably exists elsewhere |
 
-**Counts (27 features):** Complete **17** · Partial **4** (#6, #24, #25, #26) · Unverified **4** (#1, #3, #18, #21) · Not Implemented **2** (#7, #27) · Blocked **0**.
+**Counts (27 features, after the multi-food change):** Complete **18** · Partial **4** (#6, #24, #25, #26) · Unverified **4** (#1, #3, #18, #21) · Not Implemented **1** (#27) · Blocked **0**.
 
-**Completion calculation (my own convention):** weighted = (Complete × 1 + Partial × 0.5 + Unverified/Not Implemented/Blocked × 0) / total = (17 + 2) / 27 = **70.4 %**. Strict = 17 / 27 = **63.0 %**. Unverified counts as zero, because nothing was observed working.
+**Completion calculation (my own convention):** weighted = (Complete × 1 + Partial × 0.5 + Unverified/Not Implemented/Blocked × 0) / total = (18 + 2) / 27 = **74.1 %**. Strict = 18 / 27 = **66.7 %**. (Before the multi-food change: 70.4 % / 63.0 %.) Unverified counts as zero, because nothing was observed working.
 
 ---
 
@@ -327,6 +327,7 @@ All routes need login (JSON 401 otherwise) except `/api/status`. Responses are `
 | POST | `/api/predict` | Photo → top-3 foods | multipart field `image` | `prediction_id`, `image_url`, `is_food`, `food_probability`, `confidence_level`, `top_predictions[]`, `message` | Implemented, tested (fake classifier) |
 | POST | `/api/calculate` | Preview nutrition (nothing saved) | JSON `food_id` + (`quantity` xor `grams`) | `food`, `grams`, `quantity`, `calories`, `protein`, `carbs`, `fat`, `fiber` | Implemented, tested |
 | POST | `/api/food-log` | Save a meal (201) | JSON `food_id`, `meal_type`, `quantity`/`grams`, optional `prediction_id` | `log_id`, `nutrition`, `today{consumed,goal,remaining}` | Implemented, tested |
+| POST | `/api/food-log/batch` | Save several foods from one plate (201), all-or-nothing | JSON `meal_type`, optional `prediction_id`, `items: [{food_id, quantity` or `grams}]` (1–10) | `log_ids`, `items[]` (food + nutrition), `totals`, `today` | Implemented, tested, browser-verified |
 | PUT | `/api/food-log/<id>` | Change meal type / portion | JSON `meal_type`, `quantity` or `grams` | `log_id`, `nutrition`, `meal_type`, `day` | Implemented, tested |
 | DELETE | `/api/food-log/<id>` | Delete own meal | – | `success` | Implemented, tested |
 | GET | `/api/history` | Meals in a date range (`from`, `to`, ≤31 days, default last 7) | query | `from`, `to`, `logs[]` | Implemented, tested |
@@ -347,7 +348,7 @@ All routes need login (JSON 401 otherwise) except `/api/status`. Responses are `
 ```powershell
 .venv\Scripts\python -m pytest -p no:cacheprovider -q
 ```
-**Result I observed on 2026-10-15: 165 passed, 0 failed, 0 skipped, in 15.9 s.** (The README says 164; the correct current number is 165.)
+**Result I observed on 2026-10-15: 165 passed, 0 failed, 0 skipped, in 15.9 s.** After the multi-food change the same day: **180 passed** (+1 login check, +12 batch-API cases, +2 database tests; per-module numbers below are from before that change).
 
 | Module | Tests | Type |
 |---|---|---|
@@ -424,7 +425,8 @@ Severity scale: Critical / High / Medium / Low. There are **no Critical or High 
 | I13 | Low | Suspicion | A custom food added while the model is still loading might not become a label until restart (`set_foods` reads the foods list when loading finishes) | `app.py`, `api.add_food` | Low priority; test if it matters |
 | I14 | Low | Confirmed | Live camera preview works only on HTTPS or localhost; over plain LAN HTTP phones fall back to the camera app | README, `main.js` | Documented behaviour |
 | I15 | – | **Fixed 2026-10-15** | `PROJECT_STATUS.md` was outdated | – | Rewritten as a short current status page |
-| I16 | Medium | Confirmed (developer test) | **Multi-food photos give calories for one food only**; the user must use "Add another item from this photo" for each extra item | §4 #7 | Future work (developer's choice) |
+| I16 | – | **Fixed 2026-10-15** | Multi-food photos gave calories for one food only | §4 #7 | Several foods can now be selected and saved in one step |
+| I17 | Low | Confirmed (open question) | In History, the 2nd and later foods of a plate show "Corrected (AI said …)", even when they were among the AI's suggestions, because `was_corrected` means "not the AI's top guess" (also used by `db.get_ai_accuracy`) | `routes/api.py: add_food_logs`, `static/js/meal-ui.js: mealAiNote` | Decide: keep (top-1 accuracy stays simple) or count any top-3 suggestion as "AI right" / add a separate label |
 
 **What changed since the older 2026-10-10 audit:** test count 165 vs 146; `style.css` now has media queries; unused-photo cleanup now exists (`services/cleanup.py`, 6 tests); live `getUserMedia` camera preview, edit-meal modal, quick-add recent foods and dark mode now exist; dev DB now has 2 users, 7 predictions and 1 saved meal (it had 1, 3 and 0).
 
@@ -526,7 +528,7 @@ Effort is a rough estimate in hours for one student. **Do not rebuild** authenti
 | T9 | P1 | Demo script and viva Q&A (one sure hit, one medium, one non-food photo ready) | Not done | Viva readiness | new `docs/viva.md` | T1–T3 | Rehearsed run <5 min; answers cover §6 | 2 |
 | T10 | P3 | Tidy-up: align model-size text; optionally remove duplicate weights | README lines and test count **fixed**; rest not done | I8–I10 | `README.md`, `config.py`, `models/` | – | Text consistent; model still loads | 0.5 |
 | T11 | P3 | Refresh `PROJECT_STATUS.md` | **Done 2026-10-15** | Avoid conflicting facts | `PROJECT_STATUS.md` | – | Only one current status file | 0.1 |
-| T12 | P2 (future) | **Multi-food photos**: let the user log several foods from one photo in one step (e.g. multi-select the suggestions, each with its own portion) | Not started; deferred by developer | Main feature gap found in manual testing (I16) | `static/js/main.js`, `templates/index.html`, possibly `routes/api.py` (a batch save) and `services/food_classifier.py` | T1 | User can pick 2–4 foods from one photo, set each portion, and save them together; existing single-food flow and tests still pass | 4–8 |
+| T12 | P2 | **Multi-food photos**: let the user log several foods from one photo in one step (e.g. multi-select the suggestions, each with its own portion) | **Done 2026-10-15** | Main feature gap found in manual testing (I16) | `static/js/main.js`, `templates/index.html`, possibly `routes/api.py` (a batch save) and `services/food_classifier.py` | T1 | User can pick 2–4 foods from one photo, set each portion, and save them together; existing single-food flow and tests still pass | 4–8 |
 
 **Deferred by the developer (2026-10-15):** T5 (HLD diagrams), T8 (report), T9 (viva), because they are not needed to run the program. T7 (CSRF) is also deferred. Do them later only if the college submission requires them.
 

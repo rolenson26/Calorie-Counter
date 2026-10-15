@@ -15,7 +15,8 @@ Two questions are asked about every photo
     2. Which food: which of our foods is it?  (top 3, each with a confidence)
 
 Input : an RGB PIL image (from image_processor)
-Output: a ClassificationResult (is_food, food_probability, level, top3)
+Output: a ClassificationResult (is_food, food_probability, level, top3, suggestions)
+        suggestions = the top 3 plus other likely foods (for plates with several dishes)
 
 Command line (run from the project folder):
     python -m services.food_classifier photo.jpg [more.jpg ...]
@@ -24,7 +25,7 @@ Command line (run from the project folder):
 """
 import threading
 import time
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 
 import torch
 
@@ -61,6 +62,7 @@ class ClassificationResult:
     level: str                 # "high", "medium", "low" or "not_food"
     top3: list                 # list of Guess, best first
     seconds: float             # how long the model took
+    suggestions: list = field(default_factory=list)   # top3 + other likely foods, best first (shown to the user)
 
     def as_dict(self):
         return asdict(self)
@@ -71,6 +73,15 @@ def prompts_for(food):
     reliable than one sentence: on our test photos top-1 accuracy rose from 73% to 77%."""
     name = food["name"].replace(" / ", " or ")
     return [food["ai_prompt"], f"a photo of {name}, a type of food.", f"a close-up photo of {name}."]
+
+
+def pick_suggestions(guesses, top_k=3, minimum=0.04, maximum=8):
+    """The foods to offer the user: always the first top_k, then any other guess scoring at
+    least `minimum`, at most `maximum` in all. `guesses` must be sorted best first.
+
+    CLIP scores the whole photo, it does not find separate items. But when a plate holds
+    several dishes, their scores are close to each other, so they tend to pass `minimum`."""
+    return [g for i, g in enumerate(guesses) if i < top_k or g.confidence >= minimum][:maximum]
 
 
 def confidence_level(is_food, top_confidence, high=0.60, low=0.30):
@@ -87,7 +98,8 @@ def confidence_level(is_food, top_confidence, high=0.60, low=0.30):
 class FoodClassifier:
     """Loads CLIP once and classifies photos against the current list of foods."""
 
-    def __init__(self, model_name, cache_dir=None, high=0.60, low=0.30, gate=0.50):
+    def __init__(self, model_name, cache_dir=None, high=0.60, low=0.30, gate=0.50,
+                 suggestion_min=0.04, max_suggestions=8):
         # Imported here so that tests and pages that never use the model start quickly.
         from transformers import CLIPModel, CLIPProcessor
 
@@ -103,6 +115,7 @@ class FoodClassifier:
         self.model.eval()                                  # inference mode: no training
         self.scale = self.model.logit_scale.exp().item()   # CLIP's learned scale (100)
         self.high, self.low, self.gate = high, low, gate
+        self.suggestion_min, self.max_suggestions = suggestion_min, max_suggestions
 
         self._lock = threading.Lock()                      # labels can change while a request runs
         self.foods = []                                    # same order as the rows of food_vectors
@@ -174,11 +187,12 @@ class FoodClassifier:
         if not foods:
             raise RuntimeError("No foods loaded: call set_foods() first")
         probabilities = self._probabilities(image_vector, vectors)
-        best = probabilities.topk(min(top_k, len(foods)))
-        top = [
+        best = probabilities.topk(min(max(top_k, self.max_suggestions), len(foods)))
+        ranked = [
             Guess(foods[i]["id"], foods[i]["name"], round(p, 4))
             for p, i in zip(best.values.tolist(), best.indices.tolist())
         ]
+        top = ranked[:top_k]
 
         return ClassificationResult(
             is_food=is_food,
@@ -186,6 +200,7 @@ class FoodClassifier:
             level=confidence_level(is_food, top[0].confidence, self.high, self.low),
             top3=top,
             seconds=round(time.perf_counter() - start, 3),
+            suggestions=pick_suggestions(ranked, top_k, self.suggestion_min, self.max_suggestions),
         )
 
 
@@ -205,6 +220,7 @@ def _load_classifier():
     classifier = FoodClassifier(
         Config.MODEL_NAME, Config.MODEL_CACHE_DIR,
         Config.HIGH_CONFIDENCE, Config.LOW_CONFIDENCE, Config.FOOD_GATE_THRESHOLD,
+        Config.SUGGESTION_MIN_CONFIDENCE, Config.MAX_SUGGESTIONS,
     )
     classifier.set_foods(foods)
     print(f"Ready in {time.perf_counter() - start:.1f} s with {len(foods)} foods as labels\n")

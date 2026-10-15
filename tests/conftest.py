@@ -24,16 +24,18 @@ class FakeClassifier:
         self.added = []
 
     def answer(self, guesses, is_food=True):
-        """guesses: [("Idli", 0.81), ("Medu Vada", 0.10), ("Upma", 0.05)]"""
+        """guesses: [("Idli", 0.81), ("Medu Vada", 0.10), ("Upma", 0.05)]
+        The first 3 are the top 3; all of them are the suggestions (give more than 3 for a plate)."""
         with self.app.app_context():
             ids = {food["name"]: food["id"] for food in db.get_all_foods()}
-        top3 = [Guess(ids[name], name, confidence) for name, confidence in guesses]
+        ranked = [Guess(ids[name], name, confidence) for name, confidence in guesses]
         self.result = ClassificationResult(
             is_food=is_food,
             food_probability=0.97 if is_food else 0.08,
-            level=confidence_level(is_food, top3[0].confidence),
-            top3=top3,
+            level=confidence_level(is_food, ranked[0].confidence),
+            top3=ranked[:3],
             seconds=0.01,
+            suggestions=ranked,
         )
 
     def classify(self, image):

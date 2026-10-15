@@ -290,6 +290,10 @@ body.no-scroll { overflow: hidden; }
 .conf-meter.level-not_food .conf-fill { background: var(--muted); }
 
 .suggestions { display: grid; grid-template-columns: 1fr; gap: 0.5rem; margin-bottom: 1rem; }
+/* "+ Add a food": the last tile after the AI's suggestions. Dashed, so it reads as an action, not a guess. */
+.suggestion.suggestion-add { border-style: dashed; border-color: var(--brand); color: var(--brand-dark); justify-content: center; }
+.suggestion.suggestion-add .name { font-weight: 600; }
+.search-results .create-food .fw-semibold { color: var(--brand-dark); }
 .suggestions:empty { display: none; }
 .suggestion .name { font-weight: 500; }
 .suggestion[aria-pressed="true"] .name { font-weight: 650; }
@@ -318,6 +322,19 @@ body.no-scroll { overflow: hidden; }
 
 .action-bar { background: var(--surface); }
 .today-progress { margin-top: 0.75rem; }
+
+/* "Your plate": one card per chosen food, each with its own portion. */
+.plate-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.5rem; }
+.plate-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
+.plate-list:empty { display: none; }
+.plate-item { border: 1px solid var(--hairline); border-radius: 12px; background: var(--field); padding: 0.8rem 0.9rem; }
+.plate-item-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.6rem; }
+.plate-item-name { min-width: 0; }
+.grams-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.75rem; margin-top: 0.6rem; }
+.grams-row .grams-input { flex: 0 1 9rem; }
+
+.result-items { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--hairline); }
+.result-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid var(--hairline); }
 
 /* ------------------------------------------------------------ meal cards (dashboard + history) */
 .meal-item { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; padding: 0.75rem 0; border-top: 1px solid var(--hairline); }

@@ -81,6 +81,26 @@ def test_last_seven_days_include_empty_days(user_id):
     assert [d["calories"] for d in days] == [0, 0, 0, 0, 260.0, 0, 0]
 
 
+def test_several_foods_are_saved_together(user_id):
+    eaten = datetime(2026, 10, 2, 20, 0)
+    entries = [
+        {"food_id": food_id("Chicken Biryani"), "grams": 250, "quantity": 1, "nutrients": BIRYANI, "was_corrected": False},
+        {"food_id": food_id("Dal"), "grams": 150, "quantity": None, "nutrients": BIRYANI, "was_corrected": True},
+    ]
+    ids = db.add_food_logs(user_id, "dinner", entries, eaten_at=eaten)
+    logs = db.get_logs(user_id, "2026-10-02", "2026-10-02")
+    assert sorted(log["id"] for log in logs) == sorted(ids)
+    assert {log["logged_at"] for log in logs} == {"2026-10-02 20:00:00"}      # one meal, one time
+
+
+def test_one_bad_row_saves_none_of_the_foods(user_id):
+    good = {"food_id": food_id("Idli"), "grams": 80, "quantity": 2, "nutrients": BIRYANI, "was_corrected": False}
+    bad = {**good, "grams": 5000}                                            # breaks the CHECK (grams <= 3000)
+    with pytest.raises(sqlite3.IntegrityError):
+        db.add_food_logs(user_id, "lunch", [good, bad])
+    assert db.get_daily_totals(user_id, date.today())["meals_count"] == 0
+
+
 def test_user_can_only_delete_own_meal(user_id):
     other = db.create_user("Ravi", "ravi@example.com", "x")
     log_id = db.add_food_log(user_id, food_id("Dal"), "lunch", 150, BIRYANI)
