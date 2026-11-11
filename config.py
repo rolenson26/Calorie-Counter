@@ -58,5 +58,18 @@ class Config:
     REFERENCE_THRESHOLD = 0.80
     REFERENCE_WEIGHT = 200.0
 
+    # ---------------------------------------------------------------- portion estimate from the photo
+    # services/portion_estimator.py: CLIPSeg finds the plate and each chosen food; the plate is the
+    # ruler. Only used when the plate is in view and the food does not fill it.
+    PORTION_MODEL_NAME = "CIDAS/clipseg-rd64-refined"   # about 600 MB, downloaded into models/ once
+    LOAD_PORTION_MODEL = True
+    PLATE_DIAMETER_CM = 27.0                  # a standard Indian dinner plate / thali (25-30 cm)
+    PORTION_FOOD_THRESHOLD = 0.40             # a pixel belongs to a food if CLIPSeg is at least this sure
+    PORTION_PLATE_THRESHOLD = 0.30            # ... and to the plate (plates are fainter on CLIPSeg's maps)
+    PORTION_MIN_PLATE_SHARE = 0.15            # the plate must cover 15 % of the photo to be used as a ruler
+    PORTION_MAX_FOOD_SHARE = 0.75             # food covering more of the plate than this = a close-up: no estimate
+    PORTION_BOWL_RATIO = 0.7                  # "a bowl" region at least 0.7 x the plate region = a bowl: no estimate
+                                              # (sample thali: 0.10; top-down bowl close-ups: 0.74 to 1.7)
+
     # ---------------------------------------------------------------- nutrition
     DEFAULT_CALORIE_GOAL = 2000               # kcal per day; each user can change their own goal

@@ -5,7 +5,8 @@
     photo (live camera, phone camera app or file) -> preview: use / retake / change
     -> shrink in the browser -> POST /api/predict -> show top 3 + confidence
     -> user puts one or more foods on "Your plate" (AI suggestions, search, recent foods),
-       each with its own portion -> POST /api/calculate for each food
+       each with its own portion (optionally estimated: POST /api/estimate-portions fills in grams)
+    -> POST /api/calculate for each food
     -> result card (total + one row per food) -> POST /api/food-log/batch -> today's total and progress.
 
   Camera: where the browser allows it (HTTPS or localhost) the page opens its own live
@@ -28,9 +29,12 @@
 
   const state = {
     prediction: null,                   // answer from /api/predict (null = no photo)
-    plate: [],                          // [{key, food, quantity, grams}] - the foods the user chose
+    plate: [],                          // [{key, food, quantity, grams, estimate}] - the foods the user chose
     calculated: [],                     // [{food_id, portion, result}] from the last calculation (what Save stores)
     recent: [],                         // foods this user logged before (quick add)
+    portionReady: false,                // is the portion model (CLIPSeg) loaded?
+    portionError: null,                 // it could not be loaded: the estimate button is not offered
+    overlay: null,                      // the photo with the measured areas coloured in (data URL)
   };
   let plateKey = 0;                     // gives every plate card its own element ids
   const pending = { file: null, source: null, url: null };   // the photo waiting in the preview step
@@ -72,10 +76,13 @@
     let retry = true;
     try {
       const status = await api("GET", "/api/status");
+      state.portionReady = Boolean(status.portion_ready);
+      state.portionError = status.portion_error || null;
+      updateEstimateBox();
       if (status.model_ready) {
         box.replaceChildren();
         setPhotoButtons(true);
-        retry = false;
+        retry = !state.portionReady && !state.portionError;   // keep asking until the portion model is ready too
       } else if (status.model_error) {
         showAlert(box, status.model_error);
         setPhotoButtons(false);
@@ -301,6 +308,9 @@
   function showConfirm(prediction, { keepMeal = false, food = null } = {}) {
     state.prediction = prediction;
     state.plate = [];
+    state.overlay = null;
+    $("btn-overlay").hidden = true;
+    clearAlert($("estimate-note"));
     clearAlert($("confirm-alert"));
     $("food-search").value = "";
     $("search-results").replaceChildren();
@@ -390,7 +400,7 @@
       showAlert($("confirm-alert"), `You can add up to ${MAX_PLATE_ITEMS} foods at once. Save these, then add the rest.`, "warning");
       return;
     }
-    state.plate.push({ key: ++plateKey, food: entry, quantity: 1, grams: "" });
+    state.plate.push({ key: ++plateKey, food: entry, quantity: 1, grams: "", estimate: null });
     renderPlate();
   }
 
@@ -410,6 +420,60 @@
     for (const button of $("suggestions").querySelectorAll("[data-food-id]")) {
       button.setAttribute("aria-pressed", String(onPlate(Number(button.dataset.foodId))));
     }
+    updateEstimateBox();
+  }
+
+  /* ------------------------------------------------------------ step 2: portion estimate from the photo */
+
+  /* The button is offered when there is a photo, at least one food, and the portion model is not broken. */
+  function updateEstimateBox() {
+    const show = Boolean(state.prediction && state.plate.length && !state.portionError);
+    $("estimate-box").hidden = !show;
+    $("btn-estimate").disabled = !state.portionReady;
+    $("estimate-wait").hidden = state.portionReady;
+    $("estimate-wait").textContent = state.portionReady ? "" : "The portion model is still loading…";
+  }
+
+  /* Ask the server to measure every food on the plate against the plate, then fill in the grams.
+     Only the grams of foods it could measure are changed; the user can still change any of them. */
+  async function estimatePortions() {
+    const button = $("btn-estimate");
+    button.disabled = true;
+    $("btn-estimate-text").textContent = "Measuring… a few seconds";
+    clearAlert($("estimate-note"));
+    try {
+      const data = await api("POST", "/api/estimate-portions", {
+        prediction_id: state.prediction.prediction_id,
+        food_ids: state.plate.map((item) => item.food.id),
+      });
+      for (const result of data.items) {
+        const item = state.plate.find((entry) => entry.food.id === result.food_id);
+        if (!item) continue;                               // removed while the request was running
+        item.estimate = { estimated: result.estimated, colour: result.colour, note: result.note, edited: false };
+        if (result.estimated) {
+          item.grams = String(result.grams);
+        }
+      }
+      renderPlate();
+      showAlert($("estimate-note"), data.message, data.method === "plate" ? "info" : "secondary");
+      state.overlay = data.overlay;
+      showOverlay(Boolean(data.overlay));
+    } catch (error) {
+      showAlert($("estimate-note"), error.status === 503 ? error.message : friendlyError(error), "warning");
+    } finally {
+      $("btn-estimate-text").textContent = "Estimate portions from photo";
+      updateEstimateBox();
+    }
+  }
+
+  /* Switch the photo between the original and the coloured map of what was measured. */
+  function showOverlay(on) {
+    const toggle = $("btn-overlay");
+    toggle.hidden = !state.overlay;
+    if (!state.prediction) return;
+    $("photo-preview").src = on && state.overlay ? state.overlay : state.prediction.image_url;
+    toggle.setAttribute("aria-pressed", String(on));
+    toggle.textContent = on ? "Show the photo" : "Show what was measured";
   }
 
   /* {grams} when the user typed a weight, otherwise {quantity} in servings. */
@@ -433,8 +497,25 @@
     const quick = QUICK_PORTIONS.map((amount) =>
       el("button", { type: "button", class: "btn btn-outline-secondary", "data-quantity": amount,
         onclick: () => setQuantity(amount) }, formatQuantity(amount)));
+    const estimateText = el("span");
+    const estimateBadge = item.estimate
+      ? el("div", { class: "estimate-badge" },
+          item.estimate.colour ? el("span", { class: "swatch", style: `background:${item.estimate.colour}`, "aria-hidden": "true" }) : null,
+          estimateText)
+      : null;
+
+    /* The user changed the amount: it is no longer the photo's estimate. */
+    function edited() {
+      if (item.estimate) item.estimate.edited = true;
+    }
 
     function refresh() {
+      if (item.estimate) {
+        const e = item.estimate;
+        estimateText.textContent = e.edited ? "Changed by you"
+          : e.estimated ? `Estimated from the photo: ${formatGrams(Number(item.grams))} g`
+          : (e.note || "Standard serving kept");
+      }
       const portion = portionOf(item);
       for (const button of quick) {
         const active = portion.quantity === Number(button.dataset.quantity);
@@ -451,6 +532,7 @@
       item.grams = "";
       quantity.value = amount;
       grams.value = "";
+      edited();
       refresh();
     }
 
@@ -458,10 +540,12 @@
       item.quantity = Number(quantity.value);
       item.grams = "";
       grams.value = "";
+      edited();
       refresh();
     });
     grams.addEventListener("input", () => {
       item.grams = grams.value.trim();
+      edited();
       refresh();
     });
     const step = (delta) => setQuantity(Math.min(20, Math.max(0.25, (Number(item.quantity) || 1) + delta)));
@@ -470,7 +554,8 @@
       el("div", { class: "plate-item-head" },
         el("div", { class: "plate-item-name" },
           el("div", { class: "fw-semibold" }, food.name),
-          el("div", { class: "small text-secondary" }, `1 ${food.serving_unit} = ${formatGrams(food.serving_grams)} g`)),
+          el("div", { class: "small text-secondary" }, `1 ${food.serving_unit} = ${formatGrams(food.serving_grams)} g`),
+          estimateBadge),
         el("button", { type: "button", class: "btn btn-outline-secondary btn-sm", "aria-label": `Remove ${food.name}`,
           onclick: () => removeFood(food.id) }, "Remove")),
       el("div", { class: "portion-grid", role: "group", "aria-label": `Quick portions for ${food.name}` }, ...quick),
@@ -720,6 +805,8 @@
   $("food-search").addEventListener("input", onSearchInput);
   $("btn-new-food").addEventListener("click", () => openNewFood($("food-search").value.trim()));
   $("new-food-form").addEventListener("submit", saveNewFood);
+  $("btn-estimate").addEventListener("click", estimatePortions);
+  $("btn-overlay").addEventListener("click", () => showOverlay($("btn-overlay").getAttribute("aria-pressed") !== "true"));
   $("btn-calculate").addEventListener("click", calculate);
   $("btn-save").addEventListener("click", save);
 
