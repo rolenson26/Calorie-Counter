@@ -1,139 +1,62 @@
 {% extends "base.html" %}
 {#
-  index.html - the home / Scan page. One screen shows one step at a time:
-    1. Landing + capture : a short hero with the Take Photo / Upload Photo buttons (or log a food without one)
-       -> a preview where the photo can be retaken or changed before it is sent to the AI
-    2. Confirm : check the AI's suggestions and put one or more foods on "Your plate", each with its own portion
-    3. Result  : calories and nutrients (a total plus one row per food), then save them all to today's log
+  index.html - the Scan page. One screen shows one step at a time:
+    1. Add a meal : Take Photo / Upload Photo (or log a food without one)
+       -> a preview where the photo can be retaken or changed before it is sent for recognition
+    2. Confirm    : check the suggestions and put one or more foods on "Your plate", each with its own portion
+    3. Result     : calories and nutrients (a total plus one row per food), then save them all to today's log
   static/js/main.js shows one step at a time and talks to the API.
+  Kept deliberately plain (2026-11-12): standard Bootstrap parts, no hero, no decoration.
 #}
 {% block title %}Scan food{% endblock %}
 {% block content %}
 <div class="row justify-content-center">
-  <div class="col-12">
+  <div class="col-12 col-xl-10">
 
-    <!-- ===================== Step 1: landing + capture ===================== -->
-    <section id="step-capture" class="landing" aria-labelledby="capture-title">
-      <div class="hero">
-        <div class="hero-text">
-          <span class="hero-eyebrow">AI food calorie counter</span>
-          <h1 id="capture-title" class="hero-title">Snap your meal.<br>Know your calories.</h1>
-          <p class="hero-lead">
-            Take or upload a photo of a dish. The AI suggests what it is, you confirm the food and
-            choose the portion, and the calories and nutrients are added to today's log.
+    <!-- ===================== Step 1: add a meal ===================== -->
+    <section id="step-capture" class="card app-card" aria-labelledby="capture-title">
+      <div class="card-body p-4">
+        <h1 id="capture-title" class="h4">Add a meal</h1>
+        <p class="text-secondary">
+          Take or upload a photo of your food. The app suggests which foods it shows; you confirm them and
+          the amount, and the calories and nutrients are added to today's log.
+        </p>
+
+        <div id="model-status" role="status" aria-live="polite"></div>
+
+        <div id="drop-zone" class="drop-zone">
+          <div class="d-flex flex-wrap gap-2">
+            <button type="button" id="btn-camera" class="btn btn-primary">Take photo</button>
+            <button type="button" id="btn-upload" class="btn btn-outline-secondary">Upload photo</button>
+          </div>
+          <p id="drop-hint" class="small text-secondary mt-2 mb-0">
+            JPG, PNG or WEBP, up to 8 MB<span class="d-none d-md-inline">, or drag a photo here</span>
           </p>
-
-          <div id="model-status" role="status" aria-live="polite"></div>
-
-          <div id="drop-zone" class="drop-zone hero-actions">
-            <div class="d-flex flex-wrap gap-2">
-              <button type="button" id="btn-camera" class="btn btn-primary btn-lg">
-                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" class="me-1">
-                  <path d="M4 7h3l2-3h6l2 3h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z"
-                        fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-                  <circle cx="12" cy="13" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/>
-                </svg>
-                Take Photo
-              </button>
-              <button type="button" id="btn-upload" class="btn btn-outline-primary btn-lg">
-                <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" class="me-1">
-                  <path d="M12 16V4m0 0-4 4m4-4 4 4M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4" fill="none"
-                        stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                Upload Photo
-              </button>
-            </div>
-            <p id="drop-hint" class="small text-secondary mt-2 mb-0">
-              JPG, PNG or WEBP, up to 8 MB<span class="d-none d-md-inline"> · or drag a photo here</span>
-            </p>
-          </div>
-
-          <!-- Fallbacks: a phone's own camera app (capture) and the normal file picker. -->
-          <input type="file" id="camera-input" accept="image/*" capture="environment" hidden>
-          <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" hidden>
-
-          <div id="capture-alert" class="mt-3" aria-live="assertive"></div>
-
-          <div class="hero-links">
-            <a href="{{ url_for('pages.dashboard') }}" class="btn btn-outline-secondary">View Dashboard</a>
-            <a href="#" id="link-manual" class="btn btn-link">No photo? Search a food instead</a>
-          </div>
-
-          <!-- Quick add: foods this user logged before. Filled by main.js; hidden while empty. -->
-          <div id="recent-box" class="recent-box" hidden>
-            <p class="fw-semibold mb-2">Quick add: your recent foods</p>
-            <div id="recent-foods" class="chip-row" role="group" aria-label="Recent foods"></div>
-          </div>
         </div>
 
-        <!-- An example of what the app shows after a scan: a real run on the sample photo (not the user's data) -->
-        {#
-          Example card: the numbers come from a REAL run of the app on static/img/example-thali.jpg, they are not invented.
-            AI (CLIP, POST /api/predict)     : confidence level "low"; food gate 100 %
-                                               Baingan Bharta 15 %, Sambar 15 %, Veg Khichdi 14 %
-                                               (re-measured 2026-11-12 with 76 foods; with 73 foods it was 16/16/14 %)
-            Refresh it yourself              : python -m services.food_classifier static/img/example-thali.jpg
-            User picks Steamed Rice, 1 serving (POST /api/calculate): 1 bowl = 150 g -> 176 kcal,
-                                               protein 3.9 g, carbs 38.5 g, fat 0.3 g (bar widths = share of the energy,
-                                               4/4/9 kcal per g, the same rule the Dashboard uses: 9 %, 89 %, 2 %)
-          The photo is re-compressed by the browser before upload, so on a phone or laptop the order of the three
-          guesses can shift by one place (seen in Chrome: Sambar 16 %, Veg Khichdi 15 %, Baingan Bharta 14 %).
-          The result is the same: low confidence, so the user chooses the food. If you change the photo, the
-          foods or the nutrition data, run the command above and update these numbers.
-        #}
-        <div class="hero-visual">
-          <figure class="demo-card">
-            <figcaption class="demo-tag">Example · real AI result</figcaption>
-            <div class="demo-photo">
-              <img src="{{ url_for('static', filename='img/example-thali.jpg') }}" width="784" height="410"
-                   alt="A steel thali plate with rice, dal, two curries, potatoes, spinach and curd">
-            </div>
-            <div class="demo-body">
-              <div class="demo-step">
-                <div class="demo-head">
-                  <span class="demo-label">1. The AI looks at the photo</span>
-                  <span class="level-badge level-low"><span class="dot" aria-hidden="true"></span>Low confidence · 15%</span>
-                </div>
-                <p class="demo-note">This plate has many dishes and the AI gives one label per photo, so it is not sure. Its guesses:</p>
-                <ul class="demo-guesses" aria-label="The AI's top three guesses">
-                  <li>Baingan Bharta <b>15%</b></li>
-                  <li>Sambar <b>15%</b></li>
-                  <li>Veg Khichdi <b>14%</b></li>
-                </ul>
-              </div>
+        <!-- Fallbacks: a phone's own camera app (capture) and the normal file picker. -->
+        <input type="file" id="camera-input" accept="image/*" capture="environment" hidden>
+        <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" hidden>
 
-              <div class="demo-step">
-                <span class="demo-label">2. You pick the food and the portion</span>
-                <div class="demo-pick"><b>Steamed Rice</b><span class="small text-secondary">1 bowl · 150 g</span></div>
-                <div class="demo-kcal"><span class="hero-number">176</span> <span class="hero-unit">kcal</span></div>
-                <div class="demo-macros">
-                  <div><span class="bar" style="--w: 9%; --c: var(--series-1)"></span><b>3.9 g</b> Protein</div>
-                  <div><span class="bar" style="--w: 89%; --c: var(--series-2)"></span><b>38.5 g</b> Carbs</div>
-                  <div><span class="bar" style="--w: 2%; --c: var(--series-3)"></span><b>0.3 g</b> Fat</div>
-                </div>
-              </div>
+        <div id="capture-alert" class="mt-3" aria-live="assertive"></div>
 
-              <p class="demo-foot">Tap the dal, curries and other dishes too: they all go on the same plate and are saved together.</p>
-            </div>
-          </figure>
+        <p class="mt-3 mb-0">
+          <a href="#" id="link-manual">Log a food without a photo</a>
+          · <a href="{{ url_for('pages.dashboard') }}">Dashboard</a>
+        </p>
+
+        <!-- Quick add: foods this user logged before. Filled by main.js; hidden while empty. -->
+        <div id="recent-box" class="recent-box" hidden>
+          <p class="fw-semibold mb-2">Recent foods</p>
+          <div id="recent-foods" class="chip-row" role="group" aria-label="Recent foods"></div>
         </div>
       </div>
-
-      <ol class="how-grid" aria-label="How it works">
-        <li><span class="how-num" aria-hidden="true">1</span>
-          <div><strong>Snap or upload</strong><span>One dish, or a whole plate.</span></div></li>
-        <li><span class="how-num" aria-hidden="true">2</span>
-          <div><strong>Confirm the foods</strong><span>Tap the AI's guesses, or search all foods. Add as many as are on the plate.</span></div></li>
-        <li><span class="how-num" aria-hidden="true">3</span>
-          <div><strong>Check the portion</strong><span>Estimated from the photo when a plate is in view; you can always change it.</span></div></li>
-      </ol>
     </section>
 
     <!-- ===================== Step 1b: check the photo before sending it ===================== -->
     <section id="step-preview" class="card app-card" aria-labelledby="preview-title" hidden>
       <div class="card-body p-4">
-        <p class="step-label">Step 1 of 3</p>
-        <h2 id="preview-title" class="h4">Is the food clear in the photo?</h2>
+        <h2 id="preview-title" class="h4">Check the photo</h2>
         <div class="photo-frame photo-frame-lg">
           <img id="preview-image" alt="Preview of the photo you chose">
         </div>
@@ -141,16 +64,15 @@
 
         <div id="preview-busy" class="busy-box" role="status" aria-live="polite" hidden>
           <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
-          <span id="preview-busy-text" class="fw-semibold">Preparing your photo…</span>
-          <div class="busy-bar" aria-hidden="true"></div>
+          <span id="preview-busy-text">Preparing your photo…</span>
         </div>
 
         <div id="preview-alert" class="mt-3" aria-live="assertive"></div>
 
         <div id="preview-actions" class="d-grid gap-2 d-sm-flex mt-3">
-          <button type="button" id="btn-use-photo" class="btn btn-primary btn-lg">Use this photo</button>
-          <button type="button" id="btn-retake" class="btn btn-outline-secondary btn-lg">Retake photo</button>
-          <button type="button" id="btn-change" class="btn btn-outline-secondary btn-lg">Choose another</button>
+          <button type="button" id="btn-use-photo" class="btn btn-primary">Use this photo</button>
+          <button type="button" id="btn-retake" class="btn btn-outline-secondary">Retake photo</button>
+          <button type="button" id="btn-change" class="btn btn-outline-secondary">Choose another</button>
         </div>
       </div>
     </section>
@@ -158,11 +80,8 @@
     <!-- ===================== Step 2: confirm ===================== -->
     <section id="step-confirm" class="card app-card" aria-labelledby="confirm-title" hidden>
       <div class="card-body p-4">
-        <div class="d-flex justify-content-between align-items-start gap-2">
-          <div>
-            <p class="step-label">Step 2 of 3</p>
-            <h2 id="confirm-title" class="h4">Check the foods and portions</h2>
-          </div>
+        <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+          <h2 id="confirm-title" class="h4 mb-0">Foods and portions</h2>
           <button type="button" id="btn-change-photo" class="btn btn-outline-secondary btn-sm text-nowrap"
                   data-action="start-over">Change photo</button>
         </div>
@@ -173,9 +92,6 @@
               <img id="photo-preview" alt="Your food photo">
               <div id="no-photo" class="text-secondary p-3 text-center" hidden>No photo: search for the food</div>
             </div>
-            <!-- After "Estimate portions": switch between the photo and the coloured map of what was measured -->
-            <button type="button" id="btn-overlay" class="btn btn-link btn-sm px-0" aria-pressed="false" hidden>
-              Show the photo</button>
             <div id="recent-confirm" class="mt-3" hidden>
               <p class="small fw-semibold mb-2">Recent foods</p>
               <div id="recent-confirm-foods" class="chip-row" role="group" aria-label="Recent foods"></div>
@@ -184,19 +100,18 @@
 
           <div class="col-md-7">
             <div id="prediction-box">
-              <span id="confidence-badge" class="level-badge"></span>
-              <div id="conf-meter" class="conf-meter" aria-hidden="true"><div id="conf-fill" class="conf-fill"></div></div>
+              <p class="mb-1"><span id="confidence-badge" class="fw-semibold"></span></p>
               <p id="prediction-message" class="mb-2"></p>
-              <p id="multi-hint" class="small text-secondary mb-2">Tap every food on your plate. Missing one? Tap <b>+ Add a food</b>.</p>
+              <p id="multi-hint" class="small text-secondary mb-2">Select every food on your plate. Missing one? Search below.</p>
               <div id="suggestions" class="suggestions" role="group" aria-label="Suggested foods"></div>
             </div>
 
-            <label for="food-search" class="form-label fw-semibold">Not right, or something missing? Search all foods</label>
-            <input id="food-search" class="form-control form-control-lg" type="search" placeholder="e.g. dal, paneer, dosa"
+            <label for="food-search" class="form-label fw-semibold">Search all foods</label>
+            <input id="food-search" class="form-control" type="search" placeholder="e.g. dal, eromba, dosa"
                    autocomplete="off" autocapitalize="none" spellcheck="false" enterkeyhint="search" aria-controls="search-results">
             <div id="search-results" class="list-group mt-1 search-results" aria-live="polite"></div>
-            <p class="small mt-2 mb-0">Food not in the database?
-              <button type="button" id="btn-new-food" class="btn btn-link btn-sm p-0 align-baseline">Create it here</button></p>
+            <p class="small mt-2 mb-0">Food not in the list?
+              <button type="button" id="btn-new-food" class="btn btn-link btn-sm p-0 align-baseline">Add it</button></p>
           </div>
         </div>
 
@@ -209,24 +124,12 @@
               <span id="plate-count" class="small text-secondary"></span>
             </div>
             <p id="plate-empty" class="text-secondary mb-0">Choose a food above. You can add several.</p>
-            <!-- Portion estimate from the photo (services/portion_estimator.py). Shown when there is a photo. -->
-            <div id="estimate-box" class="estimate-box" hidden>
-              <button type="button" id="btn-estimate" class="btn btn-outline-primary">
-                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" class="me-1">
-                  <path d="M3 17 17 3l4 4L7 21H3v-4Zm4-4 2 2m1-5 2 2m1-5 2 2" fill="none" stroke="currentColor"
-                        stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span id="btn-estimate-text">Estimate portions from photo</span>
-              </button>
-              <span id="estimate-wait" class="small text-secondary" hidden></span>
-            </div>
-            <div id="estimate-note" class="mb-2" aria-live="polite"></div>
             <!-- One card per food, each with its own portion. Filled by main.js. -->
             <ul id="plate-items" class="plate-list" aria-label="Foods on your plate"></ul>
           </div>
           <div class="col-md-4">
             <label class="form-label fw-semibold" for="meal-type">Meal</label>
-            <select id="meal-type" class="form-select form-select-lg">
+            <select id="meal-type" class="form-select">
               {% for meal in meal_types %}<option value="{{ meal }}">{{ meal|capitalize }}</option>{% endfor %}
             </select>
           </div>
@@ -234,7 +137,7 @@
 
         <div id="confirm-alert" class="mt-3" aria-live="assertive"></div>
         <div class="action-bar mt-3">
-          <button type="button" id="btn-calculate" class="btn btn-primary btn-lg" disabled>Calculate Calories</button>
+          <button type="button" id="btn-calculate" class="btn btn-primary" disabled>Calculate</button>
         </div>
       </div>
     </section>
@@ -242,7 +145,6 @@
     <!-- ===================== Step 3: result ===================== -->
     <section id="step-result" class="card app-card" aria-labelledby="result-title" hidden>
       <div class="card-body p-4">
-        <p class="step-label">Step 3 of 3</p>
         <h2 id="result-title" class="h4">Result</h2>
 
         <div class="row g-4 align-items-center">
@@ -257,12 +159,14 @@
             <ul id="result-items" class="result-items" aria-label="Calories per food" hidden></ul>
           </div>
           <div class="col-sm-7">
-            <dl class="nutrient-grid">
-              <div><dt>Protein</dt><dd><span id="result-protein">0</span> g</dd></div>
-              <div><dt>Carbohydrates</dt><dd><span id="result-carbs">0</span> g</dd></div>
-              <div><dt>Fat</dt><dd><span id="result-fat">0</span> g</dd></div>
-              <div><dt>Fiber</dt><dd><span id="result-fiber">0</span> g</dd></div>
-            </dl>
+            <table class="table table-sm mb-0 nutrient-table">
+              <tbody>
+                <tr><th scope="row">Protein</th><td class="num"><span id="result-protein">0</span> g</td></tr>
+                <tr><th scope="row">Carbohydrates</th><td class="num"><span id="result-carbs">0</span> g</td></tr>
+                <tr><th scope="row">Fat</th><td class="num"><span id="result-fat">0</span> g</td></tr>
+                <tr><th scope="row">Fiber</th><td class="num"><span id="result-fiber">0</span> g</td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
         <p class="small text-secondary mt-3 mb-0">
@@ -280,15 +184,15 @@
         </div>
 
         <div id="before-save" class="action-bar d-grid gap-2 d-sm-flex mt-3">
-          <button type="button" id="btn-save" class="btn btn-primary btn-lg">Save to today's log</button>
-          <button type="button" class="btn btn-outline-secondary btn-lg" data-action="back-to-confirm">Change foods or portions</button>
+          <button type="button" id="btn-save" class="btn btn-primary">Save to today's log</button>
+          <button type="button" class="btn btn-outline-secondary" data-action="back-to-confirm">Change foods or portions</button>
         </div>
         <div id="after-save" class="d-grid gap-2 d-sm-flex mt-3" hidden>
-          <button type="button" class="btn btn-primary btn-lg" data-action="start-over">Scan another meal</button>
-          <button type="button" id="btn-another" class="btn btn-outline-primary btn-lg" data-action="another-item">
+          <button type="button" class="btn btn-primary" data-action="start-over">Add another meal</button>
+          <button type="button" id="btn-another" class="btn btn-outline-secondary" data-action="another-item">
             Add more from this photo
           </button>
-          <a class="btn btn-outline-secondary btn-lg" href="{{ url_for('pages.dashboard') }}">Go to dashboard</a>
+          <a class="btn btn-outline-secondary" href="{{ url_for('pages.dashboard') }}">Go to dashboard</a>
         </div>
       </div>
     </section>

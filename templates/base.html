@@ -17,7 +17,7 @@
       document.documentElement.setAttribute("data-bs-theme", theme);
     } catch (e) {}
   </script>
-  <title>{% block title %}{% endblock %} · AI Food Calorie Counter</title>
+  <title>{% block title %}{% endblock %} · Food Calorie Counter</title>
   <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}" type="image/svg+xml">
   <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -25,14 +25,7 @@
 <body class="d-flex flex-column min-vh-100">
   <nav class="navbar navbar-expand-md app-nav">
     <div class="container">
-      <a class="navbar-brand" href="{{ url_for('pages.index') }}">
-        <svg class="brand-icon" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M3 11h18a9 9 0 0 1-18 0Z" fill="currentColor"/>
-          <path d="M9 8c0-1.6 1.6-1.6 1.6-3.2M13.4 8c0-1.6 1.6-1.6 1.6-3.2" stroke="currentColor"
-                stroke-width="1.6" fill="none" stroke-linecap="round"/>
-        </svg>
-        Food Calorie Counter
-      </a>
+      <a class="navbar-brand" href="{{ url_for('pages.index') }}">Food Calorie Counter</a>
       <button type="button" id="theme-toggle" class="btn btn-sm theme-toggle ms-auto ms-md-2 me-2 me-md-0 order-md-last"
               aria-label="Switch to dark mode" title="Light / dark mode">
         <span aria-hidden="true" class="theme-icon">☾</span>

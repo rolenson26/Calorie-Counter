@@ -108,28 +108,13 @@ How a photo is scored (`reference_bonus`):
 
 The threshold matters because two food photos are always fairly alike (~0.6–0.8), much more than a photo and a sentence (~0.3). Without it, every food with examples would get a bonus on every photo. Still nothing is trained; the idea comes from Tip-Adapter (Zhang et al., 2022). The settings were chosen with `scripts/calibrate_references.py`, with every example left out of its own test ("leave-one-out"), and are stored in `config.py`.
 
-**Portion estimate from the photo (added 2026-11-12).** `services/portion_estimator.py` uses a second pretrained model, **CLIPSeg** (`CIDAS/clipseg-rd64-refined`, about 600 MB, built on CLIP). It takes a photo and a sentence and returns a 352×352 map of *where* that sentence is.
-
-When the user taps **Estimate portions from photo**:
-1. It asks for "a plate", "a bowl", and each chosen food. The food's prompt is its description without "a photo of" and without "in a bowl"; with that phrase, CLIPSeg marked the bowl instead of the rice.
-2. Each pixel goes to the strongest food, if that food scores at least 0.4.
-3. Area: food pixels ÷ plate pixels × the area of a standard **27 cm plate**.
-4. Weight: grams = area × typical height × density, by serving unit. For example, a katori of dal is 3 cm deep at 1.0 g/cm³. Bread is flat and salad is airy.
-5. The result is kept between ¼ and 3 servings and rounded to 5 g.
-
-It gives **no estimate**, and keeps the standard serving with a reason shown, when:
-- no plate is visible,
-- the dish is a bowl (bowls vary in size),
-- the food fills the dish (a close-up), or
-- a food is not found, or is a drink.
-
-The page fills in the grams, colours each food on the photo, and the user can change any number. On the sample thali this gives rice 195 g, dal 90 g, curd 160 g and spinach 110 g, in 2–8 s on CPU. It is a single-photo estimate: assume roughly ±30–50 %.
+**Portion estimate from the photo: tried and removed (2026-11-12).** A second model, CLIPSeg, found each food on the plate and used a standard 27 cm plate as the ruler. It gave sensible grams on the sample thali, but an estimate for only **3 of the developer's 81 photos**. Most photos are close-ups of one bowl, and a close-up has no scale; CLIPSeg also could not tell a plate from a bowl. The details are in [docs/portion_experiment.md](docs/portion_experiment.md), and the code is in commit `d9b31e4`. Portions are chosen by the user.
 
 **What it can do:** say which of *its known foods* the photo looks most like, and whether the photo is food at all. It takes about 0.04–0.10 s per photo on CPU, after a load of about 6 s.
 
 **What it cannot do (yet):**
-- The *classifier* ranks the **whole photo**. Locating each item happens only in the portion step, for the foods the user chose.
-- **Portion size** is estimated only when a plate is in view. Even then it is an estimate: it can't see depth or oil.
+- It ranks the **whole photo**; it does not *locate* the separate items on a plate.
+- It does not measure **portion size**. This was tried and removed; see above.
 - It cannot recognise a food that isn't in the list.
 - Its confidence is relative to the known foods. It is not a probability of being correct.
 
@@ -222,8 +207,9 @@ The multi-food scan flow *was* checked in headless Edge at phone width.
 | 2026-11-12 | The developer's 81 downloaded photos (2 duplicates removed → 79) are split with a fixed seed: 60 examples, 20 held-out test photos (`scripts/prepare_photos.py`). The photos stay off GitHub; only their vectors are committed | Honest accuracy; web photos are not ours to publish |
 | 2026-11-12 | Few-shot settings: top 5 examples, threshold 0.80, weight 200 | Best leave-one-out accuracy that left other foods' accuracy unchanged and pulled ≤1 % of other photos |
 | 2026-11-12 | Manipuri nutrition = recipe estimates from USDA ingredients, labelled as such | No published analysis exists |
-| 2026-11-12 | Portion estimate only when a plate is the ruler; for bowls and close-ups, keep the standard serving and say why | An honest "can't tell" beats a confident wrong number |
-| 2026-11-12 | CLIPSeg loads after CLIP in the same background thread. If it fails, scanning still works and the button is simply not offered | The core flow must never depend on the new feature |
+| 2026-11-12 | **Portion estimate removed** after testing: 3 of 81 photos got an estimate | A feature that almost never works is not worth a second 600 MB model; an honest "you choose" beats invented grams |
+| 2026-11-12 | The serving unit "katori" is renamed "bowl" (existing databases are migrated in `init_db`) | In Manipur people say bowl |
+| 2026-11-12 | **Plain UI:** standard Bootstrap, no hero, slogans, gradients, emoji or decorative badges | The professor dislikes an "AI-generated" look; this is a project, not a product launch |
 | 2026-11-12 | Work is committed on branch `viva-improvements`, not pushed | Default branch stays as it was until the developer merges |
 
 ---
@@ -239,7 +225,7 @@ Today, in this order. Each step gets its own go-ahead.
 | **3. Full check and fixes** | Headless browser run of the whole app (dashboard, history, edit and delete, dark mode, phone width). Fix the bugs found and I17. Optionally re-measure accuracy on a public dataset | various | Clean run with screenshots |
 | **4. Viva notes** | `docs/viva.md`: how each part works, limitations, likely questions with answers, a 5-minute demo script. Update the README and status page | docs | Ready to rehearse |
 
-**Status 2026-11-12:** Steps 1–4 are **done** and committed on branch `viva-improvements`, which is not pushed. 214 tests pass.
+**Status 2026-11-12:** Steps 1, 3 and 4 are **done**. Step 2 (portions) was built, tested on 81 photos and removed. Then the UI was simplified and "katori" renamed "bowl". Everything is committed on branch `viva-improvements`, which is not pushed. 192 tests pass.
 
 **Later ideas (not for the viva):**
 - a stronger recognition model, such as SigLIP or CLIP ViT-L/14

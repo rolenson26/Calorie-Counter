@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS foods (
     id                 INTEGER PRIMARY KEY AUTOINCREMENT,
     name               TEXT    NOT NULL UNIQUE COLLATE NOCASE,
     category           TEXT    NOT NULL,
-    serving_unit       TEXT    NOT NULL,                  -- piece, katori, bowl, plate, cup, glass, slice, fruit
+    serving_unit       TEXT    NOT NULL,                  -- piece, bowl, plate, cup, glass, slice, fruit
     serving_grams      REAL    NOT NULL CHECK (serving_grams > 0),
     calories_per_100g  REAL    NOT NULL CHECK (calories_per_100g BETWEEN 0 AND 900),
     protein_per_100g   REAL    NOT NULL CHECK (protein_per_100g  BETWEEN 0 AND 100),

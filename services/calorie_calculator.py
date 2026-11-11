@@ -17,7 +17,7 @@ import math
 MIN_QUANTITY, MAX_QUANTITY = 0.25, 20      # servings
 MIN_GRAMS, MAX_GRAMS = 1, 3000             # grams eaten in one entry
 NUTRIENTS = ("calories", "protein", "carbs", "fat", "fiber")
-SERVING_UNITS = ("piece", "katori", "bowl", "plate", "cup", "glass", "slice", "fruit")
+SERVING_UNITS = ("piece", "bowl", "plate", "cup", "glass", "slice", "fruit")   # "katori" became "bowl" (2026-11-12)
 
 
 class PortionError(ValueError):

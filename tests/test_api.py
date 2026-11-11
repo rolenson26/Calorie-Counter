@@ -18,7 +18,7 @@ def upload(client, image, filename="lunch.jpg"):
 
 @pytest.mark.parametrize("method, path", [
     ("get", "/api/dashboard"), ("get", "/api/history"), ("get", "/api/foods"),
-    ("post", "/api/predict"), ("post", "/api/estimate-portions"), ("post", "/api/calculate"),
+    ("post", "/api/predict"), ("post", "/api/calculate"),
     ("post", "/api/food-log"), ("post", "/api/food-log/batch"),
     ("delete", "/api/food-log/1"), ("put", "/api/food-log/1"), ("get", "/api/foods/recent"), ("post", "/api/foods"), ("put", "/api/user/goal"),
 ])
@@ -43,79 +43,6 @@ def test_predict_says_503_while_model_loads(tmp_path, photo):
     response = upload(client, photo())
     assert response.status_code == 503
     assert "still loading" in response.get_json()["error"]
-
-
-# =============================================================== portion estimate
-
-def scanned(auth_client, fake_classifier, photo):
-    fake_classifier.answer([("Steamed Rice", 0.40), ("Dal", 0.30), ("Curd", 0.10)])
-    return upload(auth_client, photo(size=(120, 90))).get_json()["prediction_id"]
-
-
-def test_estimate_portions_measures_every_chosen_food(auth_client, fake_classifier, fake_estimator, photo, food_id):
-    prediction_id = scanned(auth_client, fake_classifier, photo)
-    response = auth_client.post("/api/estimate-portions", json={
-        "prediction_id": prediction_id, "food_ids": [food_id("Steamed Rice"), food_id("Dal")]})
-    data = response.get_json()
-    assert response.status_code == 200
-    assert data["method"] == "plate"
-    assert [(item["name"], item["grams"]) for item in data["items"]] == [("Steamed Rice", 300), ("Dal", 300)]
-    assert fake_estimator.calls == [((120, 90), ["Steamed Rice", "Dal"])]    # the stored photo was used
-
-
-def test_status_reports_the_portion_model(client):
-    status = client.get("/api/status").get_json()
-    assert status["portion_ready"] is True and status["portion_error"] is None
-
-
-@pytest.mark.parametrize("body, status, words", [
-    ({"food_ids": [1]}, 400, "prediction_id is required"),
-    ({"prediction_id": 999, "food_ids": [1]}, 404, "Prediction not found"),
-    ({"prediction_id": "PID", "food_ids": []}, 400, "1 to 10"),
-    ({"prediction_id": "PID", "food_ids": "1"}, 400, "1 to 10"),
-    ({"prediction_id": "PID", "food_ids": list(range(1, 12))}, 400, "1 to 10"),
-    ({"prediction_id": "PID", "food_ids": [99999]}, 404, "Food not found"),
-    ({"prediction_id": "PID", "food_ids": [1, 1]}, 400, "only once"),
-])
-def test_estimate_portions_checks_its_input(auth_client, fake_classifier, photo, body, status, words):
-    prediction_id = scanned(auth_client, fake_classifier, photo)
-    if body.get("prediction_id") == "PID":
-        body = {**body, "prediction_id": prediction_id}
-    response = auth_client.post("/api/estimate-portions", json=body)
-    assert response.status_code == status
-    assert words in response.get_json()["error"]
-
-
-def test_estimate_portions_only_for_your_own_photo(auth_client, client, fake_classifier, photo, food_id, app):
-    prediction_id = scanned(auth_client, fake_classifier, photo)
-    with app.app_context():
-        other = db.create_user("Bo", "bo@example.com", "x")
-    with client.session_transaction() as session:
-        session["user_id"] = other
-    response = client.post("/api/estimate-portions", json={"prediction_id": prediction_id,
-                                                           "food_ids": [food_id("Dal")]})
-    assert response.status_code == 404
-
-
-def test_estimate_portions_when_the_photo_was_deleted(auth_client, fake_classifier, photo, food_id, app):
-    prediction_id = scanned(auth_client, fake_classifier, photo)
-    for stored in app.config["UPLOAD_FOLDER"].iterdir():
-        stored.unlink()
-    response = auth_client.post("/api/estimate-portions", json={"prediction_id": prediction_id,
-                                                                "food_ids": [food_id("Dal")]})
-    assert response.status_code == 404
-    assert "scan it again" in response.get_json()["error"]
-
-
-def test_estimate_portions_says_503_while_the_portion_model_loads(auth_client, fake_classifier, photo, food_id, app):
-    prediction_id = scanned(auth_client, fake_classifier, photo)
-    app.extensions["portion_estimator"] = None
-    response = auth_client.post("/api/estimate-portions", json={"prediction_id": prediction_id,
-                                                                "food_ids": [food_id("Dal")]})
-    assert response.status_code == 503
-    assert "still loading" in response.get_json()["error"]
-    app.extensions["portion_error"] = "The portion model could not be loaded. Choose portions yourself."
-    assert "could not be loaded" in auth_client.post("/api/estimate-portions", json={}).get_json()["error"]
 
 
 # =============================================================== predict

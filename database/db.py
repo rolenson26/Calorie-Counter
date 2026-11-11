@@ -49,6 +49,10 @@ def init_db(conn):
     Returns the number of foods inserted (0 when nothing was missing).
     """
     conn.executescript(SCHEMA_FILE.read_text(encoding="utf-8"))
+    # 2026-11-12: the serving unit "katori" was renamed "bowl" (the word used in Manipur).
+    # Databases made before that still have "katori" rows; this fixes them and does nothing afterwards.
+    conn.execute("UPDATE foods SET serving_unit = 'bowl' WHERE serving_unit = 'katori'")
+    conn.commit()
     existing = {row[0].lower() for row in conn.execute("SELECT name FROM foods")}
     missing = [food for food in FOODS if food["name"].lower() not in existing]
     if not missing:

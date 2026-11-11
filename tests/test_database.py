@@ -51,6 +51,15 @@ def test_new_starter_foods_reach_an_existing_database(app):
     assert db.get_food(food_id("Idli"))["serving_grams"] == 123
 
 
+def test_old_katori_rows_become_bowl(app):
+    conn = db.get_db()
+    conn.execute("UPDATE foods SET serving_unit = 'katori' WHERE name = 'Dal'")
+    conn.commit()
+    db.init_db(conn)
+    assert db.get_food(food_id("Dal"))["serving_unit"] == "bowl"
+    assert conn.execute("SELECT COUNT(*) FROM foods WHERE serving_unit = 'katori'").fetchone()[0] == 0
+
+
 def test_manipuri_foods_are_recipe_estimates():
     manipuri = {food["name"]: food for food in FOODS if food["category"] == "Manipuri"}
     assert set(manipuri) == {"Ooti", "Eromba", "Singju"}
@@ -71,7 +80,7 @@ def test_duplicate_email_is_rejected_ignoring_case(user_id):
 
 
 def test_duplicate_custom_food_name_is_rejected(user_id):
-    food = {"name": "dal", "category": "Dal & Legumes", "serving_unit": "katori",
+    food = {"name": "dal", "category": "Dal & Legumes", "serving_unit": "bowl",
             "serving_grams": 150, "calories": 100, "protein": 5, "carbs": 12, "fat": 3, "fiber": 2}
     with pytest.raises(sqlite3.IntegrityError):
         db.add_custom_food(food, user_id)

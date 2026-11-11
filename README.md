@@ -13,12 +13,12 @@ meal to a daily dashboard. The app is built for Indian food and runs on an ordin
 - **Manipuri dishes:** Ooti, Eromba and Singju. CLIP has rarely seen them, so each also has ~20 example photos
   (few-shot, still no training): on 20 held-out photos, top-1 went from 35% to 85% and top-3 from 55% to 95%.
 - **Confidence levels:** a high-confidence answer is pre-selected. Medium shows the top 3, and low or "not food" asks you to search.
-- **Whole plates:** the AI offers 3 to 8 likely foods (more when a plate has several dishes). Tap every food you can see; **+ Add a food** searches for anything it missed, and a food that is not in the database can be created right there. Each food gets its own portion, and they are calculated and saved together as one meal.
+- **Whole plates:** the AI offers 3 to 8 likely foods (more when a plate has several dishes). Select every food you can see; search for anything it missed, and a food that is not in the database can be added right there. Each food gets its own portion, and they are calculated and saved together as one meal.
 - **Phone friendly:** live camera preview (where the browser allows it) with a fallback to the phone's camera app, photo preview with retake, light/dark mode, and cards instead of wide tables on small screens.
 - **Meal log:** edit or delete a saved meal, quick-add your recent foods, and old photos that were never saved to a meal are deleted after 24 hours.
-- **Portions from the photo:** when a plate is in view, a second model (CLIPSeg) finds each food on it and uses the plate
-  (a standard 27 cm thali) as a ruler to estimate grams, colouring each food on the photo. For a bowl or a close-up there is no
-  ruler, so the standard serving is kept and the page says why. Every number stays editable: pieces, katori, plate, bowl, cup or grams.
+- **Portions:** pieces, bowl, plate, cup or exact grams, chosen by the user. Estimating grams from the photo with a
+  second model (CLIPSeg) was tried and removed: it gave an estimate for only 3 of 81 test photos, because a close-up
+  photo has no scale (see [docs/portion_experiment.md](docs/portion_experiment.md)).
 - **Nutrition data:** per 100 g, from the Indian Nutrient Databank (INDB) and USDA FoodData Central, with the source of every food stored.
 - **Built with:** Python, Flask, SQLite, HTML/CSS/JavaScript, Bootstrap and Chart.js. It works offline after the first model download.
 
@@ -32,8 +32,8 @@ Design and report: [Architecture & HLD](https://claude.ai/code/artifact/8e9e04f9
 | | |
 |---|---|
 | Python | 3.11 or newer (developed and tested with 3.13) |
-| Disk space | About 3 GB: AI models 1.2 GB (CLIP and CLIPSeg, about 600 MB each), Python libraries 0.9 GB |
-| Memory | 8 GB RAM recommended (the two models use about 2 GB) |
+| Disk space | About 2 GB: AI model about 600 MB, Python libraries 0.9 GB |
+| Memory | 8 GB RAM recommended (the model uses about 1–1.5 GB) |
 | Internet | Only for installation and the first start (model download) |
 | GPU | Not needed |
 
@@ -69,9 +69,9 @@ python app.py
 
 Open **http://127.0.0.1:5000** and create an account.
 
-- **The first start downloads the two models (about 1.2 GB) into `models/`.** The website opens
+- **The first start downloads the CLIP model (about 600 MB) into `models/`.** The website opens
   immediately and shows "The AI model is loading" until the download finishes. Later starts load
-  the saved copies in about 15 seconds and need no internet (checked with the network blocked).
+  the saved copy in about 15 seconds and need no internet (checked with the network blocked).
 - The database `instance/food_calorie.db` is created automatically with 76 foods. Foods added to
   `nutrition_data.py` later are added to an existing database on the next start.
 
@@ -89,12 +89,11 @@ Windows may ask whether Python can use the network; allow it for private network
 
 ## 4. How to use
 
-1. **Scan food:** take or upload a photo of a dish or a whole plate (or choose *No photo? Search a food instead*).
-2. **Check:** the AI shows its confidence and its likely foods (3 to 8). Tap every food that is on the plate
-   (tap again to remove it). For anything missing, tap **+ Add a food** and search; if it is not in the
+1. **Add a meal:** take or upload a photo of a dish or a whole plate (or choose *Log a food without a photo*).
+2. **Check:** the AI shows its confidence and its likely foods (3 to 8). Select every food that is on the plate
+   (select again to remove it). For anything missing, search all foods; if it is not in the
    database at all, choose **Create "…" as a new food** and enter its values in the pop-up. Each food appears under
-   **Your plate** with its own portion. Tap **Estimate portions from photo** to fill in the grams from the photo
-   (when a plate is visible), check them, choose the meal, then press **Calculate Calories**.
+   **Your plate** with its own portion. Choose the meal, then press **Calculate**.
 3. **Save:** the result shows the total calories, protein, carbs, fat and fiber, plus one row per food.
    **Save** stores all of them together. **Add more from this photo** adds further items later.
 4. **Dashboard** shows today's total, what is left of your goal, where the calories come from,
@@ -104,7 +103,7 @@ Windows may ask whether Python can use the network; allow it for private network
 ## 5. Test
 
 ```powershell
-python -m pytest            # 214 tests, about 1-2 minutes; no GPU needed
+python -m pytest            # 192 tests, about 1 minute; no GPU needed
 ```
 
 Check the AI's accuracy on your own photos. Put them in folders named after foods in the
@@ -142,7 +141,6 @@ routes/api.py           JSON API (/api/predict, /api/calculate, /api/food-log, /
 services/auth.py        password hashing, login_required
 services/image_processor.py   validate, rotate, resize, strip EXIF, save
 services/food_classifier.py   CLIP zero-shot recognition, example photos (few-shot), --evaluate
-services/portion_estimator.py CLIPSeg: find each food on the plate and estimate its grams
 services/calorie_calculator.py  portion -> grams -> calories and nutrients
 database/schema.sql     the four tables
 database/db.py          every SQL query
@@ -151,7 +149,7 @@ data/reference_embeddings.pt the CLIP vectors of the Manipuri example photos (th
 scripts/                prepare photos, download the public test set, calibrate the few-shot settings
 docs/                   accuracy results, viva notes
 templates/, static/     pages, CSS, JavaScript, Bootstrap and Chart.js (stored locally)
-tests/                  214 automated tests
+tests/                  192 automated tests
 instance/               the database and uploaded photos (created at run time, never public)
 models/                 the downloaded CLIP model
 ```
@@ -168,8 +166,6 @@ All settings are in `config.py`. Common changes:
 | `SUGGESTION_MIN_CONFIDENCE` | 0.04 | Besides the top 3, foods scoring at least this are also offered |
 | `MAX_SUGGESTIONS` | 8 | Most foods offered after a scan |
 | `REFERENCE_THRESHOLD` / `REFERENCE_WEIGHT` | 0.80 / 200 | When example photos look this similar, how big the bonus is |
-| `PLATE_DIAMETER_CM` | 27 | The plate used as the ruler for portion estimates |
-| `LOAD_PORTION_MODEL` | True | Set to False to skip CLIPSeg (portions then always chosen by hand) |
 | `MAX_CONTENT_LENGTH` | 8 MB | Largest upload |
 | `DEFAULT_CALORIE_GOAL` | 2000 | New users' daily goal (each user can change it) |
 
@@ -180,7 +176,7 @@ random key is made at every start.
 
 | Problem | Fix |
 |---|---|
-| "The AI model is loading" never ends | The first start downloads 1.2 GB; watch the terminal. Without internet on the first start, the page shows an error. Connect and restart. |
+| "The AI model is loading" never ends | The first start downloads about 600 MB; watch the terminal. Without internet on the first start, the page shows an error. Connect and restart. |
 | "Cannot reach the server" | The terminal running `python app.py` was closed. Start it again. |
 | iPhone photo rejected on a laptop | HEIC photos are not supported. Export the photo as JPG, or upload it from the iPhone itself (Safari converts it). |
 | Phone cannot open the app | Use `--host 0.0.0.0`, the same Wi-Fi, the laptop's IPv4 address, and allow Python through Windows Firewall. |
@@ -191,8 +187,8 @@ random key is made at every start.
 
 - CLIP: Radford et al., *Learning Transferable Visual Models From Natural Language Supervision*, 2021
   ([openai/clip-vit-base-patch32](https://huggingface.co/openai/clip-vit-base-patch32)).
-- CLIPSeg: Lüddecke and Ecker, *Image Segmentation Using Text and Image Prompts*, CVPR 2022
-  ([CIDAS/clipseg-rd64-refined](https://huggingface.co/CIDAS/clipseg-rd64-refined)).
+- CLIPSeg (used in the portion experiment, then removed): Lüddecke and Ecker, *Image Segmentation Using Text
+  and Image Prompts*, CVPR 2022 ([CIDAS/clipseg-rd64-refined](https://huggingface.co/CIDAS/clipseg-rd64-refined)).
 - Few-shot idea: Zhang et al., *Tip-Adapter: Training-free Adaption of CLIP for Few-shot Classification*, ECCV 2022.
 - Manipuri dishes: no published nutrient analysis was found; values are recipe estimates from USDA SR Legacy
   ingredients (see `database/nutrition_data.py`). Example photos were collected from the web by the developer

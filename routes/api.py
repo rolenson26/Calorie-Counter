@@ -8,7 +8,6 @@ Every answer has the same shape, so the JavaScript handles all of them alike:
 Endpoints (all need login except /status)
     GET    /api/status              is the AI model ready?
     POST   /api/predict             photo -> top 3 foods
-    POST   /api/estimate-portions   photo + chosen foods -> estimated grams of each (plate as ruler)
     POST   /api/calculate           food + portion -> nutrition (nothing saved)
     POST   /api/food-log            save a meal
     POST   /api/food-log/batch      save several foods from one plate at once
@@ -27,10 +26,8 @@ function, and turn the result into JSON.
 import sqlite3
 from dataclasses import asdict
 from datetime import date, timedelta
-from pathlib import Path
 
 from flask import Blueprint, current_app, jsonify, request, url_for
-from PIL import Image
 
 from database import db
 from services import cleanup
@@ -181,9 +178,7 @@ def classifier():
 @api_bp.get("/status")
 def status():
     return ok(model_ready=classifier() is not None,
-              model_error=current_app.extensions.get("classifier_error"),
-              portion_ready=current_app.extensions.get("portion_estimator") is not None,
-              portion_error=current_app.extensions.get("portion_error"))
+              model_error=current_app.extensions.get("classifier_error"))
 
 
 # =============================================================== predict
@@ -225,40 +220,6 @@ def predict():
         top_predictions=suggestions,
         message=LEVEL_MESSAGES[result.level].format(name=result.top3[0].name),
     )
-
-
-# =============================================================== portion estimate
-
-@api_bp.post("/estimate-portions")
-@login_required
-def estimate_portions():
-    """Photo + the foods the user chose -> estimated grams of each (services/portion_estimator.py).
-
-    Nothing is saved: the page puts the grams into the portion boxes, where the user can change them.
-    """
-    estimator = current_app.extensions.get("portion_estimator")
-    if estimator is None:
-        message = current_app.extensions.get("portion_error") or \
-            "The portion model is still loading. Please try again in a few seconds."
-        return fail(message, 503)
-
-    data = json_body()
-    prediction = prediction_for(data.get("prediction_id"), current_user())
-    if prediction is None:
-        raise ApiError("prediction_id is required: portions are estimated from a scanned photo")
-    food_ids = data.get("food_ids")
-    if not isinstance(food_ids, list) or not 1 <= len(food_ids) <= MAX_MEAL_ITEMS:
-        raise ApiError(f"food_ids must be a list of 1 to {MAX_MEAL_ITEMS} foods")
-    foods = [get_food_or_404(food_id) for food_id in food_ids]
-    if len({food["id"] for food in foods}) != len(foods):
-        raise ApiError("Each food can be listed only once")
-
-    photo = Path(current_app.config["UPLOAD_FOLDER"]) / prediction["image_path"].removeprefix("uploads/")
-    if not photo.is_file():
-        raise ApiError("This photo is no longer stored. Please scan it again.", 404)
-    with Image.open(photo) as stored:
-        image = stored.convert("RGB")
-    return ok(**estimator.estimate(image, foods))
 
 
 # =============================================================== calculate and log

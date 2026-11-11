@@ -1,13 +1,13 @@
 /*
-  style.css - the app's own look, on top of Bootstrap 5.
+  style.css - small additions on top of plain Bootstrap 5.
 
-  Every colour is defined once below. The three chart colours (--series-*) and
-  the status colours come from a palette that was checked for colour-blind
-  safety; status colours always appear with a text label, never alone.
+  Kept deliberately simple (2026-11-12): white page, thin borders, small corners,
+  no gradients, shadows or decoration. Every colour is defined once below. The three
+  chart colours (--series-*) were checked for colour-blind safety.
 */
 :root {
-  --page: #f6f6f3;
-  --surface: #fcfcfb;
+  --page: #ffffff;
+  --surface: #ffffff;
   --ink: #0b0b0b;
   --ink-2: #52514e;
   --muted: #898781;
@@ -109,28 +109,20 @@ body { background-color: var(--page); }
 .app-nav .nav-link { color: var(--ink-2); }
 .app-nav .nav-link.active { color: var(--brand-dark); font-weight: 600; }
 
-.app-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: 14px; }
+.app-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px; }
 section.app-card + section.app-card { margin-top: 1rem; }
 .auth-card { max-width: 420px; margin: 2.5rem auto; }
 .disclaimer { font-size: 0.8rem; color: var(--muted); }
-.step-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--brand); margin-bottom: 0.25rem; }
 
 /* ------------------------------------------------------------ scan page */
-.drop-zone {
-  border: 1.5px dashed var(--axis);
-  border-radius: 12px;
-  padding: 2rem 1rem;
-  text-align: center;
-  background: var(--field);
-  transition: background-color 0.15s, border-color 0.15s;
-}
-.drop-zone.dragging { border-color: var(--brand); background: var(--brand-soft); }
+.drop-zone { border: 1px dashed var(--axis); border-radius: 6px; padding: 1rem; }
+.drop-zone.dragging { border-color: var(--brand); }
 
 .photo-frame {
   aspect-ratio: 4 / 3;
   max-height: 70vh;
   background: var(--grid);
-  border-radius: 12px;
+  border-radius: 4px;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -138,28 +130,10 @@ section.app-card + section.app-card { margin-top: 1rem; }
 }
 .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
 
-/* Confidence: the dot carries the status colour, the words carry the meaning. */
-.level-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.3rem 0.7rem;
-  border: 1px solid var(--hairline);
-  border-radius: 999px;
-  background: var(--field);
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-.level-badge .dot { width: 0.65rem; height: 0.65rem; border-radius: 50%; }
-.level-high .dot { background: var(--good); }
-.level-medium .dot { background: var(--warning); }
-.level-low .dot { background: var(--critical); }
-.level-not_food .dot { background: var(--muted); }
-
 .suggestion {
   border: 1px solid var(--axis);
   background: var(--field);
-  border-radius: 12px;
+  border-radius: 4px;
   padding: 0.55rem 0.9rem;
   min-height: 48px;
   color: var(--ink);
@@ -178,13 +152,9 @@ section.app-card + section.app-card { margin-top: 1rem; }
 .quantity-input { width: 6rem; }
 .grams-input { max-width: 12rem; }
 
-.hero-number { font-size: 3.25rem; font-weight: 650; line-height: 1.05; letter-spacing: -0.02em; }
-.hero-unit { font-size: 1.1rem; color: var(--ink-2); }
-
-.nutrient-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin: 0; }
-.nutrient-grid > div { background: var(--field); border: 1px solid var(--hairline); border-radius: 10px; padding: 0.6rem 0.8rem; }
-.nutrient-grid dt { font-size: 0.8rem; font-weight: 500; color: var(--ink-2); }
-.nutrient-grid dd { margin: 0; font-size: 1.3rem; font-weight: 600; }
+.hero-number { font-size: 2.25rem; font-weight: 600; line-height: 1.1; }
+.hero-unit { font-size: 1rem; color: var(--ink-2); }
+.nutrient-table th { font-weight: 400; }
 
 /* ------------------------------------------------------------ dashboard */
 .dash { transition: opacity 0.2s; }
@@ -242,25 +212,7 @@ h1, h2, h3, h4, .fw-semibold { overflow-wrap: anywhere; }
 .photo-frame-lg { aspect-ratio: 4 / 3; }
 .photo-frame-lg img { object-fit: contain; background: #000; }
 
-.busy-box {
-  margin-top: 1rem;
-  padding: 0.9rem 1rem;
-  border: 1px solid var(--hairline);
-  border-radius: 12px;
-  background: var(--brand-soft);
-}
-.busy-bar { height: 6px; border-radius: 999px; background: var(--hairline); overflow: hidden; margin-top: 0.6rem; }
-.busy-bar::after {
-  content: "";
-  display: block;
-  height: 100%;
-  width: 40%;
-  border-radius: 999px;
-  background: var(--brand);
-  animation: busy-slide 1.2s ease-in-out infinite;
-}
-@keyframes busy-slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } }
-@media (prefers-reduced-motion: reduce) { .busy-bar::after { animation: none; width: 100%; } }
+.busy-box { margin-top: 1rem; }
 
 .camera-overlay { position: fixed; inset: 0; z-index: 2000; background: #000; display: flex; flex-direction: column; }
 .camera-overlay video { flex: 1; min-height: 0; width: 100%; object-fit: cover; background: #000; }
@@ -282,17 +234,7 @@ h1, h2, h3, h4, .fw-semibold { overflow-wrap: anywhere; }
 .camera-shutter:active::after { inset: 9px; }
 body.no-scroll { overflow: hidden; }
 
-.conf-meter { height: 8px; border-radius: 999px; background: var(--grid); overflow: hidden; margin: 0.6rem 0 0.75rem; }
-.conf-fill { height: 100%; width: 0; border-radius: 999px; background: var(--muted); transition: width 0.4s; }
-.conf-meter.level-high .conf-fill { background: var(--good); }
-.conf-meter.level-medium .conf-fill { background: var(--warning); }
-.conf-meter.level-low .conf-fill { background: var(--critical); }
-.conf-meter.level-not_food .conf-fill { background: var(--muted); }
-
 .suggestions { display: grid; grid-template-columns: 1fr; gap: 0.5rem; margin-bottom: 1rem; }
-/* "+ Add a food": the last tile after the AI's suggestions. Dashed, so it reads as an action, not a guess. */
-.suggestion.suggestion-add { border-style: dashed; border-color: var(--brand); color: var(--brand-dark); justify-content: center; }
-.suggestion.suggestion-add .name { font-weight: 600; }
 .search-results .create-food .fw-semibold { color: var(--brand-dark); }
 .suggestions:empty { display: none; }
 .suggestion .name { font-weight: 500; }
@@ -307,7 +249,7 @@ body.no-scroll { overflow: hidden; }
 .chip-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .chip {
   border: 1px solid var(--axis); background: var(--field); color: var(--ink);
-  border-radius: 999px; padding: 0.4rem 0.95rem; min-height: 40px; font-size: 0.9rem;
+  border-radius: 4px; padding: 0.4rem 0.95rem; min-height: 40px; font-size: 0.9rem;
 }
 .chip:hover { border-color: var(--brand); }
 .chip.active, .chip[aria-pressed="true"] { background: var(--brand-soft); border-color: var(--brand); color: var(--brand-dark); font-weight: 600; }
@@ -327,16 +269,11 @@ body.no-scroll { overflow: hidden; }
 .plate-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.5rem; }
 .plate-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
 .plate-list:empty { display: none; }
-.plate-item { border: 1px solid var(--hairline); border-radius: 12px; background: var(--field); padding: 0.8rem 0.9rem; }
+.plate-item { border: 1px solid var(--hairline); border-radius: 4px; background: var(--field); padding: 0.8rem 0.9rem; }
 .plate-item-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.6rem; }
 .plate-item-name { min-width: 0; }
 .grams-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.75rem; margin-top: 0.6rem; }
 .grams-row .grams-input { flex: 0 1 9rem; }
-
-/* Portion estimate from the photo: the button, and on each food a swatch matching its colour on the photo. */
-.estimate-box { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; margin-bottom: 0.75rem; }
-.estimate-badge { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.25rem; font-size: 0.85rem; color: var(--ink-2); }
-.swatch { flex: none; width: 0.85rem; height: 0.85rem; border-radius: 3px; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.15); }
 
 .result-items { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--hairline); }
 .result-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid var(--hairline); }
@@ -357,27 +294,24 @@ body.no-scroll { overflow: hidden; }
 .food-macros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.25rem; margin-top: 0.5rem; text-align: center; font-size: 0.85rem; }
 .food-macros span { display: block; color: var(--ink-2); font-size: 0.75rem; }
 
-.empty-state { text-align: center; padding: 2rem 1rem; }
-.empty-symbol { font-size: 2.5rem; line-height: 1; margin-bottom: 0.75rem; opacity: 0.8; }
+.empty-state { padding: 1rem 0; }
 
 /* ------------------------------------------------------------ small screens (phones) */
 @media (max-width: 575.98px) {
   .container { padding-left: 16px; padding-right: 16px; }
   .card-body.p-4 { padding: 1rem !important; }
   .auth-card { margin: 1rem auto; }
-  .hero-number { font-size: 2.6rem; }
+  .hero-number { font-size: 2rem; }
   .chart-box { height: 220px; }
   .tile-value { font-size: 1.35rem; }
-  .nutrient-grid dd { font-size: 1.15rem; }
   /* The main button of each step stays in reach while the page scrolls. */
   .action-bar {
     position: sticky; bottom: 0; z-index: 5;
     margin: 0 -1rem -1rem; padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
-    border-top: 1px solid var(--hairline); border-radius: 0 0 14px 14px;
+    border-top: 1px solid var(--hairline); border-radius: 0 0 6px 6px;
   }
   .action-bar .btn, #drop-zone .btn { width: 100%; }
   #drop-zone .d-flex { flex-direction: column; }
-  .drop-zone { padding: 1.5rem 0.75rem; }
 }
 @media (min-width: 576px) {
   .suggestions { grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
@@ -406,112 +340,11 @@ body.no-scroll { overflow: hidden; }
 [data-bs-theme="dark"] .modal-header, [data-bs-theme="dark"] .modal-footer { border-color: var(--hairline); }
 #btn-prev-day, #btn-next-day { font-size: 1.4rem; line-height: 1; min-width: 44px; padding-top: 0; padding-bottom: 0.15rem; }
 
-/* ------------------------------------------------------------ home page (landing hero) */
-.hero {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-  align-items: center;
-  padding: 1.25rem;
-  border: 1px solid var(--hairline);
-  border-radius: 20px;
-  background: linear-gradient(135deg, var(--brand-soft) 0%, var(--surface) 62%);
-}
-.hero-eyebrow {
-  display: inline-block;
-  padding: 0.25rem 0.7rem;
-  border-radius: 999px;
-  background: var(--surface);
-  border: 1px solid var(--hairline);
-  color: var(--brand-dark);
-  font-size: 0.75rem;
-  font-weight: 650;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-.hero-title {
-  margin: 0.9rem 0 0.75rem;
-  font-size: clamp(2rem, 6.5vw, 3.1rem);
-  font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-}
-.hero-lead { font-size: 1.05rem; color: var(--ink-2); max-width: 36rem; margin-bottom: 1.25rem; }
-.hero .drop-zone.hero-actions { border: 0; background: none; padding: 0; text-align: left; }
-.hero-actions .btn-lg { min-height: 52px; padding-left: 1.5rem; padding-right: 1.5rem; }
-.hero-links { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.75rem; margin-top: 1rem; }
-.hero .recent-box { margin-top: 1rem; }
-
-.demo-card {
-  margin: 0 auto;
-  max-width: 24rem;
-  position: relative;
-  border: 1px solid var(--hairline);
-  border-radius: 18px;
-  background: var(--surface);
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-.demo-tag {
-  position: absolute; top: 0.6rem; left: 0.6rem; z-index: 1;
-  padding: 0.15rem 0.6rem; border-radius: 999px;
-  background: var(--surface); border: 1px solid var(--hairline);
-  font-size: 0.72rem; font-weight: 600; color: var(--ink-2);
-}
-.demo-photo img { display: block; width: 100%; height: auto; aspect-ratio: 784 / 410; object-fit: cover; background: var(--grid); }
-.demo-body { padding: 1rem 1.1rem 1.1rem; }
-.demo-step + .demo-step { margin-top: 0.9rem; padding-top: 0.9rem; border-top: 1px solid var(--hairline); }
-.demo-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.4rem 0.75rem; }
-.demo-label { font-size: 0.75rem; font-weight: 650; letter-spacing: 0.04em; text-transform: uppercase; color: var(--brand-dark); }
-.demo-note { margin: 0.55rem 0 0.5rem; font-size: 0.88rem; color: var(--ink-2); }
-.demo-guesses { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
-.demo-guesses li { padding: 0.2rem 0.65rem; border: 1px solid var(--axis); border-radius: 999px; background: var(--field); font-size: 0.85rem; }
-.demo-guesses b { margin-left: 0.2rem; font-weight: 600; color: var(--ink-2); font-variant-numeric: tabular-nums; }
-.demo-pick { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.15rem 0.75rem; margin-top: 0.45rem; }
-.demo-kcal { margin: 0.15rem 0 0.7rem; }
-.demo-kcal .hero-number { font-size: 2.4rem; }
-.demo-foot { margin: 0.9rem 0 0; font-size: 0.82rem; color: var(--ink-2); }
-.demo-macros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; font-size: 0.8rem; color: var(--ink-2); }
-.demo-macros b { display: block; color: var(--ink); font-size: 0.95rem; }
-.demo-macros .bar { display: block; height: 6px; border-radius: 999px; background: var(--grid); margin-bottom: 0.4rem; position: relative; overflow: hidden; }
-.demo-macros .bar::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--w); background: var(--c); border-radius: 999px; }
-
-.how-grid { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
-.how-grid li {
-  display: flex; gap: 0.85rem; align-items: flex-start;
-  padding: 1rem; border: 1px solid var(--hairline); border-radius: 14px; background: var(--surface);
-}
-.how-grid li div { display: flex; flex-direction: column; min-width: 0; }
-.how-grid span:not(.how-num) { color: var(--ink-2); font-size: 0.9rem; }
-.how-num {
-  flex: none; width: 2rem; height: 2rem; border-radius: 50%;
-  display: inline-flex; align-items: center; justify-content: center;
-  background: var(--brand); color: #fff; font-weight: 650;
-}
-
-@media (min-width: 768px) {
-  .hero { padding: 2rem; gap: 2rem; }
-  .how-grid { grid-template-columns: repeat(3, 1fr); }
-}
-@media (min-width: 992px) {
-  .hero { grid-template-columns: 1.1fr 0.9fr; padding: 3rem; gap: 3rem; }
-  .hero-lead { font-size: 1.15rem; }
-  .how-grid { margin-top: 1.25rem; gap: 1rem; }
-  .how-grid li { padding: 1.25rem; }
-  .app-card .card-body.p-4 { padding: 2rem !important; }   /* the other steps get roomier cards on large screens */
-}
-@media (max-width: 575.98px) {
-  .hero { padding: 1.1rem; border-radius: 16px; }
-  .hero-links .btn { flex: 1 1 100%; }
-}
-@media (max-width: 399.98px) {
-  .navbar-brand { font-size: 0.95rem; gap: 0.35rem; }
-  .brand-icon { width: 20px; height: 20px; }
-  .theme-toggle { min-width: 40px; }
-}
+/* ------------------------------------------------------------ larger screens */
 @media (min-width: 768px) {
   .navbar-brand, .app-nav .nav-link, .logout-btn { white-space: nowrap; }
 }
-@media (min-width: 992px) {
-  .demo-card { max-width: 28rem; }
+@media (max-width: 399.98px) {
+  .navbar-brand { font-size: 0.95rem; }
+  .theme-toggle { min-width: 40px; }
 }

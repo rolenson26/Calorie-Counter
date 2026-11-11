@@ -144,10 +144,10 @@ const MEAL_ORDER = ["breakfast", "lunch", "snack", "dinner"];
 
 /* ------------------------------------------------------------ empty states */
 
-/* A friendly "nothing here yet" block: a symbol, a title, one sentence and an optional button/link. */
-function emptyState(symbol, title, text, action) {
+/* A plain "nothing here yet" block: a title, one sentence and an optional button/link.
+   (The first argument used to be a decorative emoji; it is ignored now, so callers need not change.) */
+function emptyState(_symbol, title, text, action) {
   return el("div", { class: "empty-state" },
-    el("div", { class: "empty-symbol", "aria-hidden": "true" }, symbol),
     el("p", { class: "fw-semibold mb-1" }, title),
     el("p", { class: "text-secondary mb-3" }, text),
     action || null);

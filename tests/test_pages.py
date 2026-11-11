@@ -26,12 +26,13 @@ def test_scan_page_has_camera_and_upload_inputs(auth_client):
     for meal in ("breakfast", "lunch", "dinner", "snack"):
         assert f'value="{meal}"' in html
     assert 'id="plate-items"' in html and 'id="result-items"' in html    # several foods per photo
-    assert 'id="new-food-modal"' in html and '<option value="katori">katori</option>' in html   # create a food in place
+    assert 'id="new-food-modal"' in html and '<option value="bowl">bowl</option>' in html   # create a food in place
 
 
 def test_foods_page_lists_serving_units(auth_client):
     html = auth_client.get("/foods").get_data(as_text=True)
-    assert '<option value="katori">katori</option>' in html
+    assert '<option value="bowl">bowl</option>' in html
+    assert "katori" not in html                             # the word used in Manipur is "bowl"
 
 
 @pytest.mark.parametrize("path", ["/login", "/register"])
@@ -86,22 +87,11 @@ def test_static_files_are_served(client):
         response.close()
 
 
-def test_home_page_example_card_uses_the_sample_photo(auth_client):
-    """The home page shows a real AI result for static/img/example-thali.jpg, so the photo must exist and load."""
-    import io
-
-    from PIL import Image
-
+def test_home_page_is_plain(auth_client):
+    """The home page is a plain form (2026-11-12): no marketing hero or example card."""
     html = auth_client.get("/").get_data(as_text=True)
-    assert "/static/img/example-thali.jpg" in html
-    assert "Low confidence" in html                         # the honest result of the real run (see the comment in index.html)
-
-    response = auth_client.get("/static/img/example-thali.jpg")
-    assert response.status_code == 200
-    image = Image.open(io.BytesIO(response.data))
-    response.close()
-    assert image.format == "JPEG"
-    assert image.size == (784, 410)                         # the width/height written in the <img> tag
+    assert "Add a meal" in html
+    assert "hero-title" not in html and "demo-card" not in html
 
 
 def test_navbar_marks_the_current_page(auth_client):

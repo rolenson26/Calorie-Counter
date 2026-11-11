@@ -47,35 +47,13 @@ class FakeClassifier:
         self.added.append(food["name"])
 
 
-class FakePortionEstimator:
-    """Stands in for CLIPSeg: every food is 'measured' as 2 servings. Remembers what it was asked."""
-
-    def __init__(self):
-        self.calls = []
-
-    def estimate(self, image, foods):
-        self.calls.append((image.size, [food["name"] for food in foods]))
-        return {
-            "method": "plate", "message": "Measured against a standard 27 cm plate.",
-            "plate_share": 0.5, "bowl_share": 0.05, "food_share_of_plate": 0.4, "overlay": None,
-            "items": [{"food_id": food["id"], "name": food["name"], "estimated": True,
-                       "grams": 2 * food["serving_grams"], "servings": 2.0, "area_cm2": 100,
-                       "colour": "#e6194b", "note": None} for food in foods],
-        }
-
-
 @pytest.fixture
 def fake_classifier():
     return FakeClassifier()
 
 
 @pytest.fixture
-def fake_estimator():
-    return FakePortionEstimator()
-
-
-@pytest.fixture
-def app(tmp_path, fake_classifier, fake_estimator):
+def app(tmp_path, fake_classifier):
     app = create_app(
         {
             "TESTING": True,
@@ -84,7 +62,6 @@ def app(tmp_path, fake_classifier, fake_estimator):
             "UPLOAD_FOLDER": tmp_path / "uploads",
         },
         classifier=fake_classifier,
-        portion_estimator=fake_estimator,
     )
     fake_classifier.app = app
     return app

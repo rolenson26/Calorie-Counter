@@ -14,7 +14,6 @@ What happens at start-up
        opens immediately. Until it is ready, /api/predict answers 503
        "model is still loading" and /api/status says model_ready: false.
        The example-photo vectors (data/reference_embeddings.pt) are loaded with it.
-       Then CLIPSeg (portion estimate from the photo) loads in the same thread.
 """
 import argparse
 import logging
@@ -30,12 +29,11 @@ from routes.pages import pages_bp
 from services import cleanup
 
 
-def create_app(config_overrides=None, classifier=None, portion_estimator=None):
+def create_app(config_overrides=None, classifier=None):
     """Application factory: build a configured Flask app.
 
-    config_overrides  - settings to change (tests use a temporary database)
-    classifier        - a ready classifier to use instead of loading CLIP (tests pass a fake one)
-    portion_estimator - a ready portion estimator instead of loading CLIPSeg (tests pass a fake one)
+    config_overrides - settings to change (tests use a temporary database)
+    classifier       - a ready classifier to use instead of loading CLIP (tests pass a fake one)
     """
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -51,8 +49,6 @@ def create_app(config_overrides=None, classifier=None, portion_estimator=None):
 
     app.extensions["food_classifier"] = classifier
     app.extensions["classifier_error"] = None
-    app.extensions["portion_estimator"] = portion_estimator
-    app.extensions["portion_error"] = None
     if classifier is None and app.config.get("LOAD_MODEL", True):
         start_loading_classifier(app)
     return app
@@ -74,21 +70,6 @@ def start_loading_classifier(app):
         except Exception:
             app.logger.exception("Could not load the AI model")
             app.extensions["classifier_error"] = "The AI model could not be loaded. See the server log."
-            return
-        if app.config.get("LOAD_PORTION_MODEL", True):
-            load_portion_estimator()
-
-    def load_portion_estimator():
-        """CLIPSeg, loaded after CLIP so scanning is ready first. If it fails, scanning still works
-        and the page simply does not offer the portion estimate."""
-        try:
-            from services.portion_estimator import estimator_from_config
-
-            app.extensions["portion_estimator"] = estimator_from_config(app.config)
-            app.logger.info("Portion model ready")
-        except Exception:
-            app.logger.exception("Could not load the portion model")
-            app.extensions["portion_error"] = "The portion model could not be loaded. Choose portions yourself."
 
     threading.Thread(target=load, name="load-clip", daemon=True).start()
 
