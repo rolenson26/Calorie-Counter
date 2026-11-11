@@ -39,6 +39,22 @@ What is still wrong:
 
 **Side effect on other foods.** The example photos pull a few non-Manipuri photos towards a Manipuri dish: 8 of 941. For example, a dark dal makhani becomes Eromba, and some salads and fried rice become Singju. Most of these are unknown foods, or ones the app was already unsure about. The net cost is 1 photo in top-1 and 2 in top-3 out of 658.
 
+## 3. A second, varied test set (Wikimedia Commons)
+
+The `Test Samples` folder sits next to the project, outside the repository. It holds 82 freely licensed Commons photos, plus 6 of the developer's held-back Ooti photos. None of them was used to build or tune anything.
+
+| Group | Result |
+|---|---|
+| Known foods (68 photos, 22 foods) | **63 % top-1 (43), 87 % top-3 (59)** |
+| Eromba, new photos | 4 of 4 top-1 |
+| Singju, new photos | 2 of 4 top-1, 4 of 4 top-3 |
+| Ooti, held back | 4 of 6 top-1, 6 of 6 top-3 |
+| Not food (4) | 4 of 4 rejected |
+| Foods not in the app (16: jalebi, gulab jamun, pav bhaji, Manipuri thali) | 15 of 16 not answered with "high" |
+
+- **Why it is lower than the 77 % above:** these photos are more varied (restaurant tables, unusual angles).
+- **What gets confused:** similar-looking foods (roti and naan, plain and masala dosa, poha and veg pulao).
+
 ## Honest limits
 
 - **Small test set.** 20 Manipuri test photos is small: one photo is worth 5 percentage points.
