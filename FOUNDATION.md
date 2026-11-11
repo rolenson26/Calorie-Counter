@@ -239,6 +239,8 @@ Today, in this order. Each step gets its own go-ahead.
 | **3. Full check and fixes** | Headless browser run of the whole app (dashboard, history, edit and delete, dark mode, phone width). Fix the bugs found and I17. Optionally re-measure accuracy on a public dataset | various | Clean run with screenshots |
 | **4. Viva notes** | `docs/viva.md`: how each part works, limitations, likely questions with answers, a 5-minute demo script. Update the README and status page | docs | Ready to rehearse |
 
+**Status 2026-11-12:** Steps 1–4 are **done** and committed on branch `viva-improvements`, which is not pushed. 214 tests pass.
+
 **Later ideas (not for the viva):**
 - a stronger recognition model, such as SigLIP or CLIP ViT-L/14
 - a mobile app through ONNX Runtime or TFLite

@@ -70,7 +70,8 @@
         {#
           Example card: the numbers come from a REAL run of the app on static/img/example-thali.jpg, they are not invented.
             AI (CLIP, POST /api/predict)     : confidence level "low"; food gate 100 %
-                                               Baingan Bharta 15.7 %, Sambar 15.5 %, Veg Khichdi 14.3 %
+                                               Baingan Bharta 15 %, Sambar 15 %, Veg Khichdi 14 %
+                                               (re-measured 2026-11-12 with 76 foods; with 73 foods it was 16/16/14 %)
             Refresh it yourself              : python -m services.food_classifier static/img/example-thali.jpg
             User picks Steamed Rice, 1 serving (POST /api/calculate): 1 bowl = 150 g -> 176 kcal,
                                                protein 3.9 g, carbs 38.5 g, fat 0.3 g (bar widths = share of the energy,
@@ -91,12 +92,12 @@
               <div class="demo-step">
                 <div class="demo-head">
                   <span class="demo-label">1. The AI looks at the photo</span>
-                  <span class="level-badge level-low"><span class="dot" aria-hidden="true"></span>Low confidence · 16%</span>
+                  <span class="level-badge level-low"><span class="dot" aria-hidden="true"></span>Low confidence · 15%</span>
                 </div>
                 <p class="demo-note">This plate has many dishes and the AI gives one label per photo, so it is not sure. Its guesses:</p>
                 <ul class="demo-guesses" aria-label="The AI's top three guesses">
-                  <li>Baingan Bharta <b>16%</b></li>
-                  <li>Sambar <b>16%</b></li>
+                  <li>Baingan Bharta <b>15%</b></li>
+                  <li>Sambar <b>15%</b></li>
                   <li>Veg Khichdi <b>14%</b></li>
                 </ul>
               </div>

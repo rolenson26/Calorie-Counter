@@ -7,13 +7,18 @@ meal to a daily dashboard. The app is built for Indian food and runs on an ordin
 > **Academic demonstration.** Calorie and nutrient values are approximate estimates for typical
 > recipes and portions. They are not medical or dietary advice.
 
-- **AI:** pretrained CLIP ViT-B/32 (zero-shot) recognises 73 foods, and any food you add becomes a new label without retraining.
-  On 658 labelled test photos its first suggestion was right 77% of the time, and the right food was in its top 3 for 93%.
+- **AI:** pretrained CLIP ViT-B/32 (zero-shot) recognises 76 foods, and any food you add becomes a new label without retraining.
+  On 658 public test photos its first suggestion was right 77% of the time (504), and the right food was in its top 3 for 93% (609).
+  Reproduce it with `python -m scripts.export_indian_food`, then `--evaluate` (see [docs/accuracy.md](docs/accuracy.md)).
+- **Manipuri dishes:** Ooti, Eromba and Singju. CLIP has rarely seen them, so each also has ~20 example photos
+  (few-shot, still no training): on 20 held-out photos, top-1 went from 35% to 85% and top-3 from 55% to 95%.
 - **Confidence levels:** a high-confidence answer is pre-selected. Medium shows the top 3, and low or "not food" asks you to search.
 - **Whole plates:** the AI offers 3 to 8 likely foods (more when a plate has several dishes). Tap every food you can see; **+ Add a food** searches for anything it missed, and a food that is not in the database can be created right there. Each food gets its own portion, and they are calculated and saved together as one meal.
 - **Phone friendly:** live camera preview (where the browser allows it) with a fallback to the phone's camera app, photo preview with retake, light/dark mode, and cards instead of wide tables on small screens.
 - **Meal log:** edit or delete a saved meal, quick-add your recent foods, and old photos that were never saved to a meal are deleted after 24 hours.
-- **Portions:** pieces, katori, plate, bowl, cup or exact grams. Grams are never guessed from the photo.
+- **Portions from the photo:** when a plate is in view, a second model (CLIPSeg) finds each food on it and uses the plate
+  (a standard 27 cm thali) as a ruler to estimate grams, colouring each food on the photo. For a bowl or a close-up there is no
+  ruler, so the standard serving is kept and the page says why. Every number stays editable: pieces, katori, plate, bowl, cup or grams.
 - **Nutrition data:** per 100 g, from the Indian Nutrient Databank (INDB) and USDA FoodData Central, with the source of every food stored.
 - **Built with:** Python, Flask, SQLite, HTML/CSS/JavaScript, Bootstrap and Chart.js. It works offline after the first model download.
 
@@ -27,8 +32,8 @@ Design and report: [Architecture & HLD](https://claude.ai/code/artifact/8e9e04f9
 | | |
 |---|---|
 | Python | 3.11 or newer (developed and tested with 3.13) |
-| Disk space | About 3 GB: AI model 1.2 GB, Python libraries 0.9 GB |
-| Memory | 8 GB RAM recommended (the model uses about 1–1.5 GB) |
+| Disk space | About 3 GB: AI models 1.2 GB (CLIP and CLIPSeg, about 600 MB each), Python libraries 0.9 GB |
+| Memory | 8 GB RAM recommended (the two models use about 2 GB) |
 | Internet | Only for installation and the first start (model download) |
 | GPU | Not needed |
 
@@ -64,10 +69,11 @@ python app.py
 
 Open **http://127.0.0.1:5000** and create an account.
 
-- **The first start downloads the CLIP model (about 1.2 GB) into `models/`.** The website opens
+- **The first start downloads the two models (about 1.2 GB) into `models/`.** The website opens
   immediately and shows "The AI model is loading" until the download finishes. Later starts load
-  the saved copy in about 5 seconds and need no internet.
-- The database `instance/food_calorie.db` is created automatically with 73 foods.
+  the saved copies in about 15 seconds and need no internet (checked with the network blocked).
+- The database `instance/food_calorie.db` is created automatically with 76 foods. Foods added to
+  `nutrition_data.py` later are added to an existing database on the next start.
 
 ### Use it from your phone (camera)
 
@@ -87,7 +93,8 @@ Windows may ask whether Python can use the network; allow it for private network
 2. **Check:** the AI shows its confidence and its likely foods (3 to 8). Tap every food that is on the plate
    (tap again to remove it). For anything missing, tap **+ Add a food** and search; if it is not in the
    database at all, choose **Create "…" as a new food** and enter its values in the pop-up. Each food appears under
-   **Your plate** with its own portion. Choose the meal, then press **Calculate Calories**.
+   **Your plate** with its own portion. Tap **Estimate portions from photo** to fill in the grams from the photo
+   (when a plate is visible), check them, choose the meal, then press **Calculate Calories**.
 3. **Save:** the result shows the total calories, protein, carbs, fat and fiber, plus one row per food.
    **Save** stores all of them together. **Add more from this photo** adds further items later.
 4. **Dashboard** shows today's total, what is left of your goal, where the calories come from,
@@ -97,7 +104,7 @@ Windows may ask whether Python can use the network; allow it for private network
 ## 5. Test
 
 ```powershell
-python -m pytest            # 183 tests, about 20-90 seconds; no GPU needed
+python -m pytest            # 214 tests, about 1-2 minutes; no GPU needed
 ```
 
 Check the AI's accuracy on your own photos. Put them in folders named after foods in the
@@ -113,7 +120,16 @@ my_photos/
 
 ```powershell
 python -m services.food_classifier --evaluate my_photos
+python -m services.food_classifier --evaluate my_photos --no-references   # text descriptions only, for comparison
 python -m services.food_classifier my_photo.jpg      # classify a single photo
+```
+
+Teach the AI a new dish from example photos (this is how the Manipuri dishes were added):
+
+```powershell
+python -m scripts.prepare_photos "D:/path/to/Samples"          # Samples/<Food Name>/*.jpg -> data/reference_photos + data/test_photos
+python -m services.food_classifier --build-references data/reference_photos   # -> data/reference_embeddings.pt
+python -m scripts.calibrate_references                          # optional: re-check the settings in config.py
 ```
 
 ## 6. Project structure
@@ -125,13 +141,17 @@ routes/pages.py         HTML pages, login/register/logout, private photo route
 routes/api.py           JSON API (/api/predict, /api/calculate, /api/food-log, /api/food-log/batch, ...)
 services/auth.py        password hashing, login_required
 services/image_processor.py   validate, rotate, resize, strip EXIF, save
-services/food_classifier.py   CLIP zero-shot recognition and the --evaluate command
+services/food_classifier.py   CLIP zero-shot recognition, example photos (few-shot), --evaluate
+services/portion_estimator.py CLIPSeg: find each food on the plate and estimate its grams
 services/calorie_calculator.py  portion -> grams -> calories and nutrients
 database/schema.sql     the four tables
 database/db.py          every SQL query
-database/nutrition_data.py   73 foods with per-100 g values and sources
+database/nutrition_data.py   76 foods with per-100 g values and sources (3 Manipuri recipe estimates)
+data/reference_embeddings.pt the CLIP vectors of the Manipuri example photos (the photos stay local)
+scripts/                prepare photos, download the public test set, calibrate the few-shot settings
+docs/                   accuracy results, viva notes
 templates/, static/     pages, CSS, JavaScript, Bootstrap and Chart.js (stored locally)
-tests/                  183 automated tests
+tests/                  214 automated tests
 instance/               the database and uploaded photos (created at run time, never public)
 models/                 the downloaded CLIP model
 ```
@@ -147,6 +167,9 @@ All settings are in `config.py`. Common changes:
 | `FOOD_GATE_THRESHOLD` | 0.50 | Below this, the photo "doesn't look like food" |
 | `SUGGESTION_MIN_CONFIDENCE` | 0.04 | Besides the top 3, foods scoring at least this are also offered |
 | `MAX_SUGGESTIONS` | 8 | Most foods offered after a scan |
+| `REFERENCE_THRESHOLD` / `REFERENCE_WEIGHT` | 0.80 / 200 | When example photos look this similar, how big the bonus is |
+| `PLATE_DIAMETER_CM` | 27 | The plate used as the ruler for portion estimates |
+| `LOAD_PORTION_MODEL` | True | Set to False to skip CLIPSeg (portions then always chosen by hand) |
 | `MAX_CONTENT_LENGTH` | 8 MB | Largest upload |
 | `DEFAULT_CALORIE_GOAL` | 2000 | New users' daily goal (each user can change it) |
 
@@ -168,9 +191,16 @@ random key is made at every start.
 
 - CLIP: Radford et al., *Learning Transferable Visual Models From Natural Language Supervision*, 2021
   ([openai/clip-vit-base-patch32](https://huggingface.co/openai/clip-vit-base-patch32)).
+- CLIPSeg: Lüddecke and Ecker, *Image Segmentation Using Text and Image Prompts*, CVPR 2022
+  ([CIDAS/clipseg-rd64-refined](https://huggingface.co/CIDAS/clipseg-rd64-refined)).
+- Few-shot idea: Zhang et al., *Tip-Adapter: Training-free Adaption of CLIP for Few-shot Classification*, ECCV 2022.
+- Manipuri dishes: no published nutrient analysis was found; values are recipe estimates from USDA SR Legacy
+  ingredients (see `database/nutrition_data.py`). Example photos were collected from the web by the developer
+  and are not included in the repository.
 - Indian Nutrient Databank: Vijayakumar A., Dubasi H.B., Awasthi A., Jaacks L.M., *Development of an
   Indian Food Composition Database*, Current Developments in Nutrition, 2024
   ([data](https://github.com/lindsayjaacks/Indian-Nutrient-Databank-INDB-)).
 - USDA FoodData Central: FNDDS and SR Legacy ([downloads](https://fdc.nal.usda.gov/download-datasets)).
-- Accuracy test photos: [Indian Food Images dataset](https://huggingface.co/datasets/rajistics/indian_food_images) (not included in this project).
+- Accuracy test photos: [Indian Food Images dataset](https://huggingface.co/datasets/rajistics/indian_food_images)
+  (not included; `python -m scripts.export_indian_food` downloads the test split).
 - Bootstrap 5.3.8 and Chart.js 4.5.1, both MIT licensed (in `static/vendor/`).
