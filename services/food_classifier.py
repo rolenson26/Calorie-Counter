@@ -18,10 +18,17 @@ Input : an RGB PIL image (from image_processor)
 Output: a ClassificationResult (is_food, food_probability, level, top3, suggestions)
         suggestions = the top 3 plus other likely foods (for plates with several dishes)
 
+Few-shot example photos (added 2026-11-12, for the Manipuri dishes)
+    CLIP has rarely seen dishes like Eromba, so a sentence is not enough. For such foods we
+    keep the vectors of ~20 example photos. A photo that looks very much like a food's
+    examples gets a bonus for that food (reference_bonus). Still nothing is trained.
+
 Command line (run from the project folder):
     python -m services.food_classifier photo.jpg [more.jpg ...]
-    python -m services.food_classifier --evaluate my_test_photos
+    python -m services.food_classifier --evaluate my_test_photos [--no-references]
         (my_test_photos/<Food Name>/*.jpg, plus an optional my_test_photos/not_food/)
+    python -m services.food_classifier --build-references data/reference_photos
+        (saves the example-photo vectors to data/reference_embeddings.pt)
 """
 import threading
 import time
@@ -84,6 +91,33 @@ def pick_suggestions(guesses, top_k=3, minimum=0.04, maximum=8):
     return [g for i, g in enumerate(guesses) if i < top_k or g.confidence >= minimum][:maximum]
 
 
+def reference_bonus(image_vector, ref_vectors, ref_owner, n_foods, threshold, weight, top_k=3):
+    """Few-shot step: extra score for foods whose example photos look like this photo.
+
+    image_vector : 1 x D photo vector (length 1)
+    ref_vectors  : M x D vectors of the example ("reference") photos (length 1)
+    ref_owner    : M food positions, ref_owner[j] = which food example photo j shows
+    For every food that has examples: similarity = average of its top_k most similar
+    example photos. If that is above `threshold`, the food gets
+    weight x (similarity - threshold) added to its score; otherwise nothing.
+
+    Why a threshold? Two food photos are always fairly similar to each other (about 0.6-0.8),
+    much more than a photo and a sentence (about 0.3). Without a threshold every food
+    that has example photos would get a bonus on every photo and "steal" the answer.
+    Nothing is trained: adding example photos is the whole learning step (this is the idea
+    behind Tip-Adapter, Zhang et al., 2022, a training-free few-shot CLIP method).
+    """
+    bonus = torch.zeros(n_foods)
+    if ref_vectors is None or len(ref_vectors) == 0:
+        return bonus
+    similarities = (image_vector @ ref_vectors.T)[0]
+    for food in ref_owner.unique().tolist():
+        own = similarities[ref_owner == food]
+        score = own.topk(min(top_k, len(own))).values.mean().item()
+        bonus[food] = weight * max(0.0, score - threshold)
+    return bonus
+
+
 def confidence_level(is_food, top_confidence, high=0.60, low=0.30):
     """Turn the numbers into the level the page uses (HLD Module 3 table)."""
     if not is_food:
@@ -99,7 +133,8 @@ class FoodClassifier:
     """Loads CLIP once and classifies photos against the current list of foods."""
 
     def __init__(self, model_name, cache_dir=None, high=0.60, low=0.30, gate=0.50,
-                 suggestion_min=0.04, max_suggestions=8):
+                 suggestion_min=0.04, max_suggestions=8,
+                 reference_threshold=0.80, reference_weight=100.0, reference_top_k=3):
         # Imported here so that tests and pages that never use the model start quickly.
         from transformers import CLIPModel, CLIPProcessor
 
@@ -110,17 +145,22 @@ class FoodClassifier:
             except OSError:
                 return cls.from_pretrained(model_name, cache_dir=cache_dir)
 
+        self.model_name = model_name
         self.model = load(CLIPModel)
         self.processor = load(CLIPProcessor)
         self.model.eval()                                  # inference mode: no training
         self.scale = self.model.logit_scale.exp().item()   # CLIP's learned scale (100)
         self.high, self.low, self.gate = high, low, gate
         self.suggestion_min, self.max_suggestions = suggestion_min, max_suggestions
+        self.reference_threshold, self.reference_weight = reference_threshold, reference_weight
+        self.reference_top_k = reference_top_k
 
         self._lock = threading.Lock()                      # labels can change while a request runs
         self.foods = []                                    # same order as the rows of food_vectors
         self.food_vectors = torch.empty(0, self.model.config.projection_dim)
         self.gate_vectors = self.encode_text(FOOD_PROMPTS + NOT_FOOD_PROMPTS)
+        self.references = {}                               # food name -> N x D vectors of example photos
+        self.ref_vectors, self.ref_owner = None, None      # the same, stacked, matched to self.foods
 
     # ------------------------------------------------------------ embeddings
 
@@ -157,6 +197,7 @@ class FoodClassifier:
         vectors = self.food_vectors_for(foods)
         with self._lock:
             self.foods, self.food_vectors = foods, vectors
+            self._match_references()
 
     def add_food(self, food):
         """Add one new food (for example a custom food) without retraining anything."""
@@ -165,13 +206,81 @@ class FoodClassifier:
         with self._lock:
             self.foods = self.foods + [entry]
             self.food_vectors = torch.cat([self.food_vectors, vector])
+            self._match_references()
+
+    # ------------------------------------------------------------ example photos (few-shot)
+
+    def set_references(self, references):
+        """Use example photos: {food name: N x D tensor of their vectors}. See reference_bonus."""
+        with self._lock:
+            self.references = dict(references)
+            self._match_references()
+
+    def _match_references(self):
+        """Stack the example vectors of the foods we have, remembering which food each belongs to.
+        Called with the lock held. Foods are matched by name, ignoring case and punctuation."""
+        position = {_key(food["name"]): i for i, food in enumerate(self.foods)}
+        vectors, owners = [], []
+        for name, food_vectors in self.references.items():
+            if _key(name) in position:
+                vectors.append(food_vectors)
+                owners += [position[_key(name)]] * len(food_vectors)
+        if vectors:
+            self.ref_vectors, self.ref_owner = torch.cat(vectors), torch.tensor(owners)
+        else:
+            self.ref_vectors, self.ref_owner = None, None
+
+    def load_references(self, path):
+        """Load example-photo vectors saved by save_references. Returns how many foods got examples.
+        A missing file is fine (the app then works on text alone)."""
+        from pathlib import Path
+
+        path = Path(path)
+        if not path.exists():
+            return 0
+        saved = torch.load(path)
+        if saved.get("model") != self.model_name:
+            raise ValueError(f"{path} was made with {saved.get('model')}, not {self.model_name}")
+        self.set_references(saved["foods"])
+        return len(saved["foods"])
+
+    def save_references(self, references, path):
+        """Save {food name: vectors} with the model name, so a different model never uses them."""
+        path.parent.mkdir(parents=True, exist_ok=True)
+        torch.save({"model": self.model_name, "foods": references}, path)
+
+    def build_references(self, folder):
+        """Vectors of the photos in folder/<Food Name>/*.jpg -> {food name: N x D tensor}."""
+        from services.image_processor import load_image
+
+        references = {}
+        for food_dir in sorted(p for p in folder.iterdir() if p.is_dir()):
+            photos = sorted(p for p in food_dir.iterdir() if p.suffix.lower() in (".jpg", ".jpeg", ".png", ".webp"))
+            vectors = [self.encode_image(load_image(p, p.name, {"jpg", "jpeg", "png", "webp"}, 40_000_000))
+                       for p in photos]
+            if vectors:
+                references[food_dir.name] = torch.cat(vectors)
+        return references
 
     # ------------------------------------------------------------ prediction
 
-    def _probabilities(self, image_vector, text_vectors):
-        """Cosine similarity x 100, then softmax -> probabilities that add up to 1."""
+    def _probabilities(self, image_vector, text_vectors, bonus=None):
+        """Cosine similarity x 100 (+ the example-photo bonus), then softmax -> probabilities that add up to 1."""
         scores = self.scale * image_vector @ text_vectors.T
+        if bonus is not None:
+            scores = scores + bonus
         return scores.softmax(dim=-1)[0]
+
+    def food_probabilities(self, image_vector, foods_snapshot=None):
+        """Probabilities over all foods for one photo vector (text match + example-photo bonus)."""
+        foods, vectors, ref_vectors, ref_owner = foods_snapshot or self._snapshot()
+        bonus = reference_bonus(image_vector, ref_vectors, ref_owner, len(foods),
+                                self.reference_threshold, self.reference_weight, self.reference_top_k)
+        return self._probabilities(image_vector, vectors, bonus)
+
+    def _snapshot(self):
+        with self._lock:
+            return self.foods, self.food_vectors, self.ref_vectors, self.ref_owner
 
     def classify(self, image, top_k=3):
         """Answer both questions for one RGB image."""
@@ -182,11 +291,11 @@ class FoodClassifier:
         food_probability = gate[: len(FOOD_PROMPTS)].sum().item()
         is_food = food_probability >= self.gate
 
-        with self._lock:
-            foods, vectors = self.foods, self.food_vectors
+        snapshot = self._snapshot()
+        foods = snapshot[0]
         if not foods:
             raise RuntimeError("No foods loaded: call set_foods() first")
-        probabilities = self._probabilities(image_vector, vectors)
+        probabilities = self.food_probabilities(image_vector, snapshot)
         best = probabilities.topk(min(max(top_k, self.max_suggestions), len(foods)))
         ranked = [
             Guess(foods[i]["id"], foods[i]["name"], round(p, 4))
@@ -206,7 +315,18 @@ class FoodClassifier:
 
 # ================================================================ command line
 
-def _load_classifier():
+def classifier_from_config(config):
+    """Build a FoodClassifier with every AI setting from config.py (a dict or the Config class)."""
+    get = config.get if isinstance(config, dict) else lambda key: getattr(config, key)
+    return FoodClassifier(
+        get("MODEL_NAME"), get("MODEL_CACHE_DIR"),
+        get("HIGH_CONFIDENCE"), get("LOW_CONFIDENCE"), get("FOOD_GATE_THRESHOLD"),
+        get("SUGGESTION_MIN_CONFIDENCE"), get("MAX_SUGGESTIONS"),
+        get("REFERENCE_THRESHOLD"), get("REFERENCE_WEIGHT"), get("REFERENCE_TOP_K"),
+    )
+
+
+def _load_classifier(use_references=True):
     from config import Config
     from database.db import connect, init_db
 
@@ -217,13 +337,11 @@ def _load_classifier():
 
     print(f"Loading {Config.MODEL_NAME} ...")
     start = time.perf_counter()
-    classifier = FoodClassifier(
-        Config.MODEL_NAME, Config.MODEL_CACHE_DIR,
-        Config.HIGH_CONFIDENCE, Config.LOW_CONFIDENCE, Config.FOOD_GATE_THRESHOLD,
-        Config.SUGGESTION_MIN_CONFIDENCE, Config.MAX_SUGGESTIONS,
-    )
+    classifier = classifier_from_config(Config)
     classifier.set_foods(foods)
-    print(f"Ready in {time.perf_counter() - start:.1f} s with {len(foods)} foods as labels\n")
+    examples = classifier.load_references(Config.REFERENCE_FILE) if use_references else 0
+    print(f"Ready in {time.perf_counter() - start:.1f} s with {len(foods)} foods as labels"
+          f" ({examples} with example photos)\n")
     return classifier
 
 
@@ -309,13 +427,28 @@ if __name__ == "__main__":
     parser.add_argument("paths", nargs="+", type=Path, help="image files, or one folder with --evaluate")
     parser.add_argument("--evaluate", action="store_true",
                         help="measure accuracy on a folder of sub-folders named after foods")
+    parser.add_argument("--build-references", action="store_true",
+                        help="save the vectors of the example photos in a folder of sub-folders named after foods")
+    parser.add_argument("--no-references", action="store_true",
+                        help="ignore the example photos (text descriptions only), to compare before/after")
     args = parser.parse_args()
     missing = [str(p) for p in args.paths if not p.exists()]
     if missing:                                    # check before spending seconds loading the model
         parser.error("not found: " + ", ".join(missing))
 
-    clf = _load_classifier()
-    if args.evaluate:
+    clf = _load_classifier(use_references=not (args.no_references or args.build_references))
+    if args.build_references:
+        from config import Config
+
+        built = clf.build_references(args.paths[0])
+        unknown = [name for name in built if _key(name) not in {_key(f["name"]) for f in clf.foods}]
+        if unknown:
+            parser.error("these folders are not foods in the database: " + ", ".join(unknown))
+        clf.save_references(built, Config.REFERENCE_FILE)
+        for name, vectors in built.items():
+            print(f"{name:<12} {len(vectors)} example photos")
+        print(f"Saved to {Config.REFERENCE_FILE}")
+    elif args.evaluate:
         _evaluate(clf, args.paths[0])
     else:
         for image_path in args.paths:

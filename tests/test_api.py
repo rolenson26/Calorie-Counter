@@ -6,6 +6,7 @@ import pytest
 
 from app import create_app
 from database import db
+from database.nutrition_data import FOODS
 
 
 def upload(client, image, filename="lunch.jpg"):
@@ -375,7 +376,7 @@ def test_dashboard_bad_date(auth_client):
 # =============================================================== foods and goal
 
 def test_list_and_search_foods(auth_client):
-    assert len(auth_client.get("/api/foods").get_json()["foods"]) == 73
+    assert len(auth_client.get("/api/foods").get_json()["foods"]) == len(FOODS)
     names = [f["name"] for f in auth_client.get("/api/foods?q=PANEER").get_json()["foods"]]
     assert names == ["Kadai Paneer", "Matar Paneer", "Palak Paneer", "Paneer Butter Masala"]
     assert "ai_prompt" not in auth_client.get("/api/foods?q=idli").get_json()["foods"][0]

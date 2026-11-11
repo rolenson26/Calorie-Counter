@@ -10,3 +10,10 @@ instance/*
 !instance/.gitkeep
 models/*
 !models/.gitkeep
+
+# Dish photos downloaded from the web: kept on this PC only, not published.
+# The small file of their CLIP vectors (data/reference_embeddings.pt) IS committed.
+data/reference_photos/
+data/test_photos/
+data/indian_food_test/
+data/_downloads/

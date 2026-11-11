@@ -1,5 +1,5 @@
 """
-database/nutrition_data.py - the starter nutrition database (73 foods, Indian focus).
+database/nutrition_data.py - the starter nutrition database (76 foods, Indian focus, 3 Manipuri).
 
 What it is
     A plain Python list. On the first run, db.init_db() copies every entry into
@@ -35,7 +35,51 @@ Honest notes for the viva
       total carbohydrate (fibre included). The difference is a few grams.
     * Gulab jamun, jalebi, pakora and bhatura were left out because no
       reliable per-100 g record was found. Users can add them as custom foods.
+    * Manipuri dishes (Ooti, Eromba, Singju, added 2026-11-12): no published
+      nutrient analysis exists for them (INDB, IFCT and journals were searched).
+      Their values are RECIPE ESTIMATES: a typical recipe, by weight, built from
+      USDA SR Legacy ingredient values (see MANIPURI_INGREDIENTS and recipe()).
+      Ngari (fermented dried fish) has no USDA record, so dried salted fish is
+      used as the nearest match; perilla seed is replaced by sesame seed.
 """
+
+# Per 100 g, USDA SR Legacy (NDB number in the key comment):
+# (calories, protein, carbs, fat, fiber). Carbs are total carbohydrate (USDA style).
+MANIPURI_INGREDIENTS = {
+    "split peas, boiled":     (118, 8.34, 21.10, 0.39, 8.3),    # 16086
+    "potato, boiled":         (86, 1.71, 20.01, 0.10, 1.8),     # 11367
+    "green beans, boiled":    (35, 1.89, 7.88, 0.28, 3.2),      # 11053
+    "spring onion":           (32, 1.83, 7.34, 0.19, 2.6),      # 11291
+    "green chilli":           (40, 2.00, 9.46, 0.20, 1.5),      # 11670
+    "mustard oil":            (884, 0.0, 0.0, 100.0, 0.0),      # 04583
+    "cabbage":                (25, 1.28, 5.80, 0.10, 2.5),      # 11109
+    "lotus stem":             (74, 2.60, 17.23, 0.10, 4.9),     # 11264
+    "onion":                  (40, 1.10, 9.34, 0.10, 1.7),      # 11282
+    "coriander leaves":       (23, 2.13, 3.67, 0.52, 2.8),      # 11165
+    "roasted gram flour":     (387, 22.39, 57.82, 6.69, 10.8),  # 16157 (besan)
+    "perilla seed (sesame)":  (573, 17.73, 23.45, 49.67, 11.8), # 12023, nearest match
+    "ngari (dried fish)":     (290, 62.82, 0.0, 2.37, 0.0),     # 15017, nearest match
+    "water":                  (0, 0.0, 0.0, 0.0, 0.0),
+}
+
+
+def recipe(name, category, serving_unit, serving_grams, ai_prompt, parts):
+    """A food whose per-100 g values are worked out from a recipe.
+
+    `parts` maps an ingredient of MANIPURI_INGREDIENTS to its grams in the recipe.
+    Each nutrient = sum(ingredient value x grams) / total grams of the dish.
+    """
+    total = sum(parts.values())
+    keys = ("calories", "protein", "carbs", "fat", "fiber")
+    values = {
+        key: round(sum(MANIPURI_INGREDIENTS[item][i] * grams for item, grams in parts.items()) / total, 1)
+        for i, key in enumerate(keys)
+    }
+    listed = ", ".join(f"{item} {grams / total:.0%}" for item, grams in parts.items())
+    return {"name": name, "category": category, "serving_unit": serving_unit,
+            "serving_grams": serving_grams, **values, "ai_prompt": ai_prompt,
+            "source": f"USDA SR Legacy ingredients, recipe estimate ({listed})"}
+
 
 FOODS = [
     # ---- Rice ----
@@ -361,4 +405,17 @@ FOODS = [
      "calories": 83.0, "protein": 1.7, "carbs": 18.7, "fat": 1.2, "fiber": 4.0,
      "ai_prompt": "a photo of pomegranate, red pomegranate seeds",
      "source": "USDA SR Legacy 169134 (Pomegranates)"},
+
+    # ---- Manipuri (recipe estimates, see the note at the top) ----
+    recipe("Ooti", "Manipuri", "katori", 150,
+           "a photo of ooti, a Manipuri curry of soft dried peas in thick yellow-green gravy with spring onion",
+           {"split peas, boiled": 70, "water": 23.5, "spring onion": 5, "mustard oil": 1.5}),
+    recipe("Eromba", "Manipuri", "katori", 100,
+           "a photo of eromba, a Manipuri mash of boiled potato and vegetables with chilli and fermented fish",
+           {"potato, boiled": 50, "green beans, boiled": 25, "ngari (dried fish)": 5,
+            "green chilli": 5, "spring onion": 5, "water": 10}),
+    recipe("Singju", "Manipuri", "plate", 150,
+           "a photo of singju, a Manipuri salad of finely shredded cabbage, lotus stem and herbs with gram flour",
+           {"cabbage": 55, "lotus stem": 10, "onion": 10, "coriander leaves": 5, "roasted gram flour": 10,
+            "perilla seed (sesame)": 3, "ngari (dried fish)": 2, "green chilli": 5}),
 ]

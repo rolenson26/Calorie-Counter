@@ -41,12 +41,17 @@ def connect(db_path):
 
 
 def init_db(conn):
-    """Create any missing tables and, on the first run only, load the starter foods.
+    """Create any missing tables and add any starter food that is not in the table yet.
 
-    Returns the number of foods inserted (0 when the foods table already had rows).
+    On the first run that is every food. Later, only foods added to nutrition_data.py
+    since then (for example the Manipuri dishes) are inserted; existing rows, and any
+    edits to them, are left alone. Foods are matched by name, ignoring case.
+    Returns the number of foods inserted (0 when nothing was missing).
     """
     conn.executescript(SCHEMA_FILE.read_text(encoding="utf-8"))
-    if conn.execute("SELECT COUNT(*) FROM foods").fetchone()[0] > 0:
+    existing = {row[0].lower() for row in conn.execute("SELECT name FROM foods")}
+    missing = [food for food in FOODS if food["name"].lower() not in existing]
+    if not missing:
         return 0
     conn.executemany(
         """INSERT INTO foods (name, category, serving_unit, serving_grams,
@@ -54,10 +59,10 @@ def init_db(conn):
                               fat_per_100g, fiber_per_100g, ai_prompt, source)
            VALUES (:name, :category, :serving_unit, :serving_grams,
                    :calories, :protein, :carbs, :fat, :fiber, :ai_prompt, :source)""",
-        FOODS,
+        missing,
     )
     conn.commit()
-    return len(FOODS)
+    return len(missing)
 
 
 def get_db():

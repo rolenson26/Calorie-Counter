@@ -1,0 +1,36 @@
+﻿
+Loading openai/clip-vit-base-patch32 ...
+Ready in 10.8 s with 76 foods as labels (0 with example photos)
+
+MISS Eromba                 [     low] food 99% | Dal Makhani 21%, Rajma 18%, Dal 16% | 0.24 s
+MISS Eromba                 [     low] food 100% | Chicken Curry 25%, Ooti 22%, Baingan Bharta 14% | 0.12 s
+MISS Eromba                 [  medium] food 100% | Singju 41%, Ooti 14%, Baingan Bharta 10% | 0.10 s
+MISS Eromba                 [     low] food 99% | Dal 18%, Dal Makhani 11%, Rice Kheer 10% | 0.12 s
+MISS Eromba                 [     low] food 99% | Moong Dal 18%, Ooti 15%, Baingan Bharta 12% | 0.13 s
+OK   Eromba                 [    high] food 98% | Eromba 99%, Baingan Bharta 1%, Chicken Biryani 0% | 0.12 s
+OK   Ooti                   [    high] food 98% | Ooti 88%, Moong Dal 6%, Dal 4% | 0.15 s
+MISS Ooti                   [  medium] food 100% | Chana Dal 35%, Moong Dal 34%, Dal 15% | 0.14 s
+top3 Ooti                   [  medium] food 100% | Moong Dal 48%, Ooti 21%, Sambar 7% | 0.12 s
+top3 Ooti                   [  medium] food 100% | Moong Dal 32%, Dal 13%, Ooti 11% | 0.12 s
+top3 Ooti                   [  medium] food 100% | Moong Dal 59%, Ooti 11%, Palak Paneer 8% | 0.12 s
+MISS Ooti                   [  medium] food 97% | Sambar 60%, Baingan Bharta 8%, Dal 7% | 0.13 s
+OK   Singju                 [  medium] food 100% | Singju 51%, Veg Chowmein 11%, Green Salad 8% | 0.13 s
+OK   Singju                 [  medium] food 100% | Singju 47%, Uttapam 10%, Ooti 6% | 0.13 s
+MISS Singju                 [     low] food 100% | Veg Pulao 30%, Veg Biryani 12%, Chicken Biryani 11% | 0.11 s
+OK   Singju                 [     low] food 100% | Singju 27%, Chicken Biryani 24%, Mutton Biryani 12% | 0.13 s
+MISS Singju                 [    high] food 100% | Veg Chowmein 94%, Poha 2%, Veg Biryani 2% | 0.13 s
+OK   Singju                 [    high] food 100% | Singju 75%, Veg Chowmein 10%, Ooti 4% | 0.13 s
+OK   Singju                 [  medium] food 100% | Singju 36%, Mutton Biryani 13%, Veg Pulao 10% | 0.16 s
+top3 Singju                 [    high] food 100% | Veg Chowmein 62%, Singju 21%, Veg Biryani 3% | 0.16 s
+
+================ summary ================
+Images            : 20 (20 of foods in the database)
+Top-1 accuracy    : 35%
+Top-3 accuracy    : 55%
+Average time      : 0.14 s per photo
+By level (how often the top food was right):
+   high        5 photos, top food right in 3 (60%)
+   medium      9 photos, top food right in 3 (33%)
+   low         6 photos, top food right in 1 (17%)
+
+

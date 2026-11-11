@@ -1,0 +1,976 @@
+﻿
+Loading openai/clip-vit-base-patch32 ...
+Ready in 19.0 s with 76 foods as labels (0 with example photos)
+
+OK   Burger                 [    high] food 90% | Burger 99%, Chilli Chicken 0%, Veg Sandwich 0% | 2.23 s
+OK   Burger                 [    high] food 98% | Burger 100%, Veg Sandwich 0%, French Fries 0% | 1.83 s
+top3 Burger                 [  medium] food 98% | Veg Sandwich 54%, Burger 36%, Chilli Chicken 3% | 1.74 s
+OK   Burger                 [    high] food 99% | Burger 100%, Veg Sandwich 0%, French Fries 0% | 0.27 s
+OK   Burger                 [  medium] food 99% | Burger 50%, Veg Sandwich 46%, Puri 1% | 0.23 s
+OK   Burger                 [    high] food 100% | Burger 100%, Veg Sandwich 0%, French Fries 0% | 0.24 s
+OK   Burger                 [    high] food 99% | Burger 99%, Veg Sandwich 1%, Chilli Chicken 0% | 0.35 s
+OK   Burger                 [    high] food 99% | Burger 99%, Veg Sandwich 1%, Chilli Chicken 0% | 0.22 s
+OK   Burger                 [    high] food 99% | Burger 99%, French Fries 0%, Veg Sandwich 0% | 0.16 s
+OK   Burger                 [    high] food 98% | Burger 100%, Veg Sandwich 0%, French Fries 0% | 0.19 s
+OK   Burger                 [    high] food 98% | Burger 99%, Veg Sandwich 1%, Chilli Chicken 0% | 0.18 s
+OK   Burger                 [    high] food 99% | Burger 99%, Veg Sandwich 1%, Tandoori Chicken 0% | 0.28 s
+OK   Burger                 [    high] food 98% | Burger 100%, Veg Sandwich 0%, Green Salad 0% | 0.15 s
+OK   Burger                 [    high] food 99% | Burger 97%, Veg Sandwich 3%, French Fries 0% | 0.16 s
+OK   Burger                 [    high] food 96% | Burger 99%, Veg Sandwich 1%, Green Salad 0% | 0.17 s
+top3 Burger                 [  medium] food 99% | Veg Sandwich 52%, Burger 45%, Uttapam 1% | 0.16 s
+OK   Burger                 [    high] food 98% | Burger 100%, Veg Sandwich 0%, French Fries 0% | 0.32 s
+OK   Burger                 [    high] food 90% | Burger 96%, Veg Sandwich 3%, French Fries 0% | 0.14 s
+OK   Burger                 [    high] food 97% | Burger 99%, Veg Sandwich 0%, Omelette 0% | 0.14 s
+OK   Burger                 [    high] food 98% | Burger 100%, Veg Sandwich 0%, French Fries 0% | 0.18 s
+OK   Burger                 [    high] food 99% | Burger 100%, Veg Sandwich 0%, French Fries 0% | 0.15 s
+OK   Burger                 [    high] food 99% | Burger 100%, Veg Sandwich 0%, Banana 0% | 0.13 s
+OK   Burger                 [    high] food 100% | Burger 100%, Veg Sandwich 0%, French Fries 0% | 0.15 s
+OK   Burger                 [    high] food 99% | Burger 100%, Veg Sandwich 0%, Omelette 0% | 0.14 s
+OK   Burger                 [    high] food 99% | Burger 99%, Veg Sandwich 1%, French Fries 0% | 0.13 s
+OK   Burger                 [    high] food 93% | Burger 100%, Veg Sandwich 0%, French Fries 0% | 0.14 s
+OK   Burger                 [    high] food 98% | Burger 87%, Veg Sandwich 7%, Medu Vada 3% | 0.14 s
+OK   Burger                 [    high] food 99% | Burger 98%, Veg Sandwich 2%, French Fries 0% | 0.15 s
+OK   Burger                 [    high] food 99% | Burger 95%, Veg Sandwich 4%, Baingan Bharta 0% | 0.14 s
+OK   Burger                 [    high] food 99% | Burger 62%, Chilli Chicken 21%, Tandoori Chicken 5% | 0.16 s
+OK   Burger                 [    high] food 98% | Burger 100%, Veg Sandwich 0%, Chilli Chicken 0% | 0.20 s
+OK   Burger                 [    high] food 99% | Burger 67%, Veg Sandwich 31%, Uttapam 1% | 0.12 s
+OK   Burger                 [    high] food 98% | Burger 100%, French Fries 0%, Veg Sandwich 0% | 0.13 s
+OK   Burger                 [    high] food 99% | Burger 99%, Veg Sandwich 1%, Chilli Chicken 0% | 0.13 s
+OK   Burger                 [    high] food 98% | Burger 100%, Veg Sandwich 0%, Chilli Chicken 0% | 0.13 s
+OK   Burger                 [    high] food 100% | Burger 95%, Veg Sandwich 5%, Chilli Chicken 0% | 0.17 s
+MISS Burger                 [    high] food 100% | Green Salad 77%, Baingan Bharta 5%, Singju 2% | 0.13 s
+OK   Burger                 [    high] food 99% | Burger 100%, Veg Sandwich 0%, French Fries 0% | 0.15 s
+OK   Burger                 [    high] food 99% | Burger 99%, Veg Sandwich 1%, French Fries 0% | 0.14 s
+OK   Burger                 [    high] food 98% | Burger 95%, Veg Sandwich 5%, Green Salad 0% | 0.15 s
+OK   Burger                 [    high] food 97% | Burger 100%, Veg Sandwich 0%, French Fries 0% | 0.13 s
+OK   Burger                 [    high] food 99% | Burger 100%, Veg Sandwich 0%, Eromba 0% | 0.16 s
+OK   Burger                 [    high] food 96% | Burger 99%, Veg Sandwich 1%, Green Salad 0% | 0.14 s
+OK   Burger                 [    high] food 99% | Burger 100%, French Fries 0%, Veg Sandwich 0% | 0.15 s
+OK   Burger                 [    high] food 97% | Burger 100%, Veg Sandwich 0%, French Fries 0% | 0.14 s
+OK   Burger                 [    high] food 64% | Burger 100%, Veg Sandwich 0%, Orange 0% | 0.16 s
+OK   Burger                 [    high] food 99% | Burger 95%, Veg Sandwich 4%, Puri 0% | 0.16 s
+OK   Burger                 [    high] food 99% | Burger 62%, Veg Sandwich 31%, Chilli Chicken 4% | 0.18 s
+OK   Burger                 [    high] food 99% | Burger 97%, Veg Sandwich 3%, Rajma 0% | 0.14 s
+OK   Burger                 [    high] food 99% | Burger 81%, Veg Sandwich 17%, Chilli Chicken 0% | 0.28 s
+OK   Burger                 [    high] food 99% | Burger 100%, Veg Sandwich 0%, Puri 0% | 0.14 s
+OK   Burger                 [    high] food 96% | Burger 100%, Veg Sandwich 0%, Puri 0% | 0.14 s
+OK   Dal Makhani            [    high] food 99% | Dal Makhani 65%, Moong Dal 11%, Dal 9% | 0.14 s
+OK   Dal Makhani            [    high] food 98% | Dal Makhani 97%, Rajma 1%, Moong Dal 0% | 0.14 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 98%, Dal 1%, Rajma 0% | 0.13 s
+OK   Dal Makhani            [    high] food 98% | Dal Makhani 78%, Dal 6%, Rajma 5% | 0.12 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 93%, Rajma 2%, Dal 1% | 0.15 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 75%, Butter Chicken 12%, Paneer Butter Masala 2% | 0.14 
+s
+OK   Dal Makhani            [  medium] food 100% | Dal Makhani 40%, Rajma 17%, Baingan Bharta 15% | 0.14 s
+OK   Dal Makhani            [    high] food 99% | Dal Makhani 100%, Baingan Bharta 0%, Rajma 0% | 0.13 s
+OK   Dal Makhani            [    high] food 97% | Dal Makhani 100%, Moong Dal 0%, Dal 0% | 0.13 s
+MISS Dal Makhani            [     low] food 100% | Kadai Paneer 23%, Baingan Bharta 14%, Egg Curry 12% | 0.20 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 92%, Moong Dal 3%, Dal 3% | 0.14 s
+top3 Dal Makhani            [     low] food 100% | Sambar 29%, Dal Makhani 21%, Moong Dal 11% | 0.17 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 92%, Dal 2%, Moong Dal 2% | 0.18 s
+OK   Dal Makhani            [    high] food 99% | Dal Makhani 100%, Rajma 0%, Dal 0% | 0.15 s
+MISS Dal Makhani            [     low] food 96% | Moong Dal 24%, Chole 23%, Dal 22% | 0.14 s
+OK   Dal Makhani            [  medium] food 100% | Dal Makhani 59%, Moong Dal 7%, Dal 7% | 0.17 s
+OK   Dal Makhani            [    high] food 99% | Dal Makhani 69%, Moong Dal 11%, Dal 10% | 0.14 s
+MISS Dal Makhani            [    high] food 100% | Uttapam 66%, Masala Dosa 6%, Plain Dosa 6% | 0.15 s
+top3 Dal Makhani            [  medium] food 100% | Moong Dal 41%, Dal Makhani 15%, Sambar 13% | 0.16 s
+OK   Dal Makhani            [    high] food 99% | Dal Makhani 99%, Rajma 1%, Dal 0% | 0.15 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 89%, Cucumber Raita 3%, Rajma 1% | 0.20 s
+OK   Dal Makhani            [    high] food 99% | Dal Makhani 99%, Dal 0%, Rajma 0% | 0.16 s
+OK   Dal Makhani            [    high] food 98% | Dal Makhani 61%, Sambar 17%, Moong Dal 5% | 0.24 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 96%, Butter Chicken 2%, Paneer Butter Masala 1% | 0.13 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 74%, Rajma 11%, Baingan Bharta 3% | 0.14 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 95%, Rajma 2%, Dal 1% | 0.22 s
+top3 Dal Makhani            [  medium] food 98% | Dal 36%, Dal Makhani 28%, Moong Dal 13% | 0.17 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 62%, Baingan Bharta 18%, Dal 3% | 0.17 s
+top3 Dal Makhani            [     low] food 99% | Dal 26%, Dal Makhani 22%, Paneer Butter Masala 11% | 0.59 s
+top3 Dal Makhani            [     low] food 99% | Matar Paneer 26%, Moong Dal 18%, Dal Makhani 15% | 0.27 s
+OK   Dal Makhani            [  medium] food 100% | Dal Makhani 42%, Baingan Bharta 38%, Butter Chicken 7% | 0.20 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 66%, Plain Paratha 6%, Aloo Paratha 5% | 0.59 s
+OK   Dal Makhani            [    high] food 98% | Dal Makhani 99%, Dal 1%, Moong Dal 0% | 0.12 s
+OK   Dal Makhani            [    high] food 99% | Dal Makhani 100%, Rajma 0%, Matar Paneer 0% | 0.14 s
+OK   Dal Makhani            [  medium] food 96% | Dal Makhani 59%, Rajma 26%, Masala Chai 8% | 0.14 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 99%, Rajma 0%, Baingan Bharta 0% | 0.14 s
+top3 Dal Makhani            [     low] food 99% | Rajma 22%, Egg Curry 19%, Dal Makhani 12% | 0.14 s
+OK   Dal Makhani            [  medium] food 96% | Dal Makhani 54%, Butter Chicken 7%, Masala Chai 6% | 0.13 s
+MISS Dal Makhani            [     low] food 100% | Uttapam 24%, Veg Khichdi 10%, Plain Dosa 5% | 0.15 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 88%, Baingan Bharta 3%, Rajma 2% | 0.15 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 88%, Naan 4%, Plain Paratha 3% | 0.17 s
+OK   Dal Makhani            [    high] food 99% | Dal Makhani 94%, Dal 4%, Moong Dal 2% | 0.14 s
+OK   Dal Makhani            [    high] food 99% | Dal Makhani 100%, Rajma 0%, Moong Dal 0% | 0.14 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 64%, Baingan Bharta 17%, Rajma 3% | 0.13 s
+OK   Dal Makhani            [    high] food 99% | Dal Makhani 100%, Rajma 0%, Dal 0% | 0.13 s
+OK   Dal Makhani            [    high] food 99% | Dal Makhani 66%, Dal 8%, Moong Dal 7% | 0.14 s
+OK   Dal Makhani            [    high] food 98% | Dal Makhani 68%, Baingan Bharta 16%, Rajma 4% | 0.15 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 87%, Rajma 12%, Baingan Bharta 1% | 0.13 s
+OK   Dal Makhani            [    high] food 99% | Dal Makhani 94%, Chana Dal 2%, Dal 1% | 0.12 s
+OK   Dal Makhani            [    high] food 96% | Dal Makhani 67%, Sambar 8%, Veg Khichdi 4% | 0.14 s
+OK   Dal Makhani            [    high] food 98% | Dal Makhani 99%, Rajma 0%, Masala Chai 0% | 0.13 s
+OK   Dal Makhani            [    high] food 99% | Dal Makhani 96%, Rajma 2%, Baingan Bharta 1% | 0.14 s
+top3 Dal Makhani            [  medium] food 96% | Masala Chai 57%, Dal Makhani 24%, Cucumber Raita 7% | 0.15 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 74%, Sambar 9%, Moong Dal 3% | 0.13 s
+OK   Dal Makhani            [    high] food 100% | Dal Makhani 84%, Rajma 6%, Baingan Bharta 4% | 0.15 s
+OK   Dhokla                 [    high] food 100% | Dhokla 100%, Idli 0%, Upma 0% | 0.15 s
+OK   Dhokla                 [    high] food 99% | Dhokla 82%, Fish Curry 11%, Omelette 2% | 0.12 s
+MISS Dhokla                 [    high] food 99% | Uttapam 71%, Naan 11%, Omelette 8% | 0.13 s
+OK   Dhokla                 [    high] food 100% | Dhokla 98%, Lemon Rice 1%, Omelette 0% | 0.13 s
+OK   Dhokla                 [    high] food 100% | Dhokla 100%, Veg Khichdi 0%, Upma 0% | 0.17 s
+OK   Dhokla                 [  medium] food 98% | Dhokla 32%, Butter Chicken 9%, Tandoori Chicken 8% | 0.13 s
+OK   Dhokla                 [    high] food 100% | Dhokla 98%, Lemon Rice 0%, Gajar Halwa 0% | 0.14 s
+OK   Dhokla                 [    high] food 100% | Dhokla 83%, Idli 7%, Upma 5% | 0.13 s
+OK   Dhokla                 [    high] food 100% | Dhokla 100%, Idli 0%, Upma 0% | 0.14 s
+OK   Dhokla                 [    high] food 100% | Dhokla 100%, Lemon Rice 0%, Besan Ladoo 0% | 0.13 s
+OK   Dhokla                 [    high] food 99% | Dhokla 82%, Aloo Matar 6%, Matar Paneer 5% | 0.13 s
+OK   Dhokla                 [    high] food 100% | Dhokla 100%, Medu Vada 0%, Aloo Sabzi 0% | 0.13 s
+OK   Dhokla                 [    high] food 100% | Dhokla 98%, Palak Paneer 1%, Aloo Sabzi 0% | 0.14 s
+OK   Dhokla                 [    high] food 100% | Dhokla 96%, Palak Paneer 3%, Upma 0% | 0.12 s
+OK   Dhokla                 [    high] food 100% | Dhokla 99%, Moong Dal 0%, Aloo Sabzi 0% | 0.15 s
+OK   Dhokla                 [    high] food 100% | Dhokla 100%, Palak Paneer 0%, Kadai Paneer 0% | 0.15 s
+OK   Dhokla                 [    high] food 100% | Dhokla 99%, Moong Dal 0%, Veg Khichdi 0% | 0.15 s
+OK   Dhokla                 [    high] food 100% | Dhokla 90%, Matar Paneer 2%, Lemon Rice 1% | 0.13 s
+OK   Dhokla                 [    high] food 99% | Dhokla 100%, Moong Dal 0%, Palak Paneer 0% | 0.14 s
+OK   Dhokla                 [    high] food 100% | Dhokla 74%, Lemon Rice 10%, Veg Khichdi 7% | 0.14 s
+OK   Dhokla                 [    high] food 100% | Dhokla 93%, Upma 4%, Idli 3% | 0.15 s
+OK   Dhokla                 [    high] food 100% | Dhokla 99%, Lemon Rice 0%, Upma 0% | 0.13 s
+OK   Dhokla                 [    high] food 99% | Dhokla 100%, Cucumber Raita 0%, Palak Paneer 0% | 0.14 s
+OK   Dhokla                 [    high] food 100% | Dhokla 97%, Palak Paneer 1%, Jeera Rice 1% | 0.13 s
+OK   Dhokla                 [    high] food 100% | Dhokla 99%, Moong Dal 0%, Lemon Rice 0% | 0.12 s
+top3 Dhokla                 [  medium] food 100% | Upma 52%, Idli 28%, Dhokla 12% | 0.13 s
+OK   Dhokla                 [    high] food 100% | Dhokla 93%, Palak Paneer 3%, Matar Paneer 1% | 0.12 s
+OK   Dhokla                 [    high] food 100% | Dhokla 96%, Upma 2%, Lemon Rice 1% | 0.11 s
+OK   Dhokla                 [    high] food 97% | Dhokla 100%, Dal Makhani 0%, Moong Dal 0% | 0.14 s
+OK   Dhokla                 [    high] food 98% | Dhokla 94%, Aloo Sabzi 4%, Moong Dal 0% | 0.14 s
+OK   Dhokla                 [    high] food 100% | Dhokla 99%, Lemon Rice 0%, Uttapam 0% | 0.12 s
+OK   Dhokla                 [    high] food 100% | Dhokla 99%, Moong Dal 0%, Aloo Sabzi 0% | 0.14 s
+OK   Dhokla                 [    high] food 100% | Dhokla 100%, Dal 0%, Ooti 0% | 0.14 s
+OK   Dhokla                 [    high] food 100% | Dhokla 100%, Upma 0%, Matar Paneer 0% | 0.13 s
+OK   Dhokla                 [    high] food 100% | Dhokla 87%, Aloo Sabzi 6%, Aloo Gobi 3% | 0.14 s
+OK   Dhokla                 [    high] food 100% | Dhokla 76%, Upma 8%, Veg Khichdi 3% | 0.14 s
+OK   Dhokla                 [  medium] food 99% | Dhokla 49%, Palak Paneer 13%, Uttapam 8% | 0.29 s
+OK   Dhokla                 [    high] food 100% | Dhokla 99%, Veg Sandwich 1%, Cucumber Raita 0% | 0.11 s
+OK   Dhokla                 [    high] food 100% | Dhokla 89%, Moong Dal 2%, Aloo Sabzi 1% | 0.13 s
+OK   Dhokla                 [    high] food 100% | Dhokla 94%, Aloo Sabzi 2%, Aloo Gobi 1% | 0.12 s
+OK   Dhokla                 [    high] food 100% | Dhokla 99%, Idli 0%, Aloo Matar 0% | 0.15 s
+OK   Dhokla                 [    high] food 100% | Dhokla 98%, Palak Paneer 1%, Idli 0% | 0.13 s
+OK   Dhokla                 [    high] food 100% | Dhokla 88%, Upma 6%, Veg Khichdi 2% | 0.13 s
+OK   Dhokla                 [  medium] food 100% | Dhokla 49%, Palak Paneer 10%, Upma 10% | 0.28 s
+OK   Dhokla                 [    high] food 100% | Dhokla 100%, Upma 0%, Lemon Rice 0% | 0.11 s
+OK   Dhokla                 [    high] food 99% | Dhokla 100%, Medu Vada 0%, Moong Dal 0% | 0.12 s
+OK   Dhokla                 [    high] food 100% | Dhokla 98%, Aloo Sabzi 1%, Matar Paneer 0% | 0.14 s
+OK   Dhokla                 [    high] food 100% | Dhokla 98%, Palak Paneer 1%, Aloo Sabzi 0% | 0.14 s
+OK   Dhokla                 [    high] food 99% | Dhokla 100%, Kadai Paneer 0%, Moong Dal 0% | 0.13 s
+OK   Dhokla                 [    high] food 99% | Dhokla 92%, Aloo Sabzi 4%, Moong Dal 1% | 0.13 s
+OK   Dhokla                 [    high] food 100% | Dhokla 100%, Matar Paneer 0%, Upma 0% | 0.14 s
+OK   Dhokla                 [    high] food 100% | Dhokla 81%, Idli 14%, Upma 1% | 0.12 s
+OK   Dhokla                 [    high] food 100% | Dhokla 99%, Idli 0%, Upma 0% | 0.13 s
+OK   Idli                   [     low] food 100% | Idli 27%, Medu Vada 25%, Upma 19% | 0.14 s
+OK   Idli                   [    high] food 100% | Idli 95%, Medu Vada 1%, Puri 1% | 0.14 s
+OK   Idli                   [    high] food 99% | Idli 95%, Medu Vada 1%, Rasgulla 1% | 0.12 s
+OK   Idli                   [    high] food 100% | Idli 99%, Medu Vada 0%, Puri 0% | 0.12 s
+OK   Idli                   [    high] food 100% | Idli 90%, Medu Vada 4%, Puri 1% | 0.14 s
+OK   Idli                   [    high] food 100% | Idli 98%, Rasgulla 1%, Medu Vada 1% | 0.25 s
+OK   Idli                   [    high] food 100% | Idli 83%, Uttapam 4%, Moong Dal 2% | 0.13 s
+OK   Idli                   [  medium] food 100% | Idli 44%, Upma 17%, Uttapam 12% | 0.12 s
+OK   Idli                   [    high] food 100% | Idli 93%, Eromba 2%, Fish Curry 1% | 0.14 s
+top3 Idli                   [  medium] food 100% | Moong Dal 36%, Sambar 18%, Idli 13% | 0.13 s
+OK   Idli                   [    high] food 100% | Idli 89%, Plain Dosa 3%, Masala Dosa 2% | 0.12 s
+top3 Idli                   [     low] food 99% | Medu Vada 29%, Idli 24%, Upma 11% | 0.13 s
+top3 Idli                   [  medium] food 100% | Masala Dosa 42%, Plain Dosa 32%, Idli 19% | 0.13 s
+OK   Idli                   [    high] food 99% | Idli 98%, Rasgulla 0%, Steamed Rice 0% | 0.13 s
+OK   Idli                   [    high] food 98% | Idli 79%, Curd Rice 10%, Steamed Rice 4% | 0.12 s
+OK   Idli                   [    high] food 98% | Idli 69%, Rasgulla 28%, Besan Ladoo 2% | 0.16 s
+OK   Idli                   [    high] food 100% | Idli 100%, Puri 0%, Medu Vada 0% | 0.12 s
+top3 Idli                   [    high] food 100% | Upma 66%, Dhokla 9%, Idli 9% | 0.14 s
+OK   Idli                   [    high] food 98% | Idli 98%, Rasgulla 1%, Steamed Rice 1% | 0.13 s
+OK   Idli                   [  medium] food 99% | Idli 55%, Besan Ladoo 24%, Rasgulla 16% | 0.14 s
+OK   Idli                   [    high] food 100% | Idli 63%, Rice Kheer 12%, Plain Dosa 5% | 0.67 s
+OK   Idli                   [    high] food 99% | Idli 92%, Rasgulla 5%, Curd 2% | 0.16 s
+OK   Idli                   [    high] food 99% | Idli 99%, Medu Vada 0%, Rasgulla 0% | 0.15 s
+OK   Idli                   [    high] food 100% | Idli 96%, Curd 1%, Dhokla 1% | 0.32 s
+OK   Idli                   [    high] food 100% | Idli 100%, Upma 0%, Uttapam 0% | 0.14 s
+OK   Idli                   [    high] food 100% | Idli 100%, Curd 0%, Curd Rice 0% | 0.14 s
+OK   Idli                   [    high] food 100% | Idli 93%, Medu Vada 1%, Puri 1% | 0.15 s
+OK   Idli                   [    high] food 98% | Idli 85%, Upma 10%, Uttapam 1% | 0.12 s
+OK   Idli                   [    high] food 99% | Idli 68%, Besan Ladoo 10%, Momos 5% | 0.14 s
+OK   Idli                   [    high] food 99% | Idli 93%, Medu Vada 2%, Upma 1% | 0.14 s
+OK   Idli                   [    high] food 99% | Idli 92%, Rasgulla 3%, Medu Vada 3% | 0.13 s
+OK   Idli                   [    high] food 100% | Idli 100%, Medu Vada 0%, Upma 0% | 0.14 s
+MISS Idli                   [  medium] food 100% | Upma 39%, Veg Fried Rice 21%, Veg Pulao 16% | 0.12 s
+OK   Idli                   [    high] food 99% | Idli 97%, Rasgulla 1%, Puri 0% | 0.12 s
+OK   Idli                   [     low] food 100% | Idli 25%, Uttapam 18%, Naan 15% | 0.14 s
+OK   Idli                   [    high] food 93% | Idli 93%, Dal 3%, Jeera Rice 1% | 0.13 s
+top3 Idli                   [    high] food 99% | Medu Vada 77%, Idli 8%, Upma 6% | 0.13 s
+OK   Idli                   [    high] food 100% | Idli 88%, Upma 4%, Sambar 1% | 0.17 s
+top3 Idli                   [    high] food 99% | Dhokla 77%, Idli 17%, Medu Vada 1% | 0.25 s
+OK   Idli                   [    high] food 100% | Idli 90%, Upma 6%, Plain Dosa 1% | 0.12 s
+OK   Idli                   [    high] food 98% | Idli 99%, Dhokla 0%, Besan Ladoo 0% | 0.16 s
+OK   Idli                   [    high] food 100% | Idli 98%, Upma 1%, Curd Rice 0% | 0.13 s
+OK   Idli                   [    high] food 100% | Idli 99%, Upma 0%, Rasgulla 0% | 0.15 s
+OK   Idli                   [    high] food 99% | Idli 79%, Besan Ladoo 8%, Medu Vada 7% | 0.14 s
+OK   Idli                   [    high] food 99% | Idli 100%, Rasgulla 0%, Upma 0% | 0.27 s
+OK   Idli                   [    high] food 98% | Idli 97%, Rasgulla 2%, Upma 0% | 0.13 s
+OK   Kadai Paneer           [  medium] food 100% | Kadai Paneer 33%, Matar Paneer 18%, Aloo Gobi 18% | 0.16 s
+OK   Kadai Paneer           [     low] food 100% | Kadai Paneer 19%, Matar Paneer 12%, Aloo Matar 11% | 0.16 s
+OK   Kadai Paneer           [    high] food 100% | Kadai Paneer 76%, Chilli Chicken 7%, Baingan Bharta 2% | 0.14 s
+OK   Kadai Paneer           [  medium] food 100% | Kadai Paneer 41%, Baingan Bharta 15%, Matar Paneer 13% | 0.14 s
+OK   Kadai Paneer           [    high] food 100% | Kadai Paneer 76%, Paneer Butter Masala 13%, Matar Paneer 7% | 0.14 s
+MISS Kadai Paneer           [  medium] food 100% | Paneer Butter Masala 36%, Butter Chicken 24%, Aloo Gobi 10% | 0.13 s
+MISS Kadai Paneer           [  medium] food 99% | Butter Chicken 31%, Matar Paneer 19%, Paneer Butter Masala 14% | 
+0.13 s
+top3 Kadai Paneer           [     low] food 100% | Baingan Bharta 21%, Aloo Matar 9%, Kadai Paneer 8% | 0.12 s
+OK   Kadai Paneer           [  medium] food 100% | Kadai Paneer 39%, Chicken Curry 26%, Paneer Butter Masala 10% | 
+0.13 s
+top3 Kadai Paneer           [  medium] food 99% | Matar Paneer 46%, Paneer Butter Masala 40%, Kadai Paneer 5% | 0.14 s
+top3 Kadai Paneer           [  medium] food 99% | Paneer Butter Masala 49%, Kadai Paneer 17%, Matar Paneer 11% | 0.17 s
+top3 Kadai Paneer           [    high] food 99% | Matar Paneer 73%, Kadai Paneer 12%, Paneer Butter Masala 10% | 0.13 s
+OK   Kadai Paneer           [  medium] food 100% | Kadai Paneer 41%, Paneer Butter Masala 13%, Butter Chicken 12% | 
+0.13 s
+OK   Kadai Paneer           [    high] food 99% | Kadai Paneer 97%, Matar Paneer 2%, Palak Paneer 1% | 0.13 s
+OK   Kadai Paneer           [  medium] food 99% | Kadai Paneer 33%, Chicken Curry 14%, Chilli Chicken 12% | 0.13 s
+OK   Kadai Paneer           [    high] food 100% | Kadai Paneer 78%, Matar Paneer 8%, Paneer Butter Masala 4% | 0.15 s
+OK   Kadai Paneer           [    high] food 100% | Kadai Paneer 79%, Matar Paneer 9%, Egg Curry 4% | 0.17 s
+OK   Kadai Paneer           [    high] food 100% | Kadai Paneer 62%, Aloo Sabzi 15%, Matar Paneer 7% | 0.19 s
+MISS Kadai Paneer           [     low] food 100% | Baingan Bharta 20%, Aloo Matar 9%, Fish Curry 9% | 0.19 s
+top3 Kadai Paneer           [     low] food 99% | Aloo Gobi 26%, Kadai Paneer 23%, Aloo Sabzi 8% | 0.14 s
+top3 Kadai Paneer           [    high] food 99% | Paneer Butter Masala 60%, Matar Paneer 24%, Kadai Paneer 12% | 0.16 s
+MISS Kadai Paneer           [     low] food 99% | Paneer Butter Masala 24%, Matar Paneer 23%, Aloo Sabzi 8% | 0.13 s
+MISS Kadai Paneer           [  medium] food 100% | Paneer Butter Masala 47%, Butter Chicken 14%, Aloo Gobi 9% | 0.13 s
+OK   Kadai Paneer           [    high] food 99% | Kadai Paneer 86%, Matar Paneer 12%, Paneer Butter Masala 2% | 0.14 s
+OK   Kadai Paneer           [  medium] food 99% | Kadai Paneer 55%, Matar Paneer 18%, Paneer Butter Masala 16% | 0.18 s
+MISS Kadai Paneer           [     low] food 100% | Paneer Butter Masala 25%, Matar Paneer 20%, Butter Chicken 20% | 
+0.15 s
+MISS Kadai Paneer           [  medium] food 100% | Baingan Bharta 32%, Rajma 10%, Fish Curry 7% | 0.13 s
+top3 Kadai Paneer           [    high] food 99% | Paneer Butter Masala 64%, Kadai Paneer 29%, Matar Paneer 3% | 0.12 s
+OK   Kadai Paneer           [    high] food 100% | Kadai Paneer 61%, Paneer Butter Masala 14%, Aloo Gobi 5% | 0.14 s
+top3 Kadai Paneer           [  medium] food 100% | Matar Paneer 46%, Kadai Paneer 24%, Paneer Butter Masala 10% | 0.17 
+s
+OK   Kadai Paneer           [    high] food 99% | Kadai Paneer 79%, Matar Paneer 12%, Paneer Butter Masala 7% | 0.13 s
+MISS Kadai Paneer           [     low] food 100% | Matar Paneer 22%, Chana Dal 10%, Dal 10% | 0.14 s
+OK   Kadai Paneer           [    high] food 100% | Kadai Paneer 99%, Paneer Butter Masala 0%, Bhindi Masala 0% | 0.13 s
+OK   Kadai Paneer           [    high] food 99% | Kadai Paneer 100%, Paneer Butter Masala 0%, Matar Paneer 0% | 0.14 s
+top3 Kadai Paneer           [  medium] food 100% | Aloo Sabzi 37%, Kadai Paneer 23%, Aloo Gobi 15% | 0.15 s
+OK   Kadai Paneer           [    high] food 100% | Kadai Paneer 93%, Aloo Sabzi 1%, Aloo Gobi 1% | 0.13 s
+top3 Kadai Paneer           [     low] food 99% | Baingan Bharta 27%, Kadai Paneer 16%, Paneer Butter Masala 12% | 
+0.13 s
+OK   Kadai Paneer           [    high] food 100% | Kadai Paneer 73%, Fish Curry 5%, Chicken Curry 4% | 0.12 s
+OK   Kadai Paneer           [  medium] food 100% | Kadai Paneer 37%, Fish Curry 29%, Paneer Butter Masala 14% | 0.13 s
+MISS Kadai Paneer           [  medium] food 100% | Butter Chicken 38%, Rajma 22%, Sambar 10% | 0.15 s
+OK   Kadai Paneer           [    high] food 100% | Kadai Paneer 89%, Paneer Butter Masala 3%, Baingan Bharta 2% | 0.22 
+s
+OK   Kadai Paneer           [  medium] food 100% | Kadai Paneer 40%, Paneer Butter Masala 15%, Matar Paneer 7% | 0.14 s
+OK   Kadai Paneer           [  medium] food 100% | Kadai Paneer 46%, Matar Paneer 21%, Paneer Butter Masala 6% | 0.26 s
+top3 Kadai Paneer           [    high] food 100% | Paneer Butter Masala 79%, Matar Paneer 9%, Kadai Paneer 9% | 0.11 s
+MISS Kadai Paneer           [     low] food 100% | Sambar 15%, Paneer Butter Masala 13%, Butter Chicken 9% | 0.13 s
+OK   Kadai Paneer           [     low] food 100% | Kadai Paneer 25%, Paneer Butter Masala 17%, Baingan Bharta 12% | 
+0.14 s
+OK   Kadai Paneer           [    high] food 100% | Kadai Paneer 84%, Paneer Butter Masala 12%, Butter Chicken 1% | 
+0.55 s
+OK   Kadai Paneer           [    high] food 100% | Kadai Paneer 98%, Matar Paneer 1%, Paneer Butter Masala 0% | 0.11 s
+MISS Kadai Paneer           [  medium] food 100% | Pizza 37%, Uttapam 23%, Naan 21% | 0.12 s
+top3 Kadai Paneer           [  medium] food 99% | Paneer Butter Masala 59%, Kadai Paneer 29%, Butter Chicken 2% | 0.14 
+s
+MISS Kadai Paneer           [  medium] food 99% | Butter Chicken 53%, Paneer Butter Masala 38%, Aloo Gobi 4% | 0.12 s
+top3 Kadai Paneer           [  medium] food 100% | Butter Chicken 41%, Kadai Paneer 22%, Paneer Butter Masala 14% | 
+0.13 s
+OK   Kadai Paneer           [    high] food 100% | Kadai Paneer 81%, Paneer Butter Masala 5%, Butter Chicken 4% | 0.13 
+s
+OK   Kadai Paneer           [    high] food 100% | Kadai Paneer 62%, Aloo Sabzi 22%, Baingan Bharta 3% | 0.13 s
+OK   Masala Chai            [    high] food 81% | Masala Chai 99%, Sweet Lassi 0%, Curd 0% | 0.14 s
+top3 Masala Chai            [  medium] food 100% | Sweet Lassi 48%, Masala Chai 43%, Rajma 6% | 0.13 s
+OK   Masala Chai            [    high] food 99% | Masala Chai 93%, Sweet Lassi 6%, Rasgulla 0% | 0.21 s
+OK   Masala Chai            [    high] food 98% | Masala Chai 88%, Sweet Lassi 12%, Orange 0% | 0.14 s
+OK   Masala Chai            [    high] food 96% | Masala Chai 85%, Medu Vada 9%, Sweet Lassi 1% | 0.14 s
+OK   Masala Chai            [    high] food 86% | Masala Chai 99%, Mango 0%, Sweet Lassi 0% | 0.25 s
+MISS Masala Chai            [  medium] food 98% | Dal 35%, Sambar 15%, Moong Dal 11% | 0.14 s
+OK   Masala Chai            [    high] food 94% | Masala Chai 99%, Sweet Lassi 1%, French Fries 0% | 0.13 s
+OK   Masala Chai            [  medium] food 99% | Masala Chai 41%, Medu Vada 38%, Besan Ladoo 15% | 0.14 s
+OK   Masala Chai            [    high] food 94% | Masala Chai 92%, Sweet Lassi 7%, Curd 0% | 0.13 s
+top3 Masala Chai            [    high] food 99% | Sweet Lassi 74%, Masala Chai 21%, Rice Kheer 2% | 0.13 s
+OK   Masala Chai            [    high] food 94% | Masala Chai 97%, Sweet Lassi 3%, Ooti 0% | 0.24 s
+MISS Masala Chai            [     low] food 98% | Roti / Chapati 28%, Medu Vada 16%, Plain Paratha 15% | 0.17 s
+OK   Masala Chai            [    high] food 85% | Masala Chai 98%, Sweet Lassi 1%, Curd 0% | 0.16 s
+OK   Masala Chai            [    high] food 98% | Masala Chai 96%, Sweet Lassi 4%, Curd 0% | 0.31 s
+OK   Masala Chai            [    high] food 81% | Masala Chai 97%, Sweet Lassi 0%, Curd 0% | 0.12 s
+OK   Masala Chai            [    high] food 97% | Masala Chai 82%, Sweet Lassi 17%, Curd 1% | 0.12 s
+OK   Masala Chai            [    high] food 73% | Masala Chai 98%, Moong Dal 0%, Sweet Lassi 0% | 0.13 s
+OK   Masala Chai            [    high] food 98% | Masala Chai 99%, Sweet Lassi 0%, Curd 0% | 0.12 s
+OK   Masala Chai            [    high] food 94% | Masala Chai 87%, Sweet Lassi 11%, Rajma 1% | 0.14 s
+OK   Masala Chai            [    high] food 99% | Masala Chai 100%, Sweet Lassi 0%, Curd 0% | 0.12 s
+OK   Masala Chai            [    high] food 92% | Masala Chai 100%, Chole 0%, Chana Dal 0% | 0.14 s
+OK   Masala Chai            [    high] food 100% | Masala Chai 74%, Sweet Lassi 25%, Rice Kheer 0% | 0.12 s
+MISS Masala Chai            [not_food] food 45% | Sweet Lassi 60%, Masala Chai 38%, Curd 1% | 0.12 s
+OK   Masala Chai            [    high] food 74% | Masala Chai 100%, Sweet Lassi 0%, Curd 0% | 0.12 s
+OK   Masala Chai            [     low] food 92% | Masala Chai 26%, Singju 26%, Ooti 9% | 0.18 s
+OK   Masala Chai            [    high] food 98% | Masala Chai 98%, Curd 1%, Sweet Lassi 1% | 0.13 s
+OK   Masala Chai            [    high] food 87% | Masala Chai 92%, Sweet Lassi 8%, Curd 0% | 0.12 s
+MISS Masala Chai            [not_food] food 34% | Masala Chai 99%, Sweet Lassi 0%, Curd 0% | 0.13 s
+OK   Masala Chai            [    high] food 98% | Masala Chai 91%, Sweet Lassi 7%, Curd 1% | 0.13 s
+OK   Masala Chai            [    high] food 98% | Masala Chai 94%, Ooti 2%, Sambar 1% | 0.12 s
+OK   Masala Chai            [    high] food 87% | Masala Chai 99%, Rasgulla 0%, Sweet Lassi 0% | 0.16 s
+OK   Masala Chai            [    high] food 98% | Masala Chai 84%, Sweet Lassi 16%, Curd 0% | 0.15 s
+OK   Masala Chai            [    high] food 100% | Masala Chai 100%, Sweet Lassi 0%, Curd 0% | 0.13 s
+OK   Masala Chai            [    high] food 95% | Masala Chai 99%, Jeera Rice 0%, Curd 0% | 0.12 s
+OK   Masala Chai            [    high] food 92% | Masala Chai 97%, Sweet Lassi 2%, Curd 0% | 0.12 s
+OK   Masala Chai            [    high] food 99% | Masala Chai 100%, Sweet Lassi 0%, Curd 0% | 0.12 s
+OK   Masala Chai            [    high] food 95% | Masala Chai 87%, Curd 3%, Medu Vada 3% | 0.38 s
+OK   Masala Chai            [    high] food 98% | Masala Chai 95%, Sweet Lassi 5%, Curd 0% | 0.14 s
+OK   Masala Chai            [    high] food 96% | Masala Chai 100%, Sweet Lassi 0%, Rajma 0% | 0.14 s
+OK   Masala Chai            [    high] food 80% | Masala Chai 100%, Chole 0%, Curd 0% | 0.19 s
+OK   Masala Chai            [    high] food 99% | Masala Chai 76%, Sweet Lassi 24%, Curd 0% | 0.16 s
+OK   Masala Chai            [    high] food 98% | Masala Chai 80%, Sweet Lassi 20%, Curd 0% | 0.12 s
+OK   Masala Chai            [    high] food 77% | Masala Chai 97%, Curd 0%, Sweet Lassi 0% | 0.63 s
+top3 Masala Chai            [  medium] food 98% | Rice Kheer 47%, Sweet Lassi 37%, Masala Chai 10% | 0.13 s
+OK   Masala Chai            [    high] food 74% | Masala Chai 100%, Curd 0%, Sweet Lassi 0% | 0.17 s
+top3 Masala Chai            [    high] food 97% | Medu Vada 85%, Masala Chai 7%, French Fries 1% | 0.13 s
+OK   Masala Chai            [    high] food 77% | Masala Chai 87%, Sweet Lassi 3%, Ooti 2% | 0.13 s
+OK   Masala Chai            [  medium] food 99% | Masala Chai 43%, Butter Chicken 20%, Chicken Curry 6% | 0.14 s
+OK   Masala Chai            [    high] food 97% | Masala Chai 80%, Sweet Lassi 20%, Sambar 0% | 0.28 s
+OK   Masala Chai            [    high] food 74% | Masala Chai 99%, Sweet Lassi 1%, Rasgulla 0% | 0.14 s
+top3 Masala Chai            [    high] food 99% | Sweet Lassi 60%, Masala Chai 24%, Rice Kheer 10% | 0.11 s
+OK   Masala Chai            [  medium] food 100% | Masala Chai 55%, Medu Vada 27%, Curd 6% | 0.12 s
+OK   Masala Chai            [    high] food 98% | Masala Chai 91%, Sweet Lassi 9%, Curd 0% | 0.13 s
+top3 Masala Chai            [    high] food 100% | Sweet Lassi 66%, Masala Chai 33%, Rice Kheer 1% | 0.14 s
+OK   Masala Chai            [    high] food 95% | Masala Chai 84%, Moong Dal 2%, Singju 2% | 0.13 s
+OK   Masala Chai            [    high] food 74% | Masala Chai 79%, Sweet Lassi 18%, Rice Kheer 1% | 0.13 s
+OK   Masala Dosa            [    high] food 97% | Masala Dosa 60%, Plain Dosa 40%, Plain Paratha 0% | 0.24 s
+OK   Masala Dosa            [  medium] food 100% | Masala Dosa 45%, Plain Dosa 43%, Uttapam 4% | 0.11 s
+top3 Masala Dosa            [  medium] food 100% | Plain Dosa 49%, Masala Dosa 40%, Butter Chicken 4% | 0.13 s
+top3 Masala Dosa            [  medium] food 99% | Plain Dosa 46%, Masala Dosa 44%, Uttapam 4% | 0.13 s
+top3 Masala Dosa            [    high] food 99% | Plain Dosa 65%, Masala Dosa 17%, Uttapam 15% | 0.14 s
+top3 Masala Dosa            [  medium] food 100% | Plain Dosa 53%, Masala Dosa 20%, Plain Paratha 11% | 0.12 s
+top3 Masala Dosa            [  medium] food 100% | Plain Dosa 50%, Masala Dosa 48%, Plain Paratha 1% | 0.13 s
+top3 Masala Dosa            [  medium] food 99% | Plain Dosa 55%, Masala Dosa 25%, Naan 12% | 0.13 s
+OK   Masala Dosa            [    high] food 100% | Masala Dosa 60%, Plain Dosa 32%, Uttapam 3% | 0.13 s
+top3 Masala Dosa            [    high] food 98% | Plain Dosa 65%, Masala Dosa 35%, Uttapam 0% | 0.13 s
+top3 Masala Dosa            [  medium] food 99% | Plain Dosa 59%, Masala Dosa 30%, Omelette 4% | 0.12 s
+OK   Masala Dosa            [    high] food 99% | Masala Dosa 72%, Plain Dosa 28%, Samosa 0% | 0.12 s
+OK   Masala Dosa            [    high] food 99% | Masala Dosa 71%, Plain Dosa 29%, Eromba 0% | 0.16 s
+OK   Masala Dosa            [    high] food 92% | Masala Dosa 78%, Plain Dosa 22%, Roti / Chapati 0% | 0.14 s
+OK   Masala Dosa            [    high] food 100% | Masala Dosa 96%, Plain Dosa 4%, Moong Dal 0% | 0.20 s
+OK   Masala Dosa            [    high] food 99% | Masala Dosa 99%, Plain Dosa 1%, Paneer Butter Masala 0% | 0.18 s
+top3 Masala Dosa            [    high] food 99% | Plain Dosa 61%, Masala Dosa 37%, Uttapam 1% | 0.12 s
+top3 Masala Dosa            [    high] food 99% | Plain Dosa 65%, Masala Dosa 23%, Uttapam 8% | 0.14 s
+OK   Masala Dosa            [    high] food 100% | Masala Dosa 96%, Plain Dosa 4%, Medu Vada 0% | 0.15 s
+OK   Masala Dosa            [  medium] food 100% | Masala Dosa 57%, Plain Dosa 42%, Uttapam 1% | 0.13 s
+top3 Masala Dosa            [  medium] food 100% | Plain Dosa 59%, Masala Dosa 39%, Plain Paratha 1% | 0.11 s
+top3 Masala Dosa            [  medium] food 100% | Plain Dosa 54%, Masala Dosa 41%, Plain Paratha 2% | 0.12 s
+OK   Masala Dosa            [  medium] food 100% | Masala Dosa 56%, Plain Dosa 37%, Medu Vada 1% | 0.13 s
+OK   Masala Dosa            [    high] food 100% | Masala Dosa 88%, Plain Dosa 12%, Samosa 0% | 0.13 s
+top3 Masala Dosa            [  medium] food 99% | Plain Dosa 58%, Plain Paratha 19%, Masala Dosa 10% | 0.13 s
+OK   Masala Dosa            [    high] food 100% | Masala Dosa 74%, Plain Dosa 23%, Uttapam 1% | 0.13 s
+top3 Masala Dosa            [  medium] food 99% | Plain Dosa 54%, Masala Dosa 46%, Uttapam 0% | 0.13 s
+top3 Masala Dosa            [  medium] food 100% | Plain Dosa 40%, Masala Dosa 35%, Uttapam 17% | 0.13 s
+top3 Masala Dosa            [  medium] food 99% | Plain Dosa 58%, Masala Dosa 41%, Plain Paratha 0% | 0.13 s
+top3 Masala Dosa            [    high] food 96% | Plain Dosa 81%, Masala Dosa 11%, Roti / Chapati 3% | 0.19 s
+OK   Masala Dosa            [    high] food 100% | Masala Dosa 81%, Plain Dosa 19%, Samosa 0% | 0.13 s
+OK   Masala Dosa            [    high] food 100% | Masala Dosa 61%, Plain Dosa 12%, Uttapam 9% | 0.32 s
+top3 Masala Dosa            [  medium] food 99% | Plain Dosa 58%, Masala Dosa 42%, Roti / Chapati 0% | 0.13 s
+OK   Masala Dosa            [    high] food 100% | Masala Dosa 68%, Plain Dosa 31%, Plain Paratha 0% | 0.20 s
+OK   Masala Dosa            [    high] food 99% | Masala Dosa 61%, Plain Dosa 34%, Sambar 1% | 0.12 s
+OK   Masala Dosa            [    high] food 98% | Masala Dosa 62%, Uttapam 17%, Plain Dosa 16% | 0.15 s
+top3 Masala Dosa            [    high] food 99% | Plain Dosa 69%, Masala Dosa 29%, Uttapam 1% | 0.13 s
+OK   Masala Dosa            [  medium] food 100% | Masala Dosa 49%, Plain Dosa 46%, Uttapam 2% | 0.12 s
+OK   Masala Dosa            [  medium] food 100% | Masala Dosa 49%, Aloo Paratha 13%, Plain Paratha 11% | 0.13 s
+top3 Masala Dosa            [  medium] food 100% | Plain Dosa 54%, Masala Dosa 39%, Uttapam 4% | 0.14 s
+OK   Masala Dosa            [    high] food 100% | Masala Dosa 65%, Plain Dosa 35%, Naan 0% | 0.14 s
+OK   Masala Dosa            [  medium] food 99% | Masala Dosa 58%, Plain Dosa 40%, Plain Paratha 1% | 0.13 s
+OK   Masala Dosa            [    high] food 100% | Masala Dosa 65%, Plain Dosa 32%, Uttapam 1% | 0.13 s
+OK   Masala Dosa            [    high] food 99% | Masala Dosa 61%, Plain Dosa 38%, Uttapam 0% | 0.13 s
+top3 Masala Dosa            [    high] food 98% | Plain Dosa 63%, Masala Dosa 37%, Roti / Chapati 0% | 0.14 s
+OK   Masala Dosa            [    high] food 100% | Masala Dosa 79%, Baingan Bharta 5%, Plain Dosa 3% | 0.39 s
+top3 Masala Dosa            [    high] food 100% | Uttapam 87%, Plain Dosa 6%, Masala Dosa 4% | 0.29 s
+OK   Momos                  [    high] food 99% | Momos 100%, Singju 0%, Samosa 0% | 0.22 s
+OK   Momos                  [    high] food 100% | Momos 100%, Singju 0%, Puri 0% | 0.14 s
+OK   Momos                  [    high] food 99% | Momos 100%, Samosa 0%, Puri 0% | 0.13 s
+OK   Momos                  [    high] food 99% | Momos 99%, Singju 1%, Ooti 0% | 0.13 s
+top3 Momos                  [     low] food 99% | Puri 16%, Medu Vada 14%, Momos 12% | 0.14 s
+OK   Momos                  [    high] food 100% | Momos 93%, Singju 4%, Ooti 1% | 0.15 s
+OK   Momos                  [    high] food 100% | Momos 99%, Singju 1%, Puri 0% | 0.13 s
+OK   Momos                  [    high] food 100% | Momos 100%, Butter Chicken 0%, Medu Vada 0% | 0.15 s
+OK   Momos                  [    high] food 99% | Momos 100%, Singju 0%, Eromba 0% | 0.14 s
+OK   Momos                  [    high] food 98% | Momos 99%, Singju 0%, Ooti 0% | 0.14 s
+OK   Momos                  [    high] food 98% | Momos 91%, Veg Sandwich 4%, Butter Chicken 3% | 0.14 s
+OK   Momos                  [    high] food 100% | Momos 100%, Butter Chicken 0%, Medu Vada 0% | 0.15 s
+OK   Momos                  [    high] food 98% | Momos 75%, Samosa 11%, Puri 5% | 0.13 s
+OK   Momos                  [    high] food 100% | Momos 100%, Singju 0%, Puri 0% | 0.13 s
+OK   Momos                  [    high] food 100% | Momos 64%, Samosa 4%, Medu Vada 4% | 0.15 s
+OK   Momos                  [    high] food 100% | Momos 95%, Singju 2%, Samosa 1% | 0.15 s
+OK   Momos                  [    high] food 100% | Momos 71%, Besan Ladoo 10%, Medu Vada 7% | 0.15 s
+OK   Momos                  [    high] food 99% | Momos 100%, Puri 0%, Medu Vada 0% | 0.17 s
+OK   Momos                  [    high] food 100% | Momos 95%, Singju 2%, Puri 1% | 0.15 s
+OK   Momos                  [    high] food 99% | Momos 94%, Singju 1%, Idli 1% | 0.17 s
+OK   Momos                  [    high] food 100% | Momos 100%, Singju 0%, Puri 0% | 0.15 s
+OK   Momos                  [    high] food 99% | Momos 99%, Singju 0%, Puri 0% | 0.14 s
+OK   Momos                  [    high] food 97% | Momos 100%, Singju 0%, Puri 0% | 0.14 s
+OK   Momos                  [    high] food 99% | Momos 79%, Rasgulla 11%, Curd 3% | 0.14 s
+OK   Momos                  [    high] food 100% | Momos 100%, Singju 0%, Ooti 0% | 0.14 s
+OK   Momos                  [    high] food 97% | Momos 91%, Idli 5%, Puri 2% | 0.14 s
+OK   Momos                  [    high] food 100% | Momos 99%, Singju 0%, Puri 0% | 0.14 s
+OK   Momos                  [    high] food 100% | Momos 100%, Singju 0%, Puri 0% | 0.14 s
+OK   Momos                  [    high] food 100% | Momos 100%, Singju 0%, Puri 0% | 0.14 s
+OK   Momos                  [    high] food 99% | Momos 97%, Singju 1%, Ooti 1% | 0.15 s
+OK   Momos                  [    high] food 99% | Momos 87%, Puri 3%, Besan Ladoo 2% | 0.13 s
+OK   Momos                  [    high] food 98% | Momos 99%, Naan 0%, Puri 0% | 0.15 s
+OK   Momos                  [    high] food 100% | Momos 100%, Singju 0%, Puri 0% | 0.18 s
+OK   Momos                  [    high] food 99% | Momos 99%, Medu Vada 0%, Puri 0% | 0.20 s
+OK   Momos                  [    high] food 99% | Momos 99%, Puri 0%, Medu Vada 0% | 0.15 s
+OK   Momos                  [    high] food 99% | Momos 100%, Singju 0%, Steamed Rice 0% | 0.14 s
+MISS Momos                  [not_food] food 41% | Sweet Lassi 19%, Veg Khichdi 9%, Dal 6% | 0.16 s
+OK   Momos                  [    high] food 100% | Momos 100%, Singju 0%, Veg Chowmein 0% | 0.14 s
+OK   Momos                  [    high] food 99% | Momos 100%, Singju 0%, Puri 0% | 0.18 s
+OK   Momos                  [    high] food 100% | Momos 100%, Samosa 0%, Puri 0% | 0.13 s
+OK   Momos                  [    high] food 100% | Momos 97%, Samosa 1%, Singju 1% | 0.13 s
+top3 Momos                  [  medium] food 100% | Singju 36%, Momos 21%, Eromba 7% | 0.14 s
+OK   Momos                  [    high] food 100% | Momos 83%, Samosa 13%, Medu Vada 1% | 0.14 s
+OK   Momos                  [    high] food 100% | Momos 98%, Singju 0%, Puri 0% | 0.13 s
+top3 Momos                  [  medium] food 98% | Steamed Rice 49%, Momos 36%, Curd 4% | 0.14 s
+OK   Momos                  [    high] food 99% | Momos 100%, Singju 0%, Puri 0% | 0.14 s
+OK   Momos                  [    high] food 99% | Momos 100%, Singju 0%, Steamed Rice 0% | 0.14 s
+OK   Momos                  [    high] food 97% | Momos 100%, Veg Chowmein 0%, Singju 0% | 0.13 s
+MISS Momos                  [    high] food 100% | Chilli Chicken 74%, Tandoori Chicken 9%, Butter Chicken 4% | 0.13 s
+MISS Naan                   [  medium] food 100% | Baingan Bharta 34%, Dal Makhani 11%, Chicken Curry 8% | 0.13 s
+OK   Naan                   [    high] food 96% | Naan 97%, Plain Paratha 1%, Roti / Chapati 1% | 0.15 s
+top3 Naan                   [     low] food 100% | Butter Chicken 20%, Paneer Butter Masala 17%, Naan 13% | 0.14 s
+OK   Naan                   [  medium] food 99% | Naan 55%, Roti / Chapati 18%, Plain Paratha 17% | 0.13 s
+OK   Naan                   [    high] food 100% | Naan 68%, Plain Paratha 15%, Roti / Chapati 11% | 0.15 s
+OK   Naan                   [    high] food 99% | Naan 97%, Plain Paratha 1%, Aloo Paratha 1% | 0.13 s
+MISS Naan                   [  medium] food 100% | Uttapam 40%, Aloo Paratha 14%, Upma 9% | 0.13 s
+OK   Naan                   [    high] food 100% | Naan 69%, Aloo Paratha 22%, Plain Paratha 5% | 0.15 s
+OK   Naan                   [  medium] food 98% | Naan 56%, Aloo Paratha 17%, Plain Paratha 10% | 0.16 s
+OK   Naan                   [    high] food 99% | Naan 82%, Aloo Paratha 4%, Butter Chicken 3% | 0.15 s
+top3 Naan                   [  medium] food 100% | Plain Paratha 36%, Naan 35%, Aloo Paratha 15% | 0.17 s
+OK   Naan                   [    high] food 100% | Naan 88%, Aloo Paratha 8%, Plain Paratha 2% | 0.13 s
+OK   Naan                   [    high] food 100% | Naan 66%, Dal Makhani 17%, Aloo Paratha 5% | 0.13 s
+OK   Naan                   [  medium] food 99% | Naan 49%, Plain Paratha 28%, Aloo Paratha 14% | 0.14 s
+OK   Naan                   [    high] food 99% | Naan 76%, Plain Paratha 14%, Roti / Chapati 5% | 0.25 s
+MISS Naan                   [  medium] food 100% | Uttapam 30%, Baingan Bharta 12%, Butter Chicken 9% | 0.14 s
+OK   Naan                   [    high] food 100% | Naan 85%, Aloo Paratha 4%, Uttapam 3% | 0.14 s
+OK   Naan                   [    high] food 99% | Naan 86%, Aloo Paratha 5%, Plain Paratha 4% | 0.13 s
+MISS Naan                   [    high] food 98% | Cucumber Raita 87%, Palak Paneer 4%, Curd 4% | 0.14 s
+top3 Naan                   [  medium] food 99% | Plain Paratha 44%, Naan 19%, Roti / Chapati 16% | 0.13 s
+OK   Naan                   [  medium] food 100% | Naan 34%, Uttapam 26%, Aloo Paratha 15% | 0.15 s
+OK   Naan                   [  medium] food 99% | Naan 53%, Plain Paratha 25%, Aloo Paratha 12% | 0.23 s
+OK   Naan                   [    high] food 100% | Naan 82%, Uttapam 10%, Plain Paratha 3% | 0.15 s
+top3 Naan                   [  medium] food 100% | Aloo Paratha 47%, Naan 20%, Aloo Sabzi 7% | 0.13 s
+OK   Naan                   [    high] food 99% | Naan 62%, Plain Paratha 18%, Aloo Paratha 15% | 0.13 s
+OK   Naan                   [  medium] food 100% | Naan 50%, Aloo Paratha 38%, Plain Paratha 8% | 0.12 s
+OK   Naan                   [  medium] food 100% | Naan 40%, Aloo Paratha 21%, Plain Paratha 17% | 0.14 s
+OK   Naan                   [    high] food 100% | Naan 78%, Aloo Paratha 12%, Plain Paratha 6% | 0.15 s
+OK   Naan                   [    high] food 100% | Naan 92%, Plain Dosa 2%, Masala Dosa 2% | 0.27 s
+OK   Naan                   [  medium] food 99% | Naan 58%, Aloo Paratha 30%, Plain Paratha 10% | 0.15 s
+OK   Naan                   [  medium] food 100% | Naan 56%, Aloo Paratha 25%, Plain Paratha 9% | 0.12 s
+OK   Naan                   [    high] food 100% | Naan 98%, Aloo Paratha 1%, Roti / Chapati 1% | 0.39 s
+OK   Naan                   [    high] food 100% | Naan 82%, Aloo Paratha 9%, Plain Paratha 7% | 0.17 s
+OK   Naan                   [    high] food 100% | Naan 75%, Idli 5%, Uttapam 5% | 0.14 s
+MISS Naan                   [    high] food 100% | Butter Chicken 68%, Paneer Butter Masala 13%, Kadai Paneer 8% | 
+0.14 s
+OK   Naan                   [    high] food 100% | Naan 87%, Aloo Paratha 5%, Plain Paratha 5% | 0.15 s
+OK   Naan                   [  medium] food 100% | Naan 59%, Plain Paratha 24%, Aloo Paratha 10% | 0.16 s
+top3 Naan                   [  medium] food 99% | Plain Paratha 55%, Aloo Paratha 33%, Naan 7% | 0.35 s
+OK   Naan                   [    high] food 97% | Naan 99%, Plain Paratha 0%, Roti / Chapati 0% | 0.14 s
+OK   Naan                   [    high] food 97% | Naan 80%, Roti / Chapati 6%, Plain Paratha 3% | 0.16 s
+OK   Naan                   [    high] food 100% | Naan 78%, Roti / Chapati 14%, Plain Paratha 4% | 0.16 s
+top3 Naan                   [  medium] food 100% | Aloo Paratha 49%, Naan 27%, Plain Paratha 15% | 0.16 s
+OK   Naan                   [  medium] food 100% | Naan 59%, Aloo Paratha 23%, Plain Paratha 10% | 0.18 s
+OK   Naan                   [    high] food 100% | Naan 70%, Aloo Paratha 19%, Plain Paratha 4% | 0.17 s
+top3 Naan                   [  medium] food 97% | Roti / Chapati 59%, Naan 23%, Plain Paratha 12% | 0.18 s
+OK   Naan                   [    high] food 100% | Naan 80%, Plain Paratha 8%, Aloo Paratha 4% | 0.21 s
+OK   Naan                   [    high] food 100% | Naan 76%, Aloo Paratha 13%, Plain Paratha 7% | 0.20 s
+OK   Naan                   [    high] food 99% | Naan 66%, Aloo Paratha 18%, Plain Paratha 9% | 0.20 s
+top3 Naan                   [  medium] food 100% | Plain Paratha 36%, Roti / Chapati 36%, Naan 13% | 0.22 s
+OK   Naan                   [  medium] food 99% | Naan 37%, Plain Paratha 30%, Roti / Chapati 18% | 0.17 s
+OK   Naan                   [  medium] food 100% | Naan 51%, Aloo Paratha 31%, Plain Paratha 14% | 0.21 s
+OK   Naan                   [     low] food 100% | Naan 30%, Plain Paratha 27%, Roti / Chapati 12% | 0.15 s
+MISS Naan                   [  medium] food 100% | Plain Paratha 42%, Uttapam 20%, Aloo Paratha 20% | 0.14 s
+OK   Pizza                  [    high] food 99% | Pizza 98%, Naan 1%, Uttapam 0% | 0.16 s
+OK   Pizza                  [    high] food 98% | Pizza 100%, Naan 0%, Uttapam 0% | 0.14 s
+OK   Pizza                  [    high] food 99% | Pizza 84%, Uttapam 9%, Naan 5% | 0.14 s
+OK   Pizza                  [    high] food 99% | Pizza 82%, Dal 6%, Naan 4% | 0.17 s
+OK   Pizza                  [    high] food 99% | Pizza 98%, Naan 1%, Uttapam 0% | 0.14 s
+OK   Pizza                  [    high] food 96% | Pizza 100%, Naan 0%, Momos 0% | 0.17 s
+OK   Pizza                  [    high] food 98% | Pizza 100%, Naan 0%, Uttapam 0% | 0.14 s
+OK   Pizza                  [    high] food 99% | Pizza 98%, Green Salad 1%, Uttapam 1% | 0.13 s
+OK   Pizza                  [    high] food 99% | Pizza 94%, Naan 3%, Uttapam 2% | 0.17 s
+OK   Pizza                  [    high] food 99% | Pizza 84%, Naan 12%, Uttapam 2% | 0.14 s
+OK   Pizza                  [    high] food 87% | Pizza 98%, Uttapam 2%, Burger 0% | 0.20 s
+OK   Pizza                  [    high] food 99% | Pizza 100%, Naan 0%, Uttapam 0% | 0.15 s
+OK   Pizza                  [    high] food 99% | Pizza 99%, Naan 1%, Uttapam 0% | 0.12 s
+OK   Pizza                  [    high] food 99% | Pizza 93%, Naan 7%, Uttapam 0% | 0.14 s
+OK   Pizza                  [    high] food 97% | Pizza 98%, Tandoori Chicken 0%, Uttapam 0% | 0.14 s
+OK   Pizza                  [    high] food 97% | Pizza 98%, Naan 1%, Tandoori Chicken 0% | 0.14 s
+OK   Pizza                  [    high] food 99% | Pizza 97%, Naan 1%, Uttapam 1% | 0.13 s
+OK   Pizza                  [    high] food 99% | Pizza 97%, Naan 1%, Uttapam 1% | 0.12 s
+OK   Pizza                  [    high] food 99% | Pizza 97%, Naan 2%, Uttapam 0% | 0.11 s
+OK   Pizza                  [    high] food 98% | Pizza 96%, Naan 1%, Aloo Paratha 1% | 0.12 s
+OK   Pizza                  [    high] food 99% | Pizza 97%, Naan 2%, Uttapam 1% | 0.14 s
+OK   Pizza                  [    high] food 94% | Pizza 69%, Chilli Chicken 20%, Tandoori Chicken 4% | 0.18 s
+OK   Pizza                  [    high] food 98% | Pizza 100%, Naan 0%, Uttapam 0% | 0.14 s
+OK   Pizza                  [    high] food 98% | Pizza 96%, Naan 3%, Uttapam 0% | 0.18 s
+OK   Pizza                  [    high] food 98% | Pizza 98%, Naan 1%, Uttapam 0% | 0.15 s
+OK   Pizza                  [    high] food 99% | Pizza 96%, Uttapam 2%, Naan 0% | 0.15 s
+OK   Pizza                  [    high] food 98% | Pizza 96%, Naan 4%, Uttapam 0% | 0.22 s
+OK   Pizza                  [    high] food 98% | Pizza 99%, Naan 0%, Chilli Chicken 0% | 0.16 s
+OK   Pizza                  [    high] food 99% | Pizza 99%, Naan 0%, Uttapam 0% | 0.16 s
+OK   Pizza                  [    high] food 98% | Pizza 100%, Naan 0%, Uttapam 0% | 0.15 s
+OK   Pizza                  [  medium] food 100% | Pizza 52%, Green Salad 18%, Uttapam 5% | 0.22 s
+OK   Pizza                  [    high] food 99% | Pizza 70%, Chilli Chicken 14%, Tandoori Chicken 9% | 0.14 s
+OK   Pizza                  [    high] food 92% | Pizza 99%, Burger 0%, Momos 0% | 0.16 s
+OK   Pizza                  [    high] food 99% | Pizza 99%, Naan 1%, Uttapam 0% | 0.16 s
+OK   Pizza                  [    high] food 99% | Pizza 63%, Naan 27%, Uttapam 4% | 0.15 s
+OK   Pizza                  [    high] food 100% | Pizza 75%, Naan 14%, Uttapam 6% | 0.14 s
+OK   Pizza                  [    high] food 99% | Pizza 100%, Naan 0%, Uttapam 0% | 0.16 s
+OK   Roti / Chapati         [  medium] food 98% | Roti / Chapati 56%, Naan 30%, Plain Paratha 10% | 0.17 s
+top3 Roti / Chapati         [  medium] food 99% | Naan 38%, Roti / Chapati 31%, Plain Paratha 11% | 0.17 s
+OK   Roti / Chapati         [  medium] food 99% | Roti / Chapati 56%, Naan 22%, Plain Paratha 18% | 0.17 s
+MISS Roti / Chapati         [  medium] food 100% | Aloo Paratha 42%, Uttapam 18%, Plain Paratha 17% | 0.20 s
+top3 Roti / Chapati         [    high] food 100% | Plain Paratha 69%, Roti / Chapati 14%, Naan 10% | 0.16 s
+MISS Roti / Chapati         [     low] food 100% | Uttapam 29%, Aloo Paratha 29%, Plain Paratha 26% | 0.14 s
+OK   Roti / Chapati         [  medium] food 100% | Roti / Chapati 39%, Plain Paratha 16%, Dal Makhani 14% | 0.16 s
+OK   Roti / Chapati         [    high] food 99% | Roti / Chapati 67%, Naan 17%, Plain Paratha 13% | 0.20 s
+OK   Roti / Chapati         [     low] food 100% | Roti / Chapati 28%, Plain Paratha 24%, Aloo Paratha 23% | 0.44 s
+top3 Roti / Chapati         [  medium] food 98% | Naan 43%, Roti / Chapati 42%, Plain Paratha 9% | 0.17 s
+top3 Roti / Chapati         [  medium] food 100% | Plain Paratha 40%, Roti / Chapati 37%, Naan 10% | 0.20 s
+OK   Roti / Chapati         [  medium] food 99% | Roti / Chapati 49%, Plain Paratha 28%, Naan 8% | 0.19 s
+top3 Roti / Chapati         [  medium] food 98% | Rice Kheer 38%, Plain Paratha 11%, Roti / Chapati 6% | 0.17 s
+OK   Roti / Chapati         [  medium] food 100% | Roti / Chapati 58%, Plain Paratha 12%, Naan 10% | 0.16 s
+MISS Roti / Chapati         [  medium] food 99% | Aloo Paratha 56%, Plain Paratha 30%, Uttapam 8% | 0.15 s
+top3 Roti / Chapati         [  medium] food 99% | Naan 51%, Plain Paratha 23%, Roti / Chapati 12% | 0.15 s
+OK   Roti / Chapati         [  medium] food 97% | Roti / Chapati 38%, Naan 35%, Plain Paratha 20% | 0.15 s
+top3 Roti / Chapati         [  medium] food 99% | Plain Paratha 42%, Roti / Chapati 15%, Plain Dosa 12% | 0.17 s
+top3 Roti / Chapati         [  medium] food 99% | Aloo Paratha 53%, Plain Paratha 35%, Roti / Chapati 3% | 0.15 s
+top3 Roti / Chapati         [     low] food 74% | Naan 27%, Roti / Chapati 22%, Plain Paratha 22% | 0.14 s
+top3 Roti / Chapati         [     low] food 98% | Naan 25%, Roti / Chapati 24%, Plain Paratha 14% | 0.13 s
+top3 Roti / Chapati         [  medium] food 98% | Naan 49%, Plain Paratha 22%, Roti / Chapati 21% | 0.14 s
+MISS Roti / Chapati         [    high] food 100% | Palak Paneer 97%, Baingan Bharta 1%, Aloo Sabzi 0% | 0.14 s
+OK   Roti / Chapati         [     low] food 99% | Roti / Chapati 29%, Plain Paratha 29%, Naan 16% | 0.14 s
+top3 Roti / Chapati         [     low] food 100% | Aloo Sabzi 17%, Aloo Matar 14%, Roti / Chapati 14% | 0.15 s
+OK   Roti / Chapati         [  medium] food 98% | Roti / Chapati 39%, Naan 19%, Plain Paratha 12% | 0.15 s
+top3 Roti / Chapati         [    high] food 99% | Naan 77%, Plain Paratha 10%, Roti / Chapati 7% | 0.13 s
+MISS Roti / Chapati         [     low] food 100% | Plain Paratha 21%, Aloo Paratha 21%, Uttapam 19% | 0.14 s
+top3 Roti / Chapati         [    high] food 97% | Naan 61%, Roti / Chapati 22%, Plain Paratha 12% | 0.19 s
+OK   Roti / Chapati         [  medium] food 99% | Roti / Chapati 49%, Plain Paratha 23%, Naan 14% | 0.23 s
+top3 Roti / Chapati         [  medium] food 98% | Plain Paratha 52%, Aloo Paratha 25%, Roti / Chapati 10% | 0.16 s
+top3 Roti / Chapati         [  medium] food 99% | Plain Paratha 49%, Roti / Chapati 27%, Aloo Paratha 12% | 0.14 s
+top3 Roti / Chapati         [  medium] food 99% | Plain Paratha 43%, Naan 26%, Roti / Chapati 25% | 0.14 s
+OK   Roti / Chapati         [  medium] food 99% | Roti / Chapati 37%, Plain Paratha 31%, Aloo Paratha 17% | 0.15 s
+top3 Roti / Chapati         [    high] food 84% | Naan 80%, Roti / Chapati 8%, Plain Paratha 6% | 0.15 s
+OK   Roti / Chapati         [    high] food 99% | Roti / Chapati 70%, Plain Paratha 11%, Naan 6% | 0.17 s
+OK   Roti / Chapati         [    high] food 98% | Roti / Chapati 99%, Uttapam 0%, Chole 0% | 0.15 s
+top3 Roti / Chapati         [  medium] food 100% | Plain Paratha 38%, Roti / Chapati 31%, Naan 12% | 0.32 s
+OK   Roti / Chapati         [    high] food 96% | Roti / Chapati 61%, Plain Paratha 12%, Naan 12% | 0.36 s
+top3 Roti / Chapati         [  medium] food 99% | Naan 56%, Roti / Chapati 25%, Plain Paratha 10% | 0.17 s
+top3 Roti / Chapati         [  medium] food 99% | Plain Paratha 56%, Roti / Chapati 28%, Uttapam 6% | 0.16 s
+top3 Roti / Chapati         [    high] food 100% | Plain Paratha 67%, Aloo Paratha 13%, Roti / Chapati 11% | 0.15 s
+MISS Roti / Chapati         [     low] food 99% | Masala Dosa 27%, Plain Dosa 15%, Naan 13% | 0.27 s
+MISS Roti / Chapati         [     low] food 100% | Aloo Paratha 28%, Plain Paratha 16%, Masala Dosa 12% | 0.23 s
+top3 Roti / Chapati         [  medium] food 99% | Plain Paratha 38%, Roti / Chapati 37%, Uttapam 13% | 0.26 s
+top3 Roti / Chapati         [  medium] food 99% | Plain Paratha 48%, Roti / Chapati 27%, Aloo Paratha 12% | 0.17 s
+top3 Roti / Chapati         [  medium] food 99% | Plain Paratha 32%, Roti / Chapati 26%, Aloo Paratha 20% | 0.17 s
+MISS Roti / Chapati         [    high] food 100% | Plain Paratha 67%, Aloo Paratha 18%, Naan 7% | 0.16 s
+OK   Roti / Chapati         [  medium] food 99% | Roti / Chapati 41%, Plain Paratha 31%, Naan 22% | 0.20 s
+top3 Roti / Chapati         [  medium] food 99% | Plain Paratha 51%, Roti / Chapati 33%, Naan 8% | 0.19 s
+MISS Roti / Chapati         [  medium] food 99% | Aloo Paratha 45%, Plain Paratha 19%, Medu Vada 8% | 0.13 s
+OK   Roti / Chapati         [  medium] food 99% | Roti / Chapati 45%, Naan 38%, Plain Paratha 12% | 0.12 s
+top3 Roti / Chapati         [  medium] food 99% | Plain Paratha 36%, Roti / Chapati 33%, Aloo Paratha 12% | 0.13 s
+OK   Roti / Chapati         [     low] food 100% | Roti / Chapati 22%, Plain Paratha 20%, Aloo Paratha 15% | 0.11 s
+MISS Roti / Chapati         [     low] food 100% | Chicken Curry 25%, Butter Chicken 17%, Baingan Bharta 9% | 0.13 s
+top3 Roti / Chapati         [  medium] food 100% | Plain Paratha 48%, Aloo Paratha 35%, Roti / Chapati 8% | 0.13 s
+MISS Roti / Chapati         [  medium] food 100% | Sambar 46%, Moong Dal 18%, Uttapam 8% | 0.14 s
+MISS Roti / Chapati         [    high] food 100% | Naan 74%, Plain Paratha 12%, Aloo Paratha 9% | 0.16 s
+OK   Roti / Chapati         [  medium] food 100% | Roti / Chapati 42%, Plain Paratha 34%, Naan 18% | 0.17 s
+top3 Roti / Chapati         [  medium] food 99% | Plain Paratha 49%, Roti / Chapati 29%, Naan 10% | 0.12 s
+OK   Roti / Chapati         [  medium] food 99% | Roti / Chapati 31%, Plain Paratha 29%, Naan 26% | 0.15 s
+OK   Roti / Chapati         [  medium] food 99% | Roti / Chapati 51%, Plain Paratha 31%, Aloo Paratha 7% | 0.17 s
+top3 Roti / Chapati         [  medium] food 100% | Naan 54%, Roti / Chapati 16%, Plain Paratha 16% | 0.16 s
+top3 Roti / Chapati         [  medium] food 96% | Plain Paratha 32%, Roti / Chapati 22%, Aloo Paratha 14% | 0.15 s
+OK   Roti / Chapati         [  medium] food 99% | Roti / Chapati 51%, Plain Paratha 22%, Naan 20% | 0.17 s
+top3 Roti / Chapati         [  medium] food 98% | Plain Paratha 56%, Roti / Chapati 21%, Naan 10% | 0.14 s
+OK   Roti / Chapati         [  medium] food 91% | Roti / Chapati 34%, Naan 18%, Plain Paratha 14% | 0.11 s
+MISS Samosa                 [     low] food 100% | Baingan Bharta 18%, Rajma 10%, Chole 9% | 0.12 s
+OK   Samosa                 [    high] food 99% | Samosa 100%, Momos 0%, Puri 0% | 0.10 s
+MISS Samosa                 [  medium] food 100% | Rajma 36%, Baingan Bharta 34%, Chole 15% | 0.12 s
+OK   Samosa                 [    high] food 100% | Samosa 95%, Masala Dosa 2%, Medu Vada 1% | 0.12 s
+OK   Samosa                 [  medium] food 100% | Samosa 51%, Medu Vada 14%, Naan 12% | 0.17 s
+OK   Samosa                 [    high] food 100% | Samosa 93%, Puri 4%, Momos 1% | 0.17 s
+OK   Samosa                 [    high] food 100% | Samosa 98%, Medu Vada 1%, Dhokla 0% | 0.17 s
+OK   Samosa                 [    high] food 100% | Samosa 92%, Masala Dosa 6%, Plain Dosa 1% | 0.17 s
+OK   Samosa                 [    high] food 99% | Samosa 89%, Momos 7%, Uttapam 1% | 0.12 s
+OK   Samosa                 [    high] food 99% | Samosa 96%, Puri 1%, Masala Dosa 1% | 0.16 s
+OK   Samosa                 [    high] food 97% | Samosa 99%, Puri 0%, Momos 0% | 0.14 s
+OK   Samosa                 [    high] food 100% | Samosa 61%, Momos 36%, Puri 2% | 0.20 s
+OK   Samosa                 [    high] food 99% | Samosa 94%, Momos 2%, Medu Vada 2% | 0.14 s
+OK   Samosa                 [  medium] food 100% | Samosa 39%, Medu Vada 24%, Baingan Bharta 17% | 0.15 s
+OK   Samosa                 [    high] food 100% | Samosa 80%, Masala Dosa 8%, Plain Dosa 7% | 0.16 s
+OK   Samosa                 [  medium] food 100% | Samosa 48%, Plain Dosa 12%, Masala Dosa 11% | 0.17 s
+OK   Samosa                 [    high] food 100% | Samosa 97%, Uttapam 1%, Masala Dosa 1% | 0.15 s
+OK   Samosa                 [    high] food 99% | Samosa 98%, Momos 2%, Plain Dosa 0% | 0.15 s
+OK   Samosa                 [    high] food 100% | Samosa 95%, Momos 3%, Medu Vada 0% | 0.30 s
+OK   Samosa                 [    high] food 99% | Samosa 90%, Puri 6%, Medu Vada 3% | 0.91 s
+OK   Samosa                 [    high] food 100% | Samosa 91%, Puri 2%, Baingan Bharta 1% | 0.49 s
+OK   Samosa                 [    high] food 100% | Samosa 76%, Momos 16%, Puri 6% | 0.16 s
+MISS Samosa                 [  medium] food 100% | Plain Paratha 30%, Aloo Paratha 21%, Roti / Chapati 9% | 0.20 s
+OK   Samosa                 [    high] food 99% | Samosa 99%, Puri 0%, Momos 0% | 0.15 s
+top3 Samosa                 [  medium] food 99% | Momos 39%, Samosa 29%, Puri 25% | 0.24 s
+OK   Samosa                 [    high] food 100% | Samosa 93%, Momos 6%, Puri 1% | 0.20 s
+OK   Samosa                 [    high] food 99% | Samosa 98%, Puri 1%, Medu Vada 1% | 0.16 s
+OK   Samosa                 [    high] food 99% | Samosa 99%, Momos 0%, Puri 0% | 0.18 s
+OK   Samosa                 [    high] food 99% | Samosa 97%, Puri 1%, Masala Dosa 1% | 0.27 s
+OK   Samosa                 [  medium] food 100% | Samosa 46%, Masala Dosa 30%, Plain Dosa 9% | 0.17 s
+OK   Samosa                 [    high] food 98% | Samosa 94%, Momos 5%, Puri 1% | 0.17 s
+OK   Samosa                 [    high] food 100% | Samosa 89%, Naan 4%, Puri 3% | 0.17 s
+OK   Samosa                 [    high] food 100% | Samosa 76%, Masala Dosa 8%, Dhokla 5% | 0.16 s
+OK   Samosa                 [    high] food 99% | Samosa 97%, Medu Vada 1%, Masala Dosa 0% | 0.18 s
+OK   Samosa                 [    high] food 100% | Samosa 96%, Masala Dosa 2%, Plain Dosa 1% | 0.21 s
+OK   Samosa                 [    high] food 99% | Samosa 100%, Puri 0%, Medu Vada 0% | 0.13 s
+OK   Samosa                 [    high] food 100% | Samosa 86%, Naan 4%, Puri 3% | 0.14 s
+MISS Samosa                 [    high] food 99% | Veg Sandwich 97%, Pizza 1%, Veg Biryani 1% | 0.13 s
+OK   Samosa                 [    high] food 100% | Samosa 97%, Puri 1%, Medu Vada 1% | 0.13 s
+OK   Samosa                 [    high] food 100% | Samosa 96%, Plain Dosa 1%, Plain Paratha 1% | 0.23 s
+OK   Samosa                 [    high] food 100% | Samosa 97%, Momos 2%, Puri 0% | 0.17 s
+OK   Samosa                 [     low] food 100% | Samosa 26%, Masala Dosa 18%, Plain Dosa 12% | 0.14 s
+OK   Samosa                 [    high] food 100% | Samosa 84%, Medu Vada 4%, Dhokla 2% | 0.21 s
+OK   Samosa                 [    high] food 99% | Samosa 98%, Medu Vada 1%, Puri 0% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Rajma 51%, Baingan Bharta 24%, Chole 8% | 0.14 s
+OK   unknown_food           [     low] food 100% | Roti / Chapati 21%, Uttapam 18%, Masala Dosa 10% | 0.15 s
+MISS unknown_food           [    high] food 100% | Puri 80%, Medu Vada 9%, Samosa 4% | 0.15 s
+OK   unknown_food           [     low] food 100% | Aloo Sabzi 19%, Aloo Paratha 16%, Plain Paratha 13% | 0.16 s
+OK   unknown_food           [  medium] food 100% | Puri 33%, Medu Vada 15%, Masala Dosa 11% | 0.14 s
+OK   unknown_food           [  medium] food 98% | Puri 48%, Chole 19%, Baingan Bharta 5% | 0.13 s
+OK   unknown_food           [     low] food 100% | Baingan Bharta 27%, Aloo Matar 10%, Puri 9% | 0.17 s
+OK   unknown_food           [     low] food 99% | Naan 24%, Plain Paratha 18%, Roti / Chapati 14% | 0.15 s
+OK   unknown_food           [  medium] food 100% | Puri 52%, Rajma 13%, Chole 10% | 0.15 s
+OK   unknown_food           [     low] food 100% | Chana Dal 24%, Puri 23%, Chole 16% | 0.15 s
+OK   unknown_food           [  medium] food 100% | Puri 56%, Medu Vada 26%, Uttapam 10% | 0.12 s
+OK   unknown_food           [     low] food 100% | Plain Paratha 20%, Naan 16%, Baingan Bharta 15% | 0.14 s
+MISS unknown_food           [    high] food 100% | Puri 90%, Medu Vada 3%, Baingan Bharta 2% | 0.12 s
+OK   unknown_food           [  medium] food 99% | Baingan Bharta 54%, Aloo Matar 8%, Chole 5% | 0.12 s
+MISS unknown_food           [    high] food 100% | Chana Dal 71%, Chole 19%, Moong Dal 3% | 0.11 s
+MISS unknown_food           [    high] food 100% | Puri 65%, Medu Vada 13%, Samosa 7% | 0.26 s
+OK   unknown_food           [  medium] food 100% | Baingan Bharta 47%, Dal Makhani 25%, Rajma 13% | 0.15 s
+OK   unknown_food           [  medium] food 100% | Uttapam 38%, Puri 20%, Baingan Bharta 9% | 0.15 s
+MISS unknown_food           [    high] food 100% | Chole 81%, Chana Dal 9%, Roti / Chapati 2% | 0.23 s
+OK   unknown_food           [  medium] food 100% | Masala Dosa 36%, Puri 21%, Samosa 14% | 0.47 s
+OK   unknown_food           [     low] food 100% | Puri 28%, Baingan Bharta 27%, Chole 26% | 0.14 s
+OK   unknown_food           [  medium] food 99% | Puri 46%, Naan 12%, Samosa 7% | 0.55 s
+OK   unknown_food           [     low] food 100% | Masala Dosa 16%, Aloo Matar 11%, Chole 11% | 0.11 s
+OK   unknown_food           [     low] food 99% | Uttapam 25%, Plain Paratha 20%, Baingan Bharta 19% | 0.15 s
+OK   unknown_food           [  medium] food 100% | Puri 30%, Uttapam 16%, Samosa 10% | 0.18 s
+OK   unknown_food           [  medium] food 99% | Baingan Bharta 54%, Aloo Matar 8%, Chole 5% | 0.18 s
+MISS unknown_food           [    high] food 100% | Puri 81%, Chole 6%, Baingan Bharta 3% | 0.16 s
+MISS unknown_food           [    high] food 98% | Chole 67%, Dhokla 7%, Momos 4% | 0.16 s
+OK   unknown_food           [  medium] food 100% | Puri 34%, Baingan Bharta 25%, Chole 9% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Uttapam 35%, Masala Dosa 24%, Plain Dosa 10% | 0.13 s
+OK   unknown_food           [     low] food 100% | Masala Dosa 21%, Naan 16%, Uttapam 14% | 0.17 s
+OK   unknown_food           [     low] food 100% | Samosa 27%, Naan 11%, Baingan Bharta 9% | 0.13 s
+OK   unknown_food           [  medium] food 100% | Masala Dosa 55%, Plain Dosa 29%, Uttapam 5% | 0.13 s
+OK   unknown_food           [     low] food 100% | Samosa 21%, Puri 17%, Plain Paratha 11% | 0.13 s
+OK   unknown_food           [  medium] food 100% | Baingan Bharta 53%, Puri 13%, Dal Makhani 10% | 0.13 s
+MISS unknown_food           [    high] food 100% | Puri 63%, Chole 21%, Medu Vada 8% | 0.12 s
+OK   unknown_food           [  medium] food 94% | Veg Khichdi 31%, Dal 7%, Baingan Bharta 6% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Puri 55%, Chole 14%, Medu Vada 12% | 0.13 s
+OK   unknown_food           [  medium] food 100% | Puri 42%, Uttapam 28%, Medu Vada 6% | 0.29 s
+OK   unknown_food           [  medium] food 100% | Puri 36%, Uttapam 21%, Medu Vada 11% | 0.39 s
+OK   unknown_food           [  medium] food 100% | Rajma 35%, Chole 20%, Chana Dal 12% | 0.13 s
+OK   unknown_food           [     low] food 99% | Roti / Chapati 25%, Naan 19%, Plain Paratha 15% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Puri 36%, Chole 22%, Baingan Bharta 11% | 0.14 s
+OK   unknown_food           [     low] food 100% | Chole 24%, Rajma 15%, Puri 15% | 0.15 s
+OK   unknown_food           [     low] food 100% | Puri 13%, Aloo Matar 13%, Chole 13% | 0.15 s
+OK   unknown_food           [     low] food 100% | Sambar 22%, Aloo Matar 17%, Puri 10% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Chole 43%, Puri 34%, Chana Dal 11% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Chole 32%, Puri 30%, Baingan Bharta 20% | 0.15 s
+OK   unknown_food           [     low] food 100% | Chole 24%, Baingan Bharta 23%, Puri 12% | 0.29 s
+OK   unknown_food           [  medium] food 100% | Uttapam 36%, Puri 35%, Baingan Bharta 6% | 0.16 s
+OK   unknown_food           [     low] food 100% | Uttapam 20%, Naan 17%, Baingan Bharta 15% | 0.11 s
+OK   unknown_food           [     low] food 100% | Puri 21%, Chana Dal 20%, Chole 16% | 0.16 s
+OK   unknown_food           [  medium] food 100% | Puri 52%, Chole 9%, Medu Vada 9% | 0.16 s
+OK   unknown_food           [  medium] food 100% | Puri 43%, Medu Vada 16%, Masala Dosa 14% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Veg Pulao 38%, Poha 25%, Veg Biryani 18% | 0.12 s
+OK   unknown_food           [  medium] food 100% | Singju 57%, Veg Chowmein 5%, Moong Dal 5% | 0.13 s
+MISS unknown_food           [    high] food 100% | Medu Vada 72%, Momos 10%, Puri 3% | 0.15 s
+OK   unknown_food           [     low] food 100% | Rajma 30%, Gajar Halwa 17%, Medu Vada 8% | 0.12 s
+OK   unknown_food           [     low] food 99% | French Fries 14%, Momos 13%, Banana 13% | 0.10 s
+OK   unknown_food           [  medium] food 99% | Medu Vada 53%, Puri 14%, Plain Paratha 8% | 0.13 s
+OK   unknown_food           [     low] food 99% | Momos 16%, Medu Vada 15%, Rajma 15% | 0.14 s
+OK   unknown_food           [     low] food 100% | Aloo Sabzi 26%, Aloo Gobi 8%, Dal 8% | 0.13 s
+MISS unknown_food           [    high] food 100% | Medu Vada 78%, Aloo Sabzi 6%, Chilli Chicken 5% | 0.15 s
+MISS unknown_food           [    high] food 99% | Medu Vada 87%, Singju 4%, Bhindi Masala 2% | 0.13 s
+OK   unknown_food           [  medium] food 100% | Veg Biryani 39%, Poha 34%, Veg Pulao 14% | 0.12 s
+MISS unknown_food           [    high] food 99% | Medu Vada 76%, Besan Ladoo 15%, Gajar Halwa 4% | 0.12 s
+OK   unknown_food           [     low] food 100% | Medu Vada 17%, Singju 15%, Gajar Halwa 13% | 0.12 s
+MISS unknown_food           [    high] food 99% | French Fries 68%, Singju 6%, Veg Chowmein 4% | 0.10 s
+OK   unknown_food           [     low] food 99% | Orange 23%, Gajar Halwa 17%, Momos 12% | 0.12 s
+OK   unknown_food           [  medium] food 99% | Gajar Halwa 44%, Veg Chowmein 11%, Veg Biryani 5% | 0.11 s
+OK   unknown_food           [  medium] food 98% | Medu Vada 42%, Orange 38%, Papaya 7% | 0.13 s
+OK   unknown_food           [  medium] food 100% | Medu Vada 49%, Aloo Paratha 25%, Puri 12% | 0.13 s
+OK   unknown_food           [  medium] food 100% | Papaya 55%, Orange 13%, Gajar Halwa 8% | 0.12 s
+OK   unknown_food           [  medium] food 99% | Medu Vada 42%, Besan Ladoo 25%, Gajar Halwa 6% | 0.10 s
+OK   unknown_food           [     low] food 100% | Dal 10%, Singju 9%, Medu Vada 9% | 0.14 s
+OK   unknown_food           [  medium] food 98% | Medu Vada 39%, Besan Ladoo 22%, Apple 20% | 0.14 s
+MISS unknown_food           [    high] food 100% | Gajar Halwa 89%, Medu Vada 8%, Besan Ladoo 0% | 0.16 s
+MISS unknown_food           [    high] food 97% | Orange 86%, Ooti 1%, Medu Vada 1% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Gajar Halwa 46%, Besan Ladoo 14%, Jeera Rice 11% | 0.12 s
+OK   unknown_food           [  medium] food 100% | Singju 35%, Medu Vada 12%, Gajar Halwa 8% | 0.13 s
+OK   unknown_food           [  medium] food 100% | Cucumber Raita 47%, Rice Kheer 26%, Curd 17% | 0.12 s
+MISS unknown_food           [    high] food 100% | Papaya 77%, Gajar Halwa 8%, Orange 7% | 0.17 s
+MISS unknown_food           [    high] food 99% | Gajar Halwa 72%, Orange 19%, Veg Sandwich 2% | 0.15 s
+MISS unknown_food           [    high] food 99% | Orange 60%, Gajar Halwa 5%, Papaya 5% | 0.13 s
+OK   unknown_food           [  medium] food 100% | Butter Chicken 42%, Gajar Halwa 7%, Rajma 7% | 0.13 s
+OK   unknown_food           [     low] food 98% | Medu Vada 21%, Orange 16%, Singju 13% | 0.14 s
+OK   unknown_food           [     low] food 99% | Medu Vada 25%, Besan Ladoo 18%, Orange 13% | 0.14 s
+MISS unknown_food           [    high] food 100% | Gajar Halwa 80%, Orange 6%, Papaya 4% | 0.14 s
+OK   unknown_food           [  medium] food 99% | Gajar Halwa 39%, Medu Vada 19%, Besan Ladoo 9% | 0.12 s
+OK   unknown_food           [  medium] food 100% | Medu Vada 45%, Uttapam 7%, Dhokla 6% | 0.11 s
+OK   unknown_food           [     low] food 100% | Momos 25%, Uttapam 9%, Plain Paratha 9% | 0.11 s
+OK   unknown_food           [  medium] food 100% | Gajar Halwa 47%, Medu Vada 12%, Orange 12% | 0.11 s
+OK   unknown_food           [  medium] food 99% | Plain Dosa 31%, Masala Dosa 30%, Uttapam 24% | 0.11 s
+OK   unknown_food           [     low] food 100% | Plain Dosa 23%, Uttapam 22%, Masala Dosa 20% | 0.15 s
+OK   unknown_food           [     low] food 99% | Masala Dosa 25%, Roti / Chapati 17%, Plain Paratha 16% | 0.13 s
+OK   unknown_food           [  medium] food 98% | Plain Dosa 40%, Masala Dosa 27%, Plain Paratha 12% | 0.12 s
+OK   unknown_food           [     low] food 99% | Masala Dosa 16%, Naan 15%, Plain Paratha 15% | 0.16 s
+OK   unknown_food           [     low] food 99% | Kadai Paneer 29%, Paneer Butter Masala 8%, Matar Paneer 8% | 0.15 s
+OK   unknown_food           [  medium] food 100% | Uttapam 39%, Masala Dosa 13%, Plain Dosa 13% | 0.11 s
+OK   unknown_food           [  medium] food 100% | Omelette 42%, Samosa 18%, Chicken Biryani 4% | 0.11 s
+OK   unknown_food           [  medium] food 100% | Uttapam 57%, Plain Paratha 12%, Aloo Paratha 7% | 0.11 s
+OK   unknown_food           [     low] food 100% | Plain Paratha 23%, Naan 20%, Aloo Paratha 16% | 0.12 s
+OK   unknown_food           [  medium] food 100% | Masala Dosa 31%, Aloo Paratha 26%, Plain Dosa 10% | 0.12 s
+OK   unknown_food           [     low] food 100% | Naan 21%, Uttapam 9%, Baingan Bharta 7% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Plain Paratha 40%, Roti / Chapati 15%, Samosa 13% | 0.13 s
+OK   unknown_food           [  medium] food 97% | Plain Dosa 43%, Roti / Chapati 38%, Plain Paratha 5% | 0.23 s
+OK   unknown_food           [  medium] food 100% | Plain Paratha 39%, Aloo Paratha 20%, Masala Dosa 10% | 0.14 s
+OK   unknown_food           [     low] food 98% | Masala Dosa 27%, Plain Paratha 26%, Plain Dosa 21% | 0.30 s
+OK   unknown_food           [  medium] food 99% | Plain Paratha 30%, Roti / Chapati 22%, Masala Dosa 19% | 0.12 s
+MISS unknown_food           [    high] food 99% | Samosa 85%, Momos 3%, Plain Paratha 3% | 0.13 s
+MISS unknown_food           [    high] food 100% | Naan 77%, Uttapam 16%, Aloo Paratha 1% | 0.15 s
+OK   unknown_food           [  medium] food 99% | Roti / Chapati 50%, Plain Paratha 28%, Aloo Paratha 11% | 0.14 s
+OK   unknown_food           [     low] food 100% | Uttapam 23%, Tandoori Chicken 15%, Plain Paratha 12% | 0.13 s
+OK   unknown_food           [     low] food 100% | Plain Paratha 16%, Uttapam 13%, Tandoori Chicken 11% | 0.21 s
+OK   unknown_food           [  medium] food 100% | Aloo Paratha 32%, Plain Paratha 32%, Uttapam 14% | 0.13 s
+OK   unknown_food           [     low] food 98% | Butter Chicken 16%, Chilli Chicken 10%, Aloo Paratha 9% | 0.17 s
+OK   unknown_food           [  medium] food 99% | Masala Dosa 32%, Plain Dosa 14%, Samosa 13% | 0.15 s
+OK   unknown_food           [     low] food 98% | Masala Dosa 21%, Samosa 18%, Plain Paratha 16% | 0.15 s
+OK   unknown_food           [     low] food 100% | Uttapam 20%, Veg Biryani 17%, Aloo Sabzi 8% | 0.12 s
+OK   unknown_food           [  medium] food 99% | Uttapam 56%, Masala Dosa 11%, Plain Dosa 7% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Roti / Chapati 36%, Plain Paratha 24%, Aloo Paratha 10% | 0.13 s
+OK   unknown_food           [     low] food 99% | Masala Dosa 26%, Plain Dosa 24%, Uttapam 20% | 0.15 s
+OK   unknown_food           [     low] food 100% | Plain Paratha 28%, Plain Dosa 20%, Masala Dosa 17% | 0.14 s
+OK   unknown_food           [  medium] food 99% | Plain Paratha 43%, Palak Paneer 16%, Masala Dosa 13% | 0.14 s
+OK   unknown_food           [     low] food 100% | Plain Paratha 29%, Masala Dosa 19%, Aloo Paratha 17% | 0.10 s
+OK   unknown_food           [  medium] food 99% | Masala Dosa 44%, Uttapam 18%, Plain Dosa 7% | 0.16 s
+OK   unknown_food           [  medium] food 99% | Plain Paratha 31%, Roti / Chapati 21%, Plain Dosa 13% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Aloo Paratha 44%, Plain Paratha 39%, Uttapam 5% | 0.13 s
+OK   unknown_food           [     low] food 100% | Masala Dosa 22%, Uttapam 20%, Roti / Chapati 17% | 0.39 s
+OK   unknown_food           [     low] food 100% | Masala Dosa 18%, Plain Paratha 14%, Roti / Chapati 13% | 0.11 s
+OK   unknown_food           [  medium] food 99% | Masala Dosa 30%, Plain Paratha 15%, Aloo Paratha 12% | 0.09 s
+OK   unknown_food           [  medium] food 99% | Masala Dosa 37%, Plain Dosa 28%, Plain Paratha 15% | 0.10 s
+OK   unknown_food           [  medium] food 99% | Naan 40%, Roti / Chapati 15%, Plain Paratha 15% | 0.11 s
+OK   unknown_food           [     low] food 100% | Naan 20%, Uttapam 19%, Veg Sandwich 10% | 0.10 s
+OK   unknown_food           [  medium] food 100% | Naan 39%, Tandoori Chicken 12%, Momos 8% | 0.13 s
+OK   unknown_food           [     low] food 100% | Plain Paratha 26%, Masala Dosa 21%, Aloo Paratha 18% | 0.12 s
+MISS unknown_food           [    high] food 100% | Mango 99%, Papaya 0%, Banana 0% | 0.11 s
+MISS unknown_food           [    high] food 100% | Dhokla 87%, Aloo Paratha 2%, Masala Dosa 2% | 0.10 s
+OK   unknown_food           [  medium] food 99% | Rice Kheer 41%, Besan Ladoo 16%, Curd Rice 10% | 0.12 s
+OK   unknown_food           [     low] food 82% | Dhokla 22%, Curd 19%, Cucumber Raita 12% | 0.22 s
+MISS unknown_food           [    high] food 100% | Dhokla 71%, Matar Paneer 17%, Rice Kheer 2% | 0.20 s
+OK   unknown_food           [     low] food 99% | Mango 26%, Dhokla 26%, Sweet Lassi 11% | 0.12 s
+MISS unknown_food           [    high] food 99% | Dhokla 73%, Besan Ladoo 19%, Banana 2% | 0.11 s
+OK   unknown_food           [     low] food 94% | Curd 27%, Curd Rice 22%, Steamed Rice 17% | 0.12 s
+MISS unknown_food           [    high] food 98% | Curd 73%, Rasgulla 3%, Apple 3% | 0.12 s
+MISS unknown_food           [    high] food 99% | Dhokla 95%, Matar Paneer 2%, Paneer Butter Masala 1% | 0.24 s
+OK   unknown_food           [     low] food 97% | Dhokla 28%, Papaya 20%, Mango 20% | 0.13 s
+MISS unknown_food           [    high] food 100% | Dhokla 94%, Curd 1%, Cucumber Raita 1% | 0.12 s
+OK   unknown_food           [  medium] food 96% | Mango 33%, Lemon Rice 24%, Dhokla 15% | 0.11 s
+OK   unknown_food           [  medium] food 99% | Sweet Lassi 51%, Curd 13%, Besan Ladoo 13% | 0.12 s
+OK   unknown_food           [  medium] food 93% | Upma 59%, Rice Kheer 24%, Sweet Lassi 4% | 0.12 s
+OK   unknown_food           [  medium] food 98% | Rasgulla 53%, Curd 12%, Banana 11% | 0.08 s
+MISS unknown_food           [    high] food 99% | Curd 69%, Sweet Lassi 11%, Fruit Salad 7% | 0.10 s
+OK   unknown_food           [  medium] food 98% | Plain Dosa 30%, Idli 15%, Dhokla 13% | 0.17 s
+MISS unknown_food           [    high] food 99% | Dhokla 69%, Palak Paneer 8%, Idli 5% | 0.15 s
+OK   unknown_food           [  medium] food 99% | Fruit Salad 32%, Curd 32%, Watermelon 13% | 0.26 s
+MISS unknown_food           [    high] food 99% | Mango 88%, Aloo Matar 2%, Rice Kheer 1% | 0.14 s
+OK   unknown_food           [     low] food 98% | Curd 22%, Steamed Rice 20%, Eromba 19% | 0.17 s
+MISS unknown_food           [    high] food 99% | Rice Kheer 67%, Sweet Lassi 21%, Rasgulla 3% | 0.13 s
+OK   unknown_food           [  medium] food 99% | Matar Paneer 33%, Masala Chai 15%, Paneer Butter Masala 7% | 0.33 s
+OK   unknown_food           [  medium] food 95% | Sweet Lassi 31%, Curd 15%, Veg Sandwich 14% | 0.16 s
+OK   unknown_food           [  medium] food 98% | Curd 45%, Sweet Lassi 30%, Rice Kheer 20% | 0.13 s
+OK   unknown_food           [  medium] food 100% | Papaya 49%, Mango 37%, Guava 8% | 0.13 s
+OK   unknown_food           [  medium] food 100% | Omelette 32%, Upma 14%, Eromba 7% | 0.13 s
+MISS unknown_food           [    high] food 98% | Sweet Lassi 88%, Rice Kheer 3%, Masala Dosa 2% | 0.14 s
+MISS unknown_food           [    high] food 99% | Mango 95%, Moong Dal 2%, Singju 1% | 0.15 s
+OK   unknown_food           [  medium] food 98% | Rasgulla 37%, Besan Ladoo 13%, Curd 10% | 0.17 s
+OK   unknown_food           [  medium] food 95% | Sweet Lassi 50%, Curd 11%, Steamed Rice 10% | 0.17 s
+OK   unknown_food           [  medium] food 98% | Curd 41%, Fruit Salad 21%, Guava 10% | 0.17 s
+OK   unknown_food           [     low] food 98% | Dhokla 27%, Besan Ladoo 10%, Cucumber Raita 9% | 0.16 s
+OK   unknown_food           [     low] food 91% | Sweet Lassi 26%, Banana 20%, Rice Kheer 18% | 0.12 s
+OK   unknown_food           [     low] food 99% | Dhokla 11%, Plain Dosa 11%, Upma 11% | 0.14 s
+OK   unknown_food           [     low] food 91% | Plain Dosa 18%, Masala Dosa 14%, Banana 8% | 0.15 s
+OK   unknown_food           [     low] food 98% | Curd 24%, Rasgulla 22%, Sweet Lassi 19% | 0.15 s
+MISS unknown_food           [    high] food 100% | Dhokla 72%, Rasgulla 10%, Curd 7% | 0.17 s
+OK   unknown_food           [  medium] food 99% | Dhokla 48%, Upma 11%, Matar Paneer 7% | 0.13 s
+OK   unknown_food           [  medium] food 100% | Puri 49%, Medu Vada 19%, Chana Dal 13% | 0.13 s
+MISS unknown_food           [    high] food 100% | Medu Vada 71%, Puri 8%, Besan Ladoo 5% | 0.15 s
+OK   unknown_food           [     low] food 100% | Puri 30%, Medu Vada 19%, Besan Ladoo 11% | 0.15 s
+OK   unknown_food           [  medium] food 100% | Medu Vada 56%, Besan Ladoo 19%, Rasgulla 7% | 0.18 s
+MISS unknown_food           [    high] food 100% | Medu Vada 80%, Puri 6%, Masala Dosa 5% | 0.18 s
+OK   unknown_food           [  medium] food 100% | Sweet Lassi 56%, Curd 19%, Rasgulla 3% | 0.16 s
+OK   unknown_food           [  medium] food 99% | Besan Ladoo 48%, Medu Vada 29%, Rasgulla 8% | 0.21 s
+MISS unknown_food           [    high] food 100% | Momos 63%, Medu Vada 8%, Mutton Biryani 7% | 0.17 s
+MISS unknown_food           [    high] food 100% | Puri 70%, Medu Vada 21%, Besan Ladoo 4% | 0.15 s
+MISS unknown_food           [    high] food 99% | Medu Vada 90%, Besan Ladoo 5%, Puri 2% | 0.16 s
+MISS unknown_food           [    high] food 100% | Medu Vada 81%, Puri 6%, Samosa 4% | 0.19 s
+OK   unknown_food           [  medium] food 100% | Samosa 42%, Puri 22%, Medu Vada 19% | 0.18 s
+OK   unknown_food           [  medium] food 100% | Medu Vada 44%, Samosa 22%, Puri 17% | 0.13 s
+MISS unknown_food           [    high] food 100% | Medu Vada 83%, Puri 11%, Besan Ladoo 3% | 0.17 s
+OK   unknown_food           [     low] food 100% | Medu Vada 23%, Sambar 15%, Puri 12% | 0.13 s
+OK   unknown_food           [  medium] food 100% | Puri 49%, Medu Vada 19%, Masala Dosa 6% | 0.16 s
+OK   unknown_food           [  medium] food 99% | Medu Vada 55%, Puri 16%, Masala Dosa 9% | 0.13 s
+MISS unknown_food           [    high] food 100% | Medu Vada 97%, Besan Ladoo 1%, Ooti 0% | 0.23 s
+MISS unknown_food           [    high] food 99% | Medu Vada 83%, Momos 4%, Chilli Chicken 3% | 0.17 s
+OK   unknown_food           [  medium] food 100% | Baingan Bharta 44%, Medu Vada 17%, Singju 6% | 0.16 s
+OK   unknown_food           [  medium] food 100% | Chilli Chicken 40%, Medu Vada 27%, Momos 4% | 0.18 s
+MISS unknown_food           [    high] food 100% | Medu Vada 64%, Chilli Chicken 19%, Momos 7% | 0.17 s
+OK   unknown_food           [  medium] food 100% | Medu Vada 31%, Chilli Chicken 19%, Gajar Halwa 13% | 0.15 s
+MISS unknown_food           [    high] food 100% | Medu Vada 72%, Aloo Sabzi 8%, Besan Ladoo 7% | 0.15 s
+OK   unknown_food           [  medium] food 100% | Medu Vada 59%, Besan Ladoo 30%, Momos 2% | 0.15 s
+MISS unknown_food           [    high] food 100% | Medu Vada 71%, Aloo Gobi 7%, Puri 5% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Singju 46%, Ooti 23%, Momos 10% | 0.16 s
+OK   unknown_food           [     low] food 100% | Medu Vada 15%, Chilli Chicken 14%, Chicken Curry 12% | 0.12 s
+MISS unknown_food           [    high] food 100% | Momos 85%, Singju 3%, Puri 3% | 0.15 s
+OK   unknown_food           [  medium] food 100% | Medu Vada 55%, Puri 18%, Samosa 17% | 0.12 s
+OK   unknown_food           [     low] food 100% | Medu Vada 26%, Baingan Bharta 24%, Uttapam 10% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Medu Vada 45%, Baingan Bharta 28%, Bhindi Masala 5% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Medu Vada 41%, Chilli Chicken 15%, Baingan Bharta 15% | 0.11 s
+OK   unknown_food           [     low] food 99% | Aloo Sabzi 9%, Aloo Matar 9%, Sambar 8% | 0.15 s
+MISS unknown_food           [    high] food 100% | Medu Vada 79%, Curd 8%, Cucumber Raita 6% | 0.13 s
+OK   unknown_food           [  medium] food 100% | Chilli Chicken 45%, Medu Vada 18%, Tandoori Chicken 17% | 0.15 s
+OK   unknown_food           [  medium] food 99% | Tandoori Chicken 42%, Medu Vada 15%, Chilli Chicken 14% | 0.13 s
+OK   unknown_food           [  medium] food 99% | Aloo Gobi 36%, Momos 12%, Butter Chicken 10% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Aloo Gobi 33%, Medu Vada 29%, Kadai Paneer 15% | 0.12 s
+OK   unknown_food           [  medium] food 100% | Medu Vada 39%, Chilli Chicken 19%, Tandoori Chicken 6% | 0.14 s
+MISS unknown_food           [    high] food 100% | Medu Vada 83%, Aloo Gobi 5%, Aloo Sabzi 2% | 0.15 s
+OK   unknown_food           [  medium] food 100% | Aloo Gobi 36%, Medu Vada 23%, Chilli Chicken 14% | 0.14 s
+OK   unknown_food           [  medium] food 99% | Baingan Bharta 31%, Chicken Curry 12%, Chole 10% | 0.14 s
+OK   unknown_food           [     low] food 100% | Medu Vada 29%, Gajar Halwa 23%, Veg Pulao 9% | 0.14 s
+OK   unknown_food           [     low] food 100% | Medu Vada 25%, Plain Paratha 11%, Puri 11% | 0.35 s
+OK   unknown_food           [     low] food 99% | Medu Vada 24%, Ooti 12%, Bhindi Masala 8% | 0.16 s
+MISS unknown_food           [    high] food 100% | Medu Vada 60%, Momos 14%, Besan Ladoo 7% | 0.18 s
+OK   unknown_food           [  medium] food 99% | Medu Vada 58%, Aloo Sabzi 12%, Besan Ladoo 6% | 0.17 s
+OK   unknown_food           [  medium] food 97% | Aloo Gobi 35%, Puri 10%, Aloo Sabzi 7% | 0.17 s
+OK   unknown_food           [  medium] food 100% | Medu Vada 49%, Puri 21%, Momos 10% | 0.20 s
+OK   unknown_food           [  medium] food 100% | Tandoori Chicken 55%, Rajma 19%, Kadai Paneer 7% | 0.23 s
+OK   unknown_food           [  medium] food 99% | Butter Chicken 43%, Masala Chai 24%, Medu Vada 11% | 0.29 s
+MISS unknown_food           [    high] food 100% | Medu Vada 97%, Besan Ladoo 1%, Puri 0% | 0.30 s
+MISS unknown_food           [    high] food 100% | Medu Vada 79%, Besan Ladoo 15%, Momos 2% | 0.18 s
+MISS unknown_food           [    high] food 100% | Medu Vada 89%, Puri 4%, Besan Ladoo 2% | 0.16 s
+OK   unknown_food           [     low] food 100% | Gajar Halwa 26%, Kadai Paneer 16%, Medu Vada 7% | 0.17 s
+MISS unknown_food           [    high] food 100% | Medu Vada 87%, Samosa 3%, Momos 3% | 0.24 s
+OK   unknown_food           [  medium] food 99% | Medu Vada 46%, Besan Ladoo 31%, Bhindi Masala 4% | 0.15 s
+MISS unknown_food           [    high] food 100% | Medu Vada 84%, Besan Ladoo 3%, Upma 3% | 0.15 s
+MISS unknown_food           [    high] food 98% | Medu Vada 71%, Besan Ladoo 14%, Tandoori Chicken 3% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Medu Vada 46%, Uttapam 20%, Baingan Bharta 8% | 0.13 s
+MISS unknown_food           [    high] food 98% | Medu Vada 80%, Egg Curry 9%, Besan Ladoo 3% | 0.19 s
+MISS unknown_food           [    high] food 100% | Medu Vada 83%, Baingan Bharta 4%, Chilli Chicken 1% | 0.15 s
+OK   unknown_food           [     low] food 100% | Samosa 28%, Medu Vada 18%, Momos 16% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Medu Vada 51%, Chilli Chicken 21%, Rajma 7% | 0.16 s
+MISS unknown_food           [    high] food 100% | Medu Vada 85%, Rasgulla 5%, Besan Ladoo 1% | 0.14 s
+MISS unknown_food           [    high] food 100% | Baingan Bharta 87%, Sambar 2%, Chole 2% | 0.18 s
+OK   unknown_food           [  medium] food 99% | Dal 32%, Sambar 21%, Dal Makhani 20% | 0.27 s
+OK   unknown_food           [     low] food 99% | Baingan Bharta 21%, Dal 14%, Kadai Paneer 10% | 0.17 s
+OK   unknown_food           [  medium] food 100% | Masala Dosa 35%, Butter Chicken 15%, Paneer Butter Masala 14% | 
+0.16 s
+OK   unknown_food           [     low] food 100% | Samosa 27%, Uttapam 14%, Puri 9% | 0.26 s
+OK   unknown_food           [     low] food 100% | Butter Chicken 17%, Matar Paneer 11%, Chicken Biryani 10% | 0.17 s
+OK   unknown_food           [     low] food 100% | Veg Sandwich 18%, Baingan Bharta 12%, Burger 11% | 0.15 s
+OK   unknown_food           [     low] food 100% | Baingan Bharta 17%, Rajma 17%, Veg Sandwich 16% | 0.16 s
+MISS unknown_food           [    high] food 100% | Dal Makhani 61%, Dal 9%, Butter Chicken 5% | 0.16 s
+OK   unknown_food           [     low] food 100% | Baingan Bharta 21%, Rajma 12%, Egg Curry 9% | 0.14 s
+OK   unknown_food           [     low] food 100% | Paneer Butter Masala 20%, Baingan Bharta 12%, Chana Dal 10% | 0.15 s
+OK   unknown_food           [     low] food 96% | Bhindi Masala 17%, Jeera Rice 13%, Eromba 10% | 0.15 s
+OK   unknown_food           [  medium] food 100% | Dal Makhani 59%, Matar Paneer 10%, Paneer Butter Masala 9% | 0.12 s
+OK   unknown_food           [not_food] food 2% | Momos 33%, Puri 16%, Singju 7% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Butter Chicken 34%, Baingan Bharta 22%, Paneer Butter Masala 11% | 
+0.14 s
+OK   unknown_food           [     low] food 100% | Rajma 21%, Eromba 13%, Dal Makhani 11% | 0.14 s
+OK   unknown_food           [     low] food 100% | Uttapam 17%, Baingan Bharta 16%, Butter Chicken 15% | 0.14 s
+OK   unknown_food           [     low] food 100% | Sambar 16%, Baingan Bharta 16%, Masala Dosa 13% | 0.14 s
+OK   unknown_food           [     low] food 100% | Sambar 11%, Rajma 10%, Baingan Bharta 10% | 0.14 s
+OK   unknown_food           [     low] food 100% | Veg Khichdi 23%, Chana Dal 17%, Dal 16% | 0.14 s
+OK   unknown_food           [  medium] food 100% | Rajma 56%, Dal Makhani 9%, Paneer Butter Masala 6% | 0.15 s
+OK   unknown_food           [     low] food 100% | Sambar 25%, Butter Chicken 12%, Paneer Butter Masala 11% | 0.17 s
+OK   unknown_food           [  medium] food 99% | Puri 42%, Baingan Bharta 20%, Rajma 10% | 0.15 s
+OK   unknown_food           [     low] food 100% | Sambar 16%, Baingan Bharta 15%, Rajma 10% | 0.16 s
+OK   unknown_food           [     low] food 100% | Dal Makhani 20%, Paneer Butter Masala 11%, Masala Dosa 10% | 0.17 s
+OK   unknown_food           [  medium] food 100% | Baingan Bharta 31%, Moong Dal 17%, Sambar 13% | 0.20 s
+OK   unknown_food           [  medium] food 100% | Baingan Bharta 32%, Chole 13%, Medu Vada 8% | 0.17 s
+OK   unknown_food           [  medium] food 100% | Butter Chicken 30%, Paneer Butter Masala 26%, Chole 11% | 0.16 s
+OK   unknown_food           [     low] food 100% | Baingan Bharta 15%, Moong Dal 12%, Sambar 10% | 0.17 s
+OK   unknown_food           [  medium] food 100% | Baingan Bharta 38%, Rajma 30%, Matar Paneer 6% | 0.11 s
+OK   unknown_food           [  medium] food 100% | Baingan Bharta 39%, Paneer Butter Masala 19%, Matar Paneer 7% | 
+0.13 s
+OK   unknown_food           [     low] food 100% | Masala Dosa 27%, Fish Curry 13%, Baingan Bharta 10% | 0.12 s
+OK   unknown_food           [  medium] food 100% | Baingan Bharta 38%, Dal Makhani 28%, Rajma 15% | 0.12 s
+MISS unknown_food           [    high] food 100% | Masala Dosa 67%, Uttapam 13%, Plain Dosa 12% | 0.31 s
+OK   unknown_food           [     low] food 100% | Baingan Bharta 23%, Gajar Halwa 23%, Poha 17% | 0.14 s
+MISS unknown_food           [    high] food 99% | Baingan Bharta 60%, Egg Curry 10%, Chole 6% | 0.10 s
+OK   unknown_food           [     low] food 99% | Omelette 28%, Burger 25%, Veg Sandwich 11% | 0.16 s
+OK   unknown_food           [     low] food 100% | Matar Paneer 13%, Egg Curry 12%, Omelette 8% | 0.15 s
+OK   unknown_food           [     low] food 100% | Rajma 24%, Baingan Bharta 17%, Chole 10% | 0.10 s
+OK   unknown_food           [  medium] food 100% | Plain Dosa 34%, Masala Dosa 32%, Butter Chicken 6% | 0.12 s
+OK   unknown_food           [     low] food 100% | Rajma 29%, Baingan Bharta 17%, Sambar 10% | 0.16 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 97%, Veg Pulao 1%, Veg Biryani 0% | 0.15 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 76%, Veg Pulao 13%, Veg Biryani 4% | 0.12 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 93%, Veg Pulao 3%, Lemon Rice 1% | 0.12 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 87%, Poha 5%, Veg Pulao 2% | 0.19 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 97%, Veg Pulao 1%, Veg Biryani 1% | 0.13 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 97%, Veg Pulao 1%, Poha 1% | 0.21 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 98%, Veg Pulao 1%, Veg Biryani 1% | 0.15 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 84%, Veg Pulao 6%, Chicken Biryani 3% | 0.14 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 88%, Veg Pulao 4%, Veg Biryani 2% | 0.15 s
+top3 Veg Fried Rice         [    high] food 100% | Veg Pulao 77%, Veg Biryani 12%, Veg Fried Rice 7% | 0.20 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 73%, Poha 14%, Veg Pulao 5% | 0.14 s
+top3 Veg Fried Rice         [  medium] food 100% | Veg Pulao 47%, Veg Biryani 27%, Veg Fried Rice 20% | 0.12 s
+OK   Veg Fried Rice         [  medium] food 100% | Veg Fried Rice 36%, Poha 31%, Veg Pulao 13% | 0.16 s
+OK   Veg Fried Rice         [    high] food 99% | Veg Fried Rice 94%, Veg Pulao 4%, Veg Biryani 1% | 0.11 s
+OK   Veg Fried Rice         [  medium] food 100% | Veg Fried Rice 57%, Veg Pulao 39%, Veg Biryani 2% | 0.27 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 79%, Veg Pulao 8%, Veg Biryani 8% | 0.09 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 88%, Veg Pulao 7%, Veg Biryani 4% | 0.18 s
+OK   Veg Fried Rice         [    high] food 99% | Veg Fried Rice 96%, Steamed Rice 1%, Lemon Rice 1% | 0.13 s
+MISS Veg Fried Rice         [  medium] food 100% | Veg Pulao 42%, Veg Biryani 30%, Chicken Biryani 18% | 0.11 s
+top3 Veg Fried Rice         [  medium] food 100% | Jeera Rice 43%, Lemon Rice 28%, Veg Fried Rice 14% | 0.12 s
+OK   Veg Fried Rice         [    high] food 99% | Veg Fried Rice 94%, Veg Pulao 2%, Veg Chowmein 1% | 0.12 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 65%, Poha 22%, Lemon Rice 4% | 0.12 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 88%, Veg Pulao 2%, Poha 1% | 0.15 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 76%, Poha 17%, Veg Pulao 2% | 0.17 s
+OK   Veg Fried Rice         [  medium] food 100% | Veg Fried Rice 55%, Poha 15%, Lemon Rice 11% | 0.13 s
+OK   Veg Fried Rice         [  medium] food 100% | Veg Fried Rice 33%, Lemon Rice 17%, Veg Biryani 12% | 0.14 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 96%, Veg Pulao 3%, Veg Biryani 1% | 0.13 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 98%, Chilli Chicken 1%, Veg Biryani 0% | 0.14 s
+top3 Veg Fried Rice         [    high] food 100% | Veg Pulao 71%, Veg Fried Rice 15%, Veg Biryani 7% | 0.17 s
+MISS Veg Fried Rice         [  medium] food 100% | Veg Biryani 34%, Veg Pulao 25%, Poha 22% | 0.15 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 78%, Veg Pulao 13%, Upma 2% | 0.17 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 86%, Lemon Rice 4%, Veg Pulao 3% | 0.10 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 93%, Veg Pulao 2%, Poha 1% | 0.10 s
+OK   Veg Fried Rice         [  medium] food 100% | Veg Fried Rice 50%, Veg Pulao 33%, Veg Biryani 7% | 0.12 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 82%, Veg Pulao 8%, Poha 6% | 0.13 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 68%, Veg Pulao 19%, Veg Biryani 6% | 0.18 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 78%, Veg Pulao 9%, Veg Biryani 5% | 0.11 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 93%, Veg Pulao 5%, Veg Biryani 1% | 0.12 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 86%, Veg Biryani 6%, Veg Pulao 3% | 0.15 s
+OK   Veg Fried Rice         [    high] food 99% | Veg Fried Rice 89%, Veg Pulao 3%, Upma 2% | 0.15 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 72%, Veg Pulao 14%, Veg Biryani 5% | 0.15 s
+OK   Veg Fried Rice         [    high] food 100% | Veg Fried Rice 79%, Poha 8%, Chicken Biryani 5% | 0.14 s
+OK   Veg Fried Rice         [  medium] food 100% | Veg Fried Rice 49%, Veg Pulao 12%, Veg Biryani 7% | 0.12 s
+OK   Veg Fried Rice         [  medium] food 100% | Veg Fried Rice 31%, Lemon Rice 24%, Upma 15% | 0.11 s
+
+================ summary ================
+Images            : 941 (658 of foods in the database)
+Top-1 accuracy    : 77%
+Top-3 accuracy    : 93%
+Unknown food asked: 219 of 283
+Average time      : 0.16 s per photo
+By level (how often the top food was right):
+   high      460 photos, top food right in 424 (92%)
+   medium    157 photos, top food right in 70 (45%)
+   low        38 photos, top food right in 10 (26%)
+   not_food    3 photos, top food right in 0 (0%)
+
+

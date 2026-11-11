@@ -47,6 +47,16 @@ class Config:
     # scores spread out (e.g. 12 %, 12 %, 7 %, 7 %, 7 %...), so more of the dishes get offered.
     SUGGESTION_MIN_CONFIDENCE = 0.04
     MAX_SUGGESTIONS = 8
+    # Few-shot example photos (Manipuri dishes): their CLIP vectors, made with
+    #   python -m services.food_classifier --build-references data/reference_photos
+    # A photo whose 5 most similar examples of a food average above the threshold gets
+    # weight x (similarity - threshold) added to that food's score. Chosen with
+    # scripts/calibrate_references.py: held-out Manipuri photos 35 % -> 85 % top-1, while
+    # 941 public photos of other Indian foods stayed at 77 % top-1.
+    REFERENCE_FILE = BASE_DIR / "data" / "reference_embeddings.pt"
+    REFERENCE_TOP_K = 5
+    REFERENCE_THRESHOLD = 0.80
+    REFERENCE_WEIGHT = 200.0
 
     # ---------------------------------------------------------------- nutrition
     DEFAULT_CALORIE_GOAL = 2000               # kcal per day; each user can change their own goal

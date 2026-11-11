@@ -1,0 +1,36 @@
+﻿
+Loading openai/clip-vit-base-patch32 ...
+Ready in 10.0 s with 76 foods as labels (3 with example photos)
+
+MISS Eromba                 [     low] food 99% | Dal Makhani 20%, Rajma 17%, Dal 16% | 0.48 s
+OK   Eromba                 [    high] food 100% | Eromba 97%, Chicken Curry 1%, Ooti 1% | 0.16 s
+OK   Eromba                 [  medium] food 100% | Eromba 36%, Singju 28%, Ooti 10% | 0.15 s
+OK   Eromba                 [    high] food 99% | Eromba 94%, Dal 1%, Dal Makhani 1% | 0.13 s
+OK   Eromba                 [    high] food 99% | Eromba 87%, Ooti 13%, Moong Dal 0% | 0.15 s
+OK   Eromba                 [    high] food 98% | Eromba 99%, Baingan Bharta 1%, Chicken Biryani 0% | 0.14 s
+OK   Ooti                   [    high] food 98% | Ooti 88%, Moong Dal 6%, Dal 4% | 0.14 s
+OK   Ooti                   [    high] food 100% | Ooti 100%, Eromba 0%, Chana Dal 0% | 0.16 s
+top3 Ooti                   [  medium] food 100% | Eromba 52%, Ooti 43%, Moong Dal 4% | 0.16 s
+top3 Ooti                   [    high] food 100% | Eromba 75%, Ooti 25%, Moong Dal 0% | 0.17 s
+OK   Ooti                   [    high] food 100% | Ooti 100%, Moong Dal 0%, Palak Paneer 0% | 0.17 s
+OK   Ooti                   [  medium] food 97% | Ooti 44%, Sambar 34%, Baingan Bharta 4% | 0.15 s
+OK   Singju                 [    high] food 100% | Singju 100%, Veg Chowmein 0%, Green Salad 0% | 0.14 s
+OK   Singju                 [    high] food 100% | Singju 100%, Uttapam 0%, Ooti 0% | 0.13 s
+OK   Singju                 [    high] food 100% | Singju 100%, Veg Pulao 0%, Veg Biryani 0% | 0.14 s
+OK   Singju                 [    high] food 100% | Singju 100%, Chicken Biryani 0%, Mutton Biryani 0% | 0.14 s
+OK   Singju                 [    high] food 100% | Singju 87%, Veg Chowmein 13%, Poha 0% | 0.14 s
+OK   Singju                 [    high] food 100% | Singju 100%, Veg Chowmein 0%, Ooti 0% | 0.13 s
+OK   Singju                 [    high] food 100% | Singju 100%, Mutton Biryani 0%, Veg Pulao 0% | 0.13 s
+OK   Singju                 [    high] food 100% | Singju 100%, Veg Chowmein 0%, Veg Biryani 0% | 0.13 s
+
+================ summary ================
+Images            : 20 (20 of foods in the database)
+Top-1 accuracy    : 85%
+Top-3 accuracy    : 95%
+Average time      : 0.16 s per photo
+By level (how often the top food was right):
+   high       16 photos, top food right in 15 (94%)
+   medium      3 photos, top food right in 2 (67%)
+   low         1 photos, top food right in 0 (0%)
+
+

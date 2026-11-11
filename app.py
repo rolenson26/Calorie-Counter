@@ -13,6 +13,7 @@ What happens at start-up
     5. The CLIP model starts loading in a background thread, so the website
        opens immediately. Until it is ready, /api/predict answers 503
        "model is still loading" and /api/status says model_ready: false.
+       The example-photo vectors (data/reference_embeddings.pt) are loaded with it.
 """
 import argparse
 import logging
@@ -58,18 +59,14 @@ def start_loading_classifier(app):
 
     def load():
         try:
-            from services.food_classifier import FoodClassifier   # slow import, so done here
+            from services.food_classifier import classifier_from_config   # slow import, so done here
 
-            model = FoodClassifier(
-                app.config["MODEL_NAME"], app.config["MODEL_CACHE_DIR"],
-                app.config["HIGH_CONFIDENCE"], app.config["LOW_CONFIDENCE"],
-                app.config["FOOD_GATE_THRESHOLD"],
-                app.config["SUGGESTION_MIN_CONFIDENCE"], app.config["MAX_SUGGESTIONS"],
-            )
+            model = classifier_from_config(app.config)
             with app.app_context():
                 model.set_foods(db.get_all_foods())
+            examples = model.load_references(app.config["REFERENCE_FILE"])   # few-shot example photos
             app.extensions["food_classifier"] = model
-            app.logger.info("AI model ready (%d foods)", len(model.foods))
+            app.logger.info("AI model ready (%d foods, %d with example photos)", len(model.foods), examples)
         except Exception:
             app.logger.exception("Could not load the AI model")
             app.extensions["classifier_error"] = "The AI model could not be loaded. See the server log."

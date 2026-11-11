@@ -38,6 +38,27 @@ def test_starter_foods_are_loaded_once(app):
     assert len(db.get_all_foods()) == len(FOODS)
 
 
+def test_new_starter_foods_reach_an_existing_database(app):
+    """A database made before a food was added to nutrition_data.py gets it on the next start,
+    and foods already there (including a user's edits) are not touched."""
+    conn = db.get_db()
+    conn.execute("DELETE FROM foods WHERE name IN ('Ooti', 'Eromba', 'Singju')")
+    conn.execute("UPDATE foods SET serving_grams = 123 WHERE name = 'Idli'")
+    conn.commit()
+    assert db.init_db(conn) == 3
+    assert len(db.get_all_foods()) == len(FOODS)
+    assert {"Ooti", "Eromba", "Singju"} <= {food["name"] for food in db.get_all_foods()}
+    assert db.get_food(food_id("Idli"))["serving_grams"] == 123
+
+
+def test_manipuri_foods_are_recipe_estimates():
+    manipuri = {food["name"]: food for food in FOODS if food["category"] == "Manipuri"}
+    assert set(manipuri) == {"Ooti", "Eromba", "Singju"}
+    for food in manipuri.values():
+        assert "recipe estimate" in food["source"]
+        assert 40 <= food["calories"] <= 150, food["name"]     # light everyday dishes, not fried
+
+
 def test_search_ignores_case(app):
     results = db.search_foods("PANEER")
     assert len(results) == 4
