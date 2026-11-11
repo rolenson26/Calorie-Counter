@@ -327,6 +327,21 @@ def test_save_a_whole_plate_in_one_step(auth_client, fake_classifier, photo, foo
     # was_corrected keeps its meaning: "not the AI's top guess" (the AI's top guess was rice).
     assert {log["food_name"]: log["was_corrected"] for log in logs} == \
         {"Steamed Rice": 0, "Dal": 1, "Roti / Chapati": 1}
+    # ... but all three were in the AI's top 3, so History does not call them "corrected".
+    assert {log["food_name"]: log["in_ai_top3"] for log in logs} == \
+        {"Steamed Rice": 1, "Dal": 1, "Roti / Chapati": 1}
+    history = auth_client.get("/api/history").get_json()["logs"]
+    assert all(log["in_ai_top3"] for log in history)
+
+
+def test_a_food_outside_the_top_3_is_not_counted_as_suggested(auth_client, fake_classifier, photo, food_id, app,
+                                                              user_id):
+    fake_classifier.answer([("Steamed Rice", 0.4), ("Dal", 0.3), ("Roti / Chapati", 0.2)])
+    prediction_id = upload(auth_client, photo()).get_json()["prediction_id"]
+    auth_client.post("/api/food-log/batch", json={"meal_type": "lunch", "prediction_id": prediction_id,
+                                                  "items": [{"food_id": food_id("Curd"), "quantity": 1}]})
+    [log] = auth_client.get("/api/history").get_json()["logs"]
+    assert log["was_corrected"] and not log["in_ai_top3"]
 
 
 def test_plate_without_photo_mixes_grams_and_servings(auth_client, food_id):

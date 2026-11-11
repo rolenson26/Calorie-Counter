@@ -161,6 +161,7 @@ def log_json(log):
         "image_url": image_url(log["image_path"]),
         "ai_guess": log["ai_guess"],
         "was_corrected": bool(log["was_corrected"]),
+        "in_ai_top3": bool(log["in_ai_top3"]),
         "log_date": log["log_date"],
         "logged_at": log["logged_at"],
     }

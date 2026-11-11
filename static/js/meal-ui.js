@@ -19,7 +19,9 @@ function mealPhoto(meal) {
 
 function mealAiNote(meal) {
   if (meal.ai_guess === null) return "Typed in";
-  return meal.was_corrected ? `Corrected (AI said ${meal.ai_guess})` : "✓ AI was right";
+  if (!meal.was_corrected) return "✓ AI was right";
+  // On a plate only one food can be the AI's first guess: the others count if they were in its top 3.
+  return meal.in_ai_top3 ? "✓ In the AI's top 3" : `Corrected (AI said ${meal.ai_guess})`;
 }
 
 /*

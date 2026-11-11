@@ -29,9 +29,11 @@
     const total = logs.reduce((sum, log) => sum + log.calories, 0);
     const fromPhoto = logs.filter((log) => log.ai_guess !== null);
     const kept = fromPhoto.filter((log) => !log.was_corrected).length;
+    const inTop3 = fromPhoto.filter((log) => !log.was_corrected || log.in_ai_top3).length;
     $("history-summary").textContent = logs.length
       ? `${logs.length} meal${logs.length === 1 ? "" : "s"} · ${formatNumber(total)} kcal in total` +
-        (fromPhoto.length ? ` · AI suggestion kept for ${kept} of ${fromPhoto.length} photo meals` : "")
+        (fromPhoto.length ? ` · AI's first guess kept for ${kept} of ${fromPhoto.length} photo meals,` +
+          ` in its top 3 for ${inTop3}` : "")
       : "";
 
     const empty = !logs.length;

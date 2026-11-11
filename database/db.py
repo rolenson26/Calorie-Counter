@@ -342,10 +342,14 @@ def get_logs(user_id, start_day, end_day):
 
     Each row also carries the food name, the photo path and the AI's guess,
     so the history page can show whether the user corrected the AI.
+    in_ai_top3 is 1 when the food was one of the AI's top 3 guesses for that photo
+    (a plate has several foods, so only one of them can be the top guess).
     """
     rows = get_db().execute(
         """SELECT l.*, f.name AS food_name, f.serving_unit, f.serving_grams,
-                  p.image_path, p.confidence AS ai_confidence, guess.name AS ai_guess
+                  p.image_path, p.confidence AS ai_confidence, guess.name AS ai_guess,
+                  EXISTS (SELECT 1 FROM json_each(p.top3_json) AS g
+                          WHERE json_extract(g.value, '$.food_id') = l.food_id) AS in_ai_top3
            FROM food_logs AS l
            JOIN foods AS f            ON f.id = l.food_id
            LEFT JOIN predictions AS p ON p.id = l.prediction_id

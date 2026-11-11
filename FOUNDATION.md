@@ -195,7 +195,7 @@ The multi-food scan flow *was* checked in headless Edge at phone width.
 | I3 | ~~The README's 77 % top-1 on 658 photos can't be reproduced~~ **Reproduced 2026-11-12**: `scripts/export_indian_food.py` downloads the public test split (941 photos; the 13 classes we have total exactly 658). Text-only top-1 = 77 %. Outputs are in `docs/accuracy_*.txt` | Done |
 | I4 | No CSRF tokens on the login, register and logout forms | Deferred; list as a limitation |
 | I7 | Everyone is logged out on restart unless `SECRET_KEY` is set | Documented |
-| I17 | In History, the 2nd and later foods of a plate show "Corrected (AI said …)", even when they were among the suggestions | Fix in Step 3 |
+| I17 | ~~In History, the 2nd and later foods of a plate show "Corrected (AI said …)"~~ **Fixed 2026-11-12**: History now says "✓ In the AI's top 3" for those (`in_ai_top3`, worked out from `predictions.top3_json`). `was_corrected` still means "not the AI's first guess", so the accuracy statistics are unchanged | Done |
 | — | No rate limiting or security headers | Deferred |
 | — | The model folder holds duplicate weight files (≈600 MB wasted) | Optional cleanup |
 
